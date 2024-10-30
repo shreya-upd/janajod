@@ -1,0 +1,800 @@
+{% load static %}
+{% load humanize %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="This is social network html5 template available in themeforest......" />
+    <meta name="keywords" content="Social Network, Social Media, Make Friends, Newsfeed, Profile Page" />
+    <meta name="robots" content="index, follow" />
+    <title>JanaJod</title>
+
+    <!-- Stylesheets
+    ================================================= -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" href="{% static 'css/ionicons.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}" />
+    <link href="{% static 'css/emoji.css' %}" rel="stylesheet">
+
+    <!--Google Font-->
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,400i,700,700i" rel="stylesheet">
+    
+
+    <!--Favicon-->
+    <link rel="shortcut icon" type="image/png" href="{% static 'images/fav.png' %}" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<!-- CSS for styling -->
+
+</head>
+<body>
+
+    <!-- Header
+    ================================================= -->
+    <header id="header">
+        <nav style="display: flex; align-items: center; justify-content: space-between; background-color: rgba(20, 0, 113, 1); padding: 10px 20px; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); position: fixed; top: 0; left: 0; right: 0; z-index: 1000;">
+            <!-- Logo -->
+    
+            <div style="display: flex; align-items: center;">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Logo" style="height: 40px; margin-right: 20px;">
+            </div>
+
+            
+              <!-- Date and Time Display -->
+                    <div style="flex-grow: 1; display: flex; align-items: center; position: relative; max-width: 500px;">
+                        <input type="text" id="dateTime" 
+                            style="width: 100%; padding: 8px 16px; border: 1px solid #ccc; border-radius: 20px; 
+                                    background-color: #f1f1f1; font-size: 14px; color:green;font-weight: bold;" readonly>
+                        <i style="position: absolute; right: 15px; color: green; font-size: 18px; cursor: pointer;" class="fas fa-envelope" onclick="openModal()"></i> <!-- Mail icon -->
+                    </div>
+
+                    <!-- Feedback Modal -->
+                    <!-- Feedback Modal -->
+                        <div id="feedbackModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 999; justify-content: center; align-items: center;">
+                            <div style="background-color: white; padding: 20px; border-radius: 10px; width: 300px; text-align: center;">
+                                <h5 style="font-weight: bold;">We value your feedback!</h5>
+                                <textarea id="userFeedback" placeholder="Your Feedback" rows="4" style="width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;"></textarea>
+                                <div>
+                                    <button onclick="submitFeedback()" style="margin-right: 10px; padding: 8px 16px; background-color: #4CAF50; color: white; border: none; border-radius: 5px;">Submit</button>
+                                    <button onclick="closeModal()" style="padding: 8px 16px; background-color: #f44336; color: white; border: none; border-radius: 5px;">Close</button>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    <script>
+                        function updateDateTime() {
+                            // Get current date and time in Nepal Time
+                            const optionsTime = { timeZone: 'Asia/Kathmandu', 
+                                                hour: '2-digit', minute: '2-digit', second: '2-digit', 
+                                                hour12: true };
+
+                            const dateObj = new Date();
+
+                            // Define month names for custom formatting
+                            const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+                                                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                            
+                            // Format date as "Oct/20/2024"
+                            const day = dateObj.getUTCDate(); // Get UTC date
+                            const month = monthNames[dateObj.getUTCMonth()]; // Get UTC month (0-11)
+                            const year = dateObj.getUTCFullYear(); // Get UTC year
+
+                            const formattedDate = `${month}/${day}/${year}`;
+                            
+                            const time = new Intl.DateTimeFormat('en-US', optionsTime).format(dateObj);
+
+                            // Format: Oct/20/2024 - HH:MM:SS AM/PM
+                            document.getElementById('dateTime').value = `${formattedDate} - ${time}`;
+                        }
+
+                        function openModal() {
+                            document.getElementById('feedbackModal').style.display = 'flex';
+                        }
+
+                        function closeModal() {
+                            document.getElementById('feedbackModal').style.display = 'none';
+                        }
+
+                        function submitFeedback() {
+                            const feedback = document.getElementById('userFeedback').value;
+                        
+                            // Send the feedback data to the server
+                            fetch('/submit-feedback/', { // Ensure this matches the URL defined in your urls.py
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': getCookie('csrftoken') // Get CSRF token for security
+                                },
+                                body: JSON.stringify({ message: feedback }) // Only send the message
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.status === 'success') {
+                                    alert(data.message); // Show success message
+                                    // Reset fields and close modal
+                                    document.getElementById('userFeedback').value = '';
+                                    closeModal();
+                                } else {
+                                    alert(data.message); // Show error message
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                alert('An error occurred while submitting feedback.');
+                            });
+                        }
+                        
+                        
+                        // Function to get CSRF token for AJAX requests
+                        function getCookie(name) {
+                            let cookieValue = null;
+                            if (document.cookie && document.cookie !== '') {
+                                const cookies = document.cookie.split(';');
+                                for (let i = 0; i < cookies.length; i++) {
+                                    const cookie = cookies[i].trim();
+                                    // Check if this cookie string begins with the name we want
+                                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                        break;
+                                    }
+                                }
+                            }
+                            return cookieValue;
+                        }
+                        
+
+                        // Update date and time every second
+                        setInterval(updateDateTime, 1000);
+                        updateDateTime(); // initial call
+                    </script>
+
+
+
+            <!-- Right side (Profile, Symbol Icons) -->
+            <div style="display: flex; align-items: center;">
+                 <!-- Notification Icon in Navbar -->
+                <!-- Notification Icon in Navbar -->
+                <div class="dropdown" style="position: relative;">
+                    <a class="nav-link dropdown-toggle" href="#" id="notificationDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="badge" id="unreadCount" style="display: {{ unread_count|yesno:'inline, none' }}; background-color: red; color: white;">{{ unread_count }}</span>
+
+                        <i class="fas fa-bell" style="margin-right: 20px; font-size: 22px; color: white;"></i>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="notificationDropdown" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 400px; max-height: 400px; overflow-y: auto; z-index: 1050; border: 1px solid rgba(0,0,0,0.1); border-radius: 5px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); background: white;">
+                        <div class="modal-header" style="border-bottom: none;">
+                            <h5 class="modal-title" id="notificationModalLabel">Notifications</h5>
+                            <button type="button" class="close" style="margin-left: auto; color: black;" data-toggle="dropdown" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body" id="notificationBody">
+                            {% if notifications %}
+                                {% for notification in notifications %}
+                                    <div class="notification-item" style="padding: 10px 0; border-bottom: 1px solid rgba(0, 0, 0, 0.1); margin-bottom: 10px;">
+                                        <a href="#">
+                                            {{ notification.message }}
+                                            <small class="text-muted" style="display: block;">{{ notification.created_at|date:"d M Y H:i" }}</small>
+                                        </a>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <div class="text-center">No notifications</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                <script>
+                    $(document).ready(function() {
+                        // Function to fetch unread count and notifications
+                        function fetchNotifications() {
+                            $.ajax({
+                                url: "{% url 'notifications' %}",
+                                type: 'GET',
+                                success: function(data) {
+                                    // Update unread count
+                                    let newCount = data.new_count;
+                                    if (newCount > 0) {
+                                        $('#unreadCount').text(newCount).show();
+                                    } else {
+                                        $('#unreadCount').hide(); // Hide if no new notifications
+                                    }
+                                },
+                                error: function(xhr, status, error) {
+                                    console.log("Error fetching notifications: " + error);
+                                }
+                            });
+                        }
+                
+                        // Call fetchNotifications on page load
+                        fetchNotifications();
+                
+                        $('#notificationDropdown').on('click', function() {
+                            // Hide the unread count only when the dropdown is opened
+                            $('#unreadCount').hide();
+                            
+                            // Fetch notifications via AJAX and display them in the dropdown
+                            $.ajax({
+                                url: "{% url 'notifications' %}",
+                                type: 'GET',
+                                success: function(data) {
+                                    $('#notificationBody').empty(); // Clear the notification body
+                
+                                    // Update dropdown with notifications
+                                    if (data.notifications.length > 0) {
+                                        data.notifications.forEach(function(notification) {
+                                            $('#notificationBody').append(`
+                                                <div class="notification-item" style="padding: 10px 0; border-bottom: 1px solid rgba(0, 0, 0, 0.1); margin-bottom: 10px;">
+                                                    <a href="#">
+                                                        ${notification.message}
+                                                        <small class="text-muted" style="display: block;">${notification.created_at}</small>
+                                                    </a>
+                                                </div>
+                                            `);
+                                        });
+                                    } else {
+                                        $('#notificationBody').append('<div class="text-center">No notifications</div>');
+                                    }
+                
+                                    // Mark notifications as read
+                                    $.ajax({
+                                        url: "{% url 'mark_notifications_as_read' %}",
+                                        type: 'POST',
+                                        data: {
+                                            'csrfmiddlewaretoken': '{{ csrf_token }}', // Include CSRF token for security
+                                        },
+                                        success: function() {
+                                            // Optionally, handle success here
+                                        },
+                                        error: function(xhr, status, error) {
+                                            console.log("Error marking notifications as read: " + error);
+                                        }
+                                    });
+                                },
+                                error: function(xhr, status, error) {
+                                    console.log("Error: " + error);
+                                }
+                            });
+                        });
+                    });
+                </script>
+                
+            
+            
+
+
+                <!-- Icons for Edit Profile and Logout -->
+                <a href="{% url 'profile' %}">
+                    <i class="fas fa-user-edit" style="margin-right: 20px; font-size: 22px; color: white;"></i>
+                </a> <!-- Edit Profile -->
+            
+                <!-- Logout Icon -->
+                <i class="fas fa-sign-out-alt" style="margin-right: 20px; font-size: 22px; color: white;" onclick="confirmLogout()"></i> <!-- Logout -->
+            
+                <!-- Overlay to block page interaction (hidden by default) -->
+                <div id="overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.5); z-index: 999;"></div>
+            
+                <!-- Confirmation Dialog (hidden by default) -->
+                <div id="logoutConfirmation" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); width: 300px; padding:20px; z-index:1000; background-color: rgba(20, 0, 113, 0.69); color: white; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);">
+                    <p style="color: white; text-align: center;">Are you sure you want to logout?</p>
+                    <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+                        <button onclick="logout()" style="padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; background-color: red; color: white;">Yes</button>
+                        <button onclick="cancelLogout()" style="padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; background-color: green; color: white;">No</button>
+                    </div>
+                </div>
+            
+                <script>
+                    function confirmLogout() {
+                        // Show the overlay and confirmation dialog
+                        document.getElementById('overlay').style.display = 'block';
+                        document.getElementById('logoutConfirmation').style.display = 'block';
+                    }
+            
+                    function logout() {
+                        // Hide the overlay and confirmation dialog, then logout
+                        document.getElementById('overlay').style.display = 'none';
+                        document.getElementById('logoutConfirmation').style.display = 'none';
+                        window.location.href = '/logout';  // Replace '/logout' with your actual logout URL
+                    }
+            
+                    function cancelLogout() {
+                        // Hide the overlay and confirmation dialog
+                        document.getElementById('overlay').style.display = 'none';
+                        document.getElementById('logoutConfirmation').style.display = 'none';
+                    }
+                </script>
+            </div>
+            
+        </nav>
+    </header>
+    <!--Header End-->
+
+    <div id="page-contents">
+        <div class="container" style="max-width: 100%; overflow-x: hidden;">
+            <div class="row">
+    
+                <!-- Newsfeed Common Side Bar Left ================================================= -->
+                <div class="col-md-3 static"  id="sticky-sidebar"  >
+                    
+                    <div class="profile-card">
+                        <!-- Display the user's profile image if available, otherwise use the default image -->
+                        {% if user.profile.profile_image %}
+                            <img src="{{ user.profile.profile_image.url }}" alt="user" class="profile-photo" />
+                        {% else %}
+                            <img src="{% static 'images/users/shrey.jpg' %}" alt="user" class="profile-photo" />
+                        {% endif %}
+    
+                        <!-- Username -->
+                        <h5><a href="timeline.html" class="text-white">{{ user.username }}</a></h5>
+                    </div>
+                     <hr>
+                    <!-- Navigation Links -->
+                    <ul class="nav-news-feed" style="list-style-type: none; padding: 10px; margin: 0; background-color: rgba(255, 255, 255, 0.8); border-radius: 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
+                        <li style="margin: 5px 0;">
+                            <div>
+                                <a href="{% url 'home' %}" 
+                                   style="text-decoration: none; color: #333; padding: 12px 16px; border-radius: 20px; display: inline-block; 
+                                          background: {% if request.path == '/' %} radial-gradient(circle at top left, rgba(20, 0, 113, 0.69), transparent 50%), 
+                                          linear-gradient(to bottom, rgba(11, 156, 49, 0.5), transparent 70%) {% else %} transparent {% endif %};
+                                          position: relative; transition: transform 0.3s;">
+                                    🗞️ Newsfeed
+                                </a>
+                            </div>
+                        </li>
+                        <li style="margin: 5px 0;">
+                            <div>
+                                <a href="{% url 'events' %}" 
+                                   style="text-decoration: none; color: #333; padding: 12px 16px; border-radius: 20px; display: inline-block; 
+                                          background: {% if request.path == '/events/' %} radial-gradient(circle at top left, rgba(20, 0, 113, 0.69), transparent 50%), 
+                                          linear-gradient(to bottom, rgba(11, 156, 49, 0.5), transparent 70%) {% else %} transparent {% endif %};
+                                          position: relative; transition: transform 0.3s;">
+                                    📅 Events
+                                </a>
+                            </div>
+                        </li>
+                        <li style="margin: 5px 0;">
+                            <div>
+                                <a href="{% url 'announce' %}" 
+                                   style="text-decoration: none; color: #333; padding: 12px 16px; border-radius: 20px; display: inline-block; 
+                                          background: {% if request.path == '/announce/' %} radial-gradient(circle at top left, rgba(20, 0, 113, 0.69), transparent 50%), 
+                                          linear-gradient(to bottom, rgba(11, 156, 49, 0.5), transparent 70%) {% else %} transparent {% endif %};
+                                          position: relative; transition: transform 0.3s;">
+                                    📢 Find Jobs
+                                </a>
+                            </div>
+                        </li>
+                        <li style="margin: 5px 0;">
+                            <div>
+                                <a href="{% url 'complain' %}" 
+                                   style="text-decoration: none; color: #333; padding: 12px 16px; border-radius: 20px; display: inline-block; 
+                                          background: {% if request.path == '/complain/' %} radial-gradient(circle at top left, rgba(20, 0, 113, 0.69), transparent 50%), 
+                                          linear-gradient(to bottom, rgba(11, 156, 49, 0.5), transparent 70%) {% else %} transparent {% endif %};
+                                          position: relative; transition: transform 0.3s;">
+                                    🚨 Complain Box
+                                </a>
+                            </div>
+                        </li>
+                        <li style="margin: 5px 0;">
+                            <div>
+                                <a href="{% url 'servicerequest' %}" 
+                                   style="text-decoration: none; color: #333; padding: 12px 16px; border-radius: 20px; display: inline-block; 
+                                          background: {% if request.path == '/servicerequest/' %} radial-gradient(circle at top left, rgba(20, 0, 113, 0.69), transparent 50%), 
+                                          linear-gradient(to bottom, rgba(11, 156, 49, 0.5), transparent 70%) {% else %} transparent {% endif %};
+                                          position: relative; transition: transform 0.3s;">
+                                    🔧 Service Request
+                                </a>
+                            </div>
+                        </li>
+                        <li style="margin: 5px 0;">
+                            <div>
+                                <a href="{% url 'surveyform' %}" 
+                                   style="text-decoration: none; color: #333; padding: 12px 16px; border-radius: 20px; display: inline-block; 
+                                          background: {% if request.path == '/surveyform/' %} radial-gradient(circle at top left, rgba(20, 0, 113, 0.69), transparent 50%), 
+                                          linear-gradient(to bottom, rgba(11, 156, 49, 0.5), transparent 70%) {% else %} transparent {% endif %};
+                                          position: relative; transition: transform 0.3s;">
+                                    🗃️ Survey Section
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                    
+                    
+                    
+                </div>
+    
+                <div class="col-md-7">
+                                                <!-- Post Create Box -->
+                        <div class="create-post" style="border: 1px solid #e1e1e1; border-radius: 10px; background-color: #f9f9f9;">
+                            <form method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <!-- Profile Image, Input Box, and Post Button -->
+                                    <div class="col-md-12">
+                                        <div class="form-group" style="display: flex; align-items: center; margin-top: 4px;">
+                                            <div style="display: flex; align-items: center; flex-grow: 1; margin-right: 10px;">
+                                                {% if user.profile.profile_image %}
+                                                    <img src="{{ user.profile.profile_image.url }}" alt="Profile Picture" class="profile-photo-md" style="border-radius: 50%; width: 40px; height: 40px; margin-right: 10px;" />
+                                                {% else %}
+                                                    <img src="{% static 'images/users/default.jpg' %}" alt="Default Profile" class="profile-photo-md" style="border-radius: 50%; width: 40px; height: 40px; margin-right: 10px;" />
+                                                {% endif %}
+                                                
+                                                <input type="text" name="content" class="form-control" style="border: none; background-color: #f1f1f1; flex-grow: 1; font-size: 16px; padding: 10px; border-radius: 20px; margin-top: 5px;" placeholder="What's on your mind?" />
+                                            </div>
+                                            
+                                            <!-- Media Icon (Trigger Modal) -->
+                                            <div style="margin-right: 10px;">
+                                                <a href="#" style="text-decoration: none; color:rgba(20, 0, 113, 0.69); display: flex; align-items: center;" data-toggle="modal" data-target="#photoVideoModal">
+                                                    <span style="font-size: 24px; margin-right: 5px;">🖼️</span>
+                                                </a>
+                                            </div>
+                                            
+                                            <!-- Post Button -->
+                                            <div>
+                                                <button type="submit" class="btn btn-primary" style="background-color: rgba(20, 0, 113, 0.69); border: none; border-radius: 20px; padding: 8px 20px;">
+                                                    Post
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- Hidden File Input for Selected Media -->
+                                        <input type="file" name="media" id="hiddenMediaInput" style="display: none;">
+                                        <div id="mediaPreview" style="margin-top: 10px;"></div> <!-- Preview area for selected media -->
+                                    </div>
+                                </div>
+                            </form>
+
+                            <!-- Photo/Video Modal -->
+                            <div class="modal fade" id="photoVideoModal" tabindex="-1" role="dialog" aria-labelledby="photoVideoModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="photoVideoModalLabel" style="color:rgba(20, 0, 113, 0.69); text-align:center; font-weight: bold;">Upload Photo/Video</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form id="uploadForm" enctype="multipart/form-data">
+                                                <div class="form-group" style="color:rgba(20, 0, 113, 0.69);">
+                                                    <label for="photoInput">Select Photo/Video: </label>
+                                                    <input type="file" class="form-control-file" id="photoInput" accept="image/*, video/*" required>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-success" data-dismiss="modal" style="border-radius: 30px;">Close</button>
+                                            <button type="button" class="btn btn-primary" id="submitUpload">Save</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Post Create Box End -->
+
+                        <script>
+                            document.getElementById('submitUpload').addEventListener('click', function() {
+                                const photoInput = document.getElementById('photoInput');
+                                const hiddenMediaInput = document.getElementById('hiddenMediaInput');
+                                const mediaPreview = document.getElementById('mediaPreview');
+
+                                // Clear previous previews
+                                mediaPreview.innerHTML = '';
+
+                                // Check if a file has been selected
+                                if (photoInput.files.length > 0) {
+                                    const file = photoInput.files[0];
+                                    const fileURL = URL.createObjectURL(file); // Create a local URL for the selected file
+
+                                    // Create an HTML element to display the selected media
+                                    let mediaElement;
+                                    if (file.type.startsWith('image/')) {
+                                        mediaElement = document.createElement('img');
+                                        mediaElement.src = fileURL;
+                                        mediaElement.alt = 'Selected Image';
+                                        mediaElement.style.width = '100px'; // Set width for the image
+                                        mediaElement.style.height = 'auto'; // Keep the aspect ratio
+                                        mediaElement.style.borderRadius = '10px'; // Optional styling
+                                        mediaElement.style.marginLeft = '10px'; // Space between input and media
+                                    } else if (file.type.startsWith('video/')) {
+                                        mediaElement = document.createElement('video');
+                                        mediaElement.src = fileURL;
+                                        mediaElement.controls = true; // Show controls for the video
+                                        mediaElement.style.width = '100px'; // Set width for the video
+                                        mediaElement.style.height = 'auto'; // Keep the aspect ratio
+                                        mediaElement.style.borderRadius = '10px'; // Optional styling
+                                        mediaElement.style.marginLeft = '10px'; // Space between input and media
+                                    }
+
+                                    // Append the media element to the preview area
+                                    if (mediaElement) {
+                                        mediaPreview.appendChild(mediaElement);
+                                    }
+
+                                    // Transfer the selected file to the hidden input for form submission
+                                    hiddenMediaInput.files = photoInput.files;
+
+                                    // Close the modal after selecting the file
+                                    $('#photoVideoModal').modal('hide');
+                                }
+                            });
+                        </script>
+
+
+                            
+                                   <!-- Display Posts -->
+                                    <div class="post-content mt-4">
+                                        {% for post in posts %}
+                                            <div class="post" style="border: 1px solid #e1e1e1; padding: 15px; border-radius: 10px; margin-bottom: 20px; background-color: #fff;">
+                                                <div class="user-info d-flex justify-content-between align-items-center" style="margin-bottom: 10px; background-color: #f9f9f9;">
+
+                                                    <div style="display: flex; align-items: center; flex-wrap: wrap;">
+                                                        <h5 style="margin: 0; display: flex; align-items: center;">
+                                                            <img src="{{ post.author.profile.profile_image.url }}" alt="user" class="profile-photo-md" style="border-radius: 50%; width: 40px; height: 40px; margin-right: 10px;" />
+                                                            <a href="{% url 'profile' post.author.username %}" class="profile-link">{{ post.author.profile.full_name }}</a>
+                                                        </h5>
+
+                                                        <!-- Conditional Role Display -->
+                                                        {% if post.author.is_superuser %}
+                                                            <span style="color: green; font-size: 12px; margin-left: 5px;">Admin</span>
+                                                        {% else %}
+                                                            <span style="color: green; font-size: 12px; margin-left: 5px;">Member</span>
+                                                        {% endif %}
+
+                                                        <p class="text-muted" style="margin: 0; margin-left: 5px; font-size: 12px;">
+                                                            posted on {{ post.created_at|date:"F j" }} at {{ post.created_at|date:"H:i" }}
+                                                        </p>
+
+                                                        <!-- Icons for Edit and Delete -->
+                                                        <div style="display: flex; align-items: center; margin-left: auto;">
+                                                            {% if post.author == request.user %} <!-- Check if the current user is the author -->
+                                                                <!-- Edit Icon -->
+                                                                <a href="#" class="text-secondary" title="Edit" data-toggle="modal" data-target="#editPostModal-{{ post.id }}">
+                                                                    <i class="fa fa-edit" style="font-size: 18px; margin-right: 15px;"></i>
+                                                                </a>
+
+                                                                <!-- Delete Icon Triggering the Modal -->
+                                                                <a href="#" class="text-danger" data-toggle="modal" data-target="#deletePostModal-{{ post.id }}">
+                                                                    <i class="fa fa-trash" style="font-size: 18px;"></i>
+                                                                </a>
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="post-text mt-3">
+                                                    <p>{{ post.content }}</p>
+                                                </div>
+
+                                                {% if post.media %}
+                                                    <div class="post-media mt-3">
+                                                        {% with post.media.url|lower as media_url %}
+                                                            {% if ".mp4" in media_url or ".webm" in media_url or ".ogg" in media_url %}
+                                                                <video src="{{ post.media.url }}" controls style="max-width: 100%; border-radius: 10px;"></video>
+                                                            {% else %}
+                                                                <img src="{{ post.media.url }}" alt="post-media" class="img-responsive" style="max-width: 100%; border-radius: 10px;" />
+                                                            {% endif %}
+                                                        {% endwith %}
+                                                    </div>
+                                                {% endif %}
+
+                                                <div class="reaction mt-3">
+                                                    <form action="{% url 'like_post' post.id %}" method="POST" style="display:inline;">
+                                                        {% csrf_token %}
+                                                        <button type="submit" class="btn text-green"><i class="icon ion-thumbsup"></i> {{ post.likes.count }}</button>
+                                                    </form>
+                                                    <form action="{% url 'dislike_post' post.id %}" method="POST" style="display:inline;">
+                                                        {% csrf_token %}
+                                                        <button type="submit" class="btn text-red"><i class="fa fa-thumbs-down"></i> {{ post.dislikes.count }}</button>
+                                                    </form>
+                                                </div>
+
+                                                <div class="line-divider"></div>
+
+                                                <!-- Edit Post Modal -->
+                                                <div class="modal fade" id="editPostModal-{{ post.id }}" tabindex="-1" role="dialog" aria-labelledby="editPostModalLabel-{{ post.id }}" aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="editPostModalLabel-{{ post.id }}" style="color: rgba(20, 0, 113, 0.69); font-weight: bold; text-align: center;">Edit Post</h5>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <form action="{% url 'edit_post' post.id %}" method="POST" enctype="multipart/form-data">
+                                                                {% csrf_token %}
+                                                                <div class="modal-body" style="color:rgba(20, 0, 113, 0.69);">
+                                                                    <div class="form-group">
+                                                                        <label for="editContent-{{ post.id }}">Edit Caption:</label>
+                                                                        <textarea id="editContent-{{ post.id }}" name="content" class="form-control">{{ post.content }}</textarea>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="editMedia-{{ post.id }}">Edit Image/Video:</label>
+                                                                        <input type="file" id="editMedia-{{ post.id }}" name="media" class="form-control-file">
+                                                                        {% if post.media %}
+                                                                            <p>Current Media:</p>
+                                                                            {% with post.media.url|lower as media_url %}
+                                                                                {% if ".mp4" in media_url or ".webm" in media_url or ".ogg" in media_url %}
+                                                                                    <video src="{{ post.media.url }}" controls style="max-width: 100%; border-radius: 10px;"></video>
+                                                                                {% else %}
+                                                                                    <img src="{{ post.media.url }}" alt="post-media" class="img-responsive" style="max-width: 100%; border-radius: 10px;" />
+                                                                                {% endif %}
+                                                                            {% endwith %}
+                                                                        {% endif %}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-success" data-dismiss="modal" style="border-radius: 30px;">Close</button>
+                                                                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Delete Confirmation Modal -->
+                                                <div class="modal fade" id="deletePostModal-{{ post.id }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                Are you sure you want to delete this post?
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <!-- Cancel button -->
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                                                                <!-- Confirm Delete button -->
+                                                                <form action="{% url 'delete_post' post.id %}" method="POST" style="display:inline;">
+                                                                    {% csrf_token %}
+                                                                    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        {% empty %}
+                                            <p>No posts available.</p>
+                                        {% endfor %}
+                                    </div>
+
+
+                    
+                    
+                </div>
+    
+                <!-- Newsfeed Common Side Bar Right ================================================= -->
+                <div class="col-md-2 static">
+                    <div class="suggestions" id="sticky-sidebar" style="position: fixed;">
+                        <h4 style="color: rgba(20, 0, 113, 0.69); font-weight: bold; text-align: center;">Members</h4>
+                        <hr>
+                        <div class="follow-user">
+                            <img src="{% static 'images/users/user-111.jpg' %}" alt="" class="profile-photo-sm pull-left" />
+                            <div>
+                                <h5><a href="timeline.html">Srijana</a></h5>
+                                <a href="#" class="text-green">Details</a>
+                            </div>
+                        </div>
+                        <div class="follow-user">
+                            <img src="{% static 'images/users/user-12.jpg' %}" alt="" class="profile-photo-sm pull-left" />
+                            <div>
+                                <h5><a href="timeline.html">Damodar</a></h5>
+                                <a href="#" class="text-green">Details</a>
+                            </div>
+                        </div>
+                        <div class="follow-user">
+                            <img src="{% static 'images/users/user-15.jpg' %}" alt="" class="profile-photo-sm pull-left" />
+                            <div>
+                                <h5><a href="timeline.html">Khimraj</a></h5>
+                                <a href="#" class="text-green">Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Optional: Include the media preview script -->
+    <script>
+        document.getElementById('id_media').addEventListener('change', function (event) {
+            const previewArea = document.getElementById('mediaPreview');
+            previewArea.innerHTML = ''; // Clear previous previews
+            const files = event.target.files;
+    
+            for (const file of files) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const mediaElement = document.createElement(file.type.startsWith('video') ? 'video' : 'img');
+                    mediaElement.src = e.target.result;
+                    mediaElement.style.maxWidth = '100%';
+                    mediaElement.style.borderRadius = '10px';
+                    mediaElement.controls = file.type.startsWith('video'); // Add controls for videos
+                    previewArea.appendChild(mediaElement);
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+    
+    <!-- Footer
+    ================================================= -->
+    <footer id="footer">
+        <div class="container">
+            <div class="row">
+                <div class="footer-wrapper">
+                    <div class="col-md-3 col-sm-3">
+                        <a href=""><img src="images/logo-black.png" alt="" class="footer-logo" /></a>
+                        <ul class="list-inline social-icons">
+                            <li><a href="#"><i class="icon ion-social-facebook"></i></a></li>
+                            <li><a href="#"><i class="icon ion-social-twitter"></i></a></li>
+                            <li><a href="#"><i class="icon ion-social-googleplus"></i></a></li>
+                            <li><a href="#"><i class="icon ion-social-pinterest"></i></a></li>
+                            <li><a href="#"><i class="icon ion-social-linkedin"></i></a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-2 col-sm-2">
+                        <h5>For individuals</h5>
+                        <ul class="footer-links">
+                            <li><a href="">Signup</a></li>
+                            <li><a href="">login</a></li>
+                            <li><a href="">News</a></li>
+                            <li><a href="">ServiceRequest</a></li>
+                            <li><a href="">Complain</a></li>
+                            <li><a href="">Survey</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="col-md-2 col-sm-2">
+                        <h5>About</h5>
+                        <ul class="footer-links">
+                            <li><a href="">About us</a></li>
+                            <li><a href="">Contact us</a></li>
+                            <li><a href="">Privacy Policy</a></li>
+                            <li><a href="">Terms</a></li>
+                            <li><a href="">Help</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-3 col-sm-3">
+                        <h5>Contact Us</h5>
+                        <ul class="contact">
+                            <li><i class="icon ion-ios-telephone-outline"></i>+977 9866432603</li>
+                            <li><i class="icon ion-ios-email-outline"></i>shryupd@gmail.com</li>
+                            <li><i class="icon ion-ios-location-outline"></i>8 Bharatpur, Chitwan</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+    </footer>
+
+    
+
+
+    <!-- Scripts
+    ================================================= -->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCTMXfmDn0VlqWIyoOxK8997L-amWbUPiQ&callback=initMap"></script>
+    <script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/jquery.sticky-kit.min.js' %}"></script>
+    <script src="{% static 'js/jquery.scrollbar.min.js' %}"></script>
+    <script src="{% static 'js/script.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+
+</body>
+
+
+</html>

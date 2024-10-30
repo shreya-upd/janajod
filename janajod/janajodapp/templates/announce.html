@@ -1,0 +1,562 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="This is social network html5 template available in themeforest......" />
+    <meta name="keywords" content="Social Network, Social Media, Make Friends, Newsfeed, Profile Page" />
+    <meta name="robots" content="index, follow" />
+    <title>JanaJod</title>
+
+    <!-- Stylesheets
+    ================================================= -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" href="{% static 'css/ionicons.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}" />
+    <link href="{% static 'css/emoji.css' %}" rel="stylesheet">
+
+    <!--Google Font-->
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,400i,700,700i" rel="stylesheet">
+    
+
+    <!--Favicon-->
+    <link rel="shortcut icon" type="image/png" href="{% static 'images/fav.png' %}" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<!-- CSS for styling -->
+
+</head>
+<body>
+
+    <!-- Header
+    ================================================= -->
+    <header id="header">
+        <nav style="display: flex; align-items: center; justify-content: space-between; background-color: rgba(20, 0, 113, 1); padding: 10px 20px; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); position: fixed; top: 0; left: 0; right: 0; z-index: 1000;">
+            <!-- Logo -->
+    
+            <div style="display: flex; align-items: center;">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Logo" style="height: 40px; margin-right: 20px;">
+            </div>
+
+            <!-- Search bar -->
+            <div style="flex-grow: 1; display: flex; align-items: center; position: relative; max-width: 500px;">
+                <input type="text" placeholder="Search" style="width: 100%; padding: 8px 16px; border: 1px solid #ccc; border-radius: 20px; background-color: #f1f1f1; font-size: 16px;">
+                <i style="position: absolute; right: 15px; color: #ccc; font-size: 18px;" class="fas fa-search"></i>
+            </div>
+
+            <!-- Right side (Profile, Symbol Icons) -->
+            <div style="display: flex; align-items: center;">
+                <!-- Icons for Edit Profile and Logout -->
+<i class="fas fa-user-edit" style="margin-right: 20px; font-size: 22px; color: white;"></i> <!-- Edit Profile -->
+<i class="fas fa-sign-out-alt" style="margin-right: 20px; font-size: 22px; color: white;"></i> <!-- Logout -->
+
+                
+            </div>
+        </nav>
+    </header>
+    <!--Header End-->
+
+    <div id="page-contents">
+        <div class="container" style="max-width: 100%;
+        overflow-x: hidden;">
+            <div class="row">
+
+                <!-- Newsfeed Common Side Bar Left
+          ================================================= -->
+                <div class="col-md-3 static" id="sticky-sidebar">
+                    
+                    <div class="profile-card">
+                        <!-- Display the user's profile image if available, otherwise use the default image -->
+                        {% if user.profile.profile_image %}
+                            <img src="{{ user.profile.profile_image.url }}" alt="user" class="profile-photo" />
+                        {% else %}
+                            <img src="{% static 'images/users/shrey.jpg' %}" alt="user" class="profile-photo" />
+                        {% endif %}
+                        
+                        <!-- Username -->
+                        <h5><a href="timeline.html" class="text-white">{{ user.username }}</a></h5>
+                    </div><hr>
+                   <!-- Navigation Links -->
+                   <ul class="nav-news-feed" style="list-style-type: none; padding: 10px; margin: 0; background-color: rgba(255, 255, 255, 0.8); border-radius: 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
+                    <li style="margin: 5px 0;">
+                        <div>
+                            <a href="{% url 'home' %}" 
+                               style="text-decoration: none; color: #333; padding: 12px 16px; border-radius: 20px; display: inline-block; 
+                                      background: {% if request.path == '/' %} radial-gradient(circle at top left, rgba(20, 0, 113, 0.69), transparent 50%), 
+                                      linear-gradient(to bottom, rgba(11, 156, 49, 0.5), transparent 70%) {% else %} transparent {% endif %};
+                                      position: relative; transition: transform 0.3s;">
+                                🗞️ Newsfeed
+                            </a>
+                        </div>
+                    </li>
+                    <li style="margin: 5px 0;">
+                        <div>
+                            <a href="{% url 'events' %}" 
+                               style="text-decoration: none; color: #333; padding: 12px 16px; border-radius: 20px; display: inline-block; 
+                                      background: {% if request.path == '/events/' %} radial-gradient(circle at top left, rgba(20, 0, 113, 0.69), transparent 50%), 
+                                      linear-gradient(to bottom, rgba(11, 156, 49, 0.5), transparent 70%) {% else %} transparent {% endif %};
+                                      position: relative; transition: transform 0.3s;">
+                                📅 Events
+                            </a>
+                        </div>
+                    </li>
+                    <li style="margin: 5px 0;">
+                        <div>
+                            <a href="{% url 'announce' %}" 
+                               style="text-decoration: none; color: #333; padding: 12px 16px; border-radius: 20px; display: inline-block; 
+                                      background: {% if request.path == '/announce/' %} radial-gradient(circle at top left, rgba(20, 0, 113, 0.69), transparent 50%), 
+                                      linear-gradient(to bottom, rgba(11, 156, 49, 0.5), transparent 70%) {% else %} transparent {% endif %};
+                                      position: relative; transition: transform 0.3s;">
+                                📢 Find Jobs
+                            </a>
+                        </div>
+                    </li>
+                    <li style="margin: 5px 0;">
+                        <div>
+                            <a href="{% url 'complain' %}" 
+                               style="text-decoration: none; color: #333; padding: 12px 16px; border-radius: 20px; display: inline-block; 
+                                      background: {% if request.path == '/complain/' %} radial-gradient(circle at top left, rgba(20, 0, 113, 0.69), transparent 50%), 
+                                      linear-gradient(to bottom, rgba(11, 156, 49, 0.5), transparent 70%) {% else %} transparent {% endif %};
+                                      position: relative; transition: transform 0.3s;">
+                                🚨 Complain Box
+                            </a>
+                        </div>
+                    </li>
+                    <li style="margin: 5px 0;">
+                        <div>
+                            <a href="{% url 'servicerequest' %}" 
+                               style="text-decoration: none; color: #333; padding: 12px 16px; border-radius: 20px; display: inline-block; 
+                                      background: {% if request.path == '/servicerequest/' %} radial-gradient(circle at top left, rgba(20, 0, 113, 0.69), transparent 50%), 
+                                      linear-gradient(to bottom, rgba(11, 156, 49, 0.5), transparent 70%) {% else %} transparent {% endif %};
+                                      position: relative; transition: transform 0.3s;">
+                                🔧 Service Request
+                            </a>
+                        </div>
+                    </li>
+                    <li style="margin: 5px 0;">
+                        <div>
+                            <a href="{% url 'surveyform' %}" 
+                               style="text-decoration: none; color: #333; padding: 12px 16px; border-radius: 20px; display: inline-block; 
+                                      background: {% if request.path == '/surveyform/' %} radial-gradient(circle at top left, rgba(20, 0, 113, 0.69), transparent 50%), 
+                                      linear-gradient(to bottom, rgba(11, 156, 49, 0.5), transparent 70%) {% else %} transparent {% endif %};
+                                      position: relative; transition: transform 0.3s;">
+                                🗃️ Survey Section
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+                
+                
+                </div>
+                    
+                <div class="col-md-7">
+
+                      <!-- Announcement Create Box -->
+                    <div class="create-announcement" style="border: 1px solid #e1e1e1; padding: 10px; border-radius: 10px; background-color: #f9f9f9; margin-bottom: 20px; height:95px;">
+                        <div class="row d-flex align-items-center justify-content-between">
+                            <!-- Image and Instructional Quote -->
+                            <div class="col-md-6 d-flex align-items-center">
+                                <div style="display: flex; align-items: center; margin-top: 15px;">
+                                    <!-- Profile Image -->
+                                    {% if user.profile.profile_image %}
+                                        <img src="{{ user.profile.profile_image.url }}" alt="Profile Picture" class="profile-photo-md" style="border-radius: 50%; width: 40px; height: 40px; margin-right: 10px;" />
+                                    {% else %}
+                                        <img src="{% static 'images/users/default.jpg' %}" alt="Default Profile" class="profile-photo-md" style="border-radius: 50%; width: 40px; height: 40px; margin-right: 10px;" />
+                                    {% endif %}
+                                
+                                    <!-- Announcement Text -->
+                                    <p style="font-size: 14px; font-weight: bold; white-space: nowrap; color: rgba(20, 0, 113, 0.69); margin: 0;">
+                                        Want to announce a job vacancy? Click the button!
+                                    </p>
+                                </div>
+                            </div>
+                            <!-- Announce Button -->
+                            <div class="col-md-6 d-flex align-items-center justify-content-end">
+                                <button id="announceButton" class="btn btn-primary" style="padding: 10px; font-size: 16px; margin-left: 150px; margin-top: 16px;" data-toggle="modal" data-target="#announcementModal">Announce Now</button>
+                            </div>
+                        </div>
+                    </div>
+
+                     <!-- Modal -->
+<div class="modal fade" id="announcementModal" tabindex="-1" role="dialog" aria-labelledby="announcementModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="announcementModalLabel" style="text-align: center;">Create Announcement</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="announcementForm" method="POST" action="{% url 'create_announcement' %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="organization" style="color: rgba(20, 0, 113, 0.69);">Organization</label>
+                        <input type="text" class="form-control" id="organization" name="organization" placeholder="Enter organization name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="jobTitle" style="color: rgba(20, 0, 113, 0.69);">Job Title</label>
+                        <input type="text" class="form-control" id="jobTitle" name="job_title" placeholder="Enter job title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="jobDescription" style="color: rgba(20, 0, 113, 0.69);">Job Description</label>
+                        <textarea class="form-control" id="jobDescription" name="job_description" rows="3" placeholder="Enter job description" required></textarea>
+                    </div>
+                    
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" data-dismiss="modal" style="border-radius: 30px;">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+                     
+                <!-- Job Listings Table -->
+                <div class="find-jobs-table" style="border: 1px solid #e1e1e1; border-radius: 10px; background-color: #f9f9f9; margin-bottom: 12px;">
+                    <h4 style="font-weight: bold; text-align: center; margin-bottom: 20px;">Who's Hiring?</h4>
+                    <hr>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr style="color: rgba(20, 0, 113, 0.69);">
+                                <th scope="col">Organization</th>
+                                <th scope="col">Job Title</th>
+                                <th scope="col">Posted On</th>
+                                <th scope="col">Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Loop through approved UserReqJob entries -->
+                            {% for job in approved_user_req_jobs %}
+                            <tr>
+                                <td>{{ job.organization }}</td>
+                                <td>{{ job.job_title }}</td>
+                                <td>{{ job.posted_on|date:"d M Y" }}</td>
+                                <td>
+                                    <button class="btn btn-success btn-sm" 
+                                    {% if job.id in applied_jobs %}
+                                        disabled title="You have already applied for this job"
+                                    {% endif %} 
+                                    onclick="showJobDetails('{{ job.job_title }}', '{{ job.organization }}', '{{ job.job_description|escapejs }}', this)">
+                                    {% if job.id in applied_jobs %}
+                                        Already Applied
+                                    {% else %}
+                                        View Details
+                                    {% endif %}
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr class="job-details-row" style="display: none;">
+                                <td colspan="4">
+                                    <!-- Job Details Section -->
+                                    <div style="border: 1px solid #e1e1e1; border-radius: 10px; padding: 20px; margin-top: 20px; background-color: #f9f9f9;">
+                                        <h5>Job Details</h5>
+                                        <p><strong>Job Title:</strong> <span id="jobTitle"></span></p>
+                                        <p><strong>Organization:</strong> <span id="organization"></span></p>
+                                        <p><strong>Job Description:</strong> <span id="jobDescription"></span></p>
+                                        <button class="btn btn-primary" 
+                                        {% if job.id in applied_jobs %} 
+                                            disabled 
+                                            title="You have already applied for this job"
+                                        {% endif %} 
+                                        onclick="showApplicationForm(this)">
+                                            {% if job.id in applied_jobs %}
+                                                Already Applied
+                                            {% else %}
+                                                Apply Now
+                                            {% endif %}
+                                        </button>
+                                        <button class="btn btn-success" onclick="hideJobDetails(this)" style="border-radius: 30px;">Close</button>
+                                    </div>
+                                    <!-- Application Form Section -->
+                                    <div class="applicationFormSection" style="display: none; border: 1px solid #e1e1e1; border-radius: 10px; padding: 20px; margin-top: 20px; background-color: #f9f9f9;">
+                                        <h5>Job Application</h5>
+                                        <form action="{% url 'apply_for_job' job.id %}" method="post">
+                                            {% csrf_token %}
+                                            <div class="form-group">
+                                                <label for="fullname">Full Name</label>
+                                                <input type="text" class="form-control" name="fullname" placeholder="Enter your full name" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="contactNumber">Contact Number</label>
+                                                <input type="text" class="form-control" name="contactNumber" placeholder="Enter your contact number" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="address">Address</label>
+                                                <input type="text" class="form-control" name="address" placeholder="Enter your address" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="email">Email Address</label>
+                                                <input type="email" class="form-control" name="email" placeholder="Enter your email address" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="whyThisJob">Why This Job?</label>
+                                                <textarea class="form-control" name="whyThisJob" rows="3" placeholder="Tell us why you are suitable for this job" required></textarea>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">Apply</button>
+                                            <button type="button" class="btn btn-success" onclick="hideApplicationForm(this)" style="border-radius: 30px;">Close</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                
+                            <!-- Loop through AdminPostedJob entries -->
+                            {% for job in admin_posted_jobs %}
+                            <tr>
+                                <td>{{ job.organization }}</td>
+                                <td>{{ job.job_title }}</td>
+                                <td>{{ job.posted_on|date:"d M Y" }}</td>
+                                <td>
+                                    <button class="btn btn-success btn-sm" 
+                                    {% if job.id in applied_jobs %}
+                                        disabled title="You have already applied for this job"
+                                    {% endif %} 
+                                    onclick="showJobDetails('{{ job.job_title }}', '{{ job.organization }}', '{{ job.job_description|escapejs }}', this)">
+                                    {% if job.id in applied_jobs %}
+                                        Already Applied
+                                    {% else %}
+                                        View Details
+                                    {% endif %}
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr class="job-details-row" style="display: none;">
+                                <td colspan="4">
+                                    <!-- Job Details Section -->
+                                    <div style="border: 1px solid #e1e1e1; border-radius: 10px; padding: 20px; margin-top: 20px; background-color: #f9f9f9;">
+                                        <h5>Job Details</h5>
+                                        <p><strong>Job Title:</strong> <span id="jobTitle"></span></p>
+                                        <p><strong>Organization:</strong> <span id="organization"></span></p>
+                                        <p><strong>Job Description:</strong> <span id="jobDescription"></span></p>
+                                        <button class="btn btn-primary" 
+                                        {% if job.id in applied_jobs %} 
+                                            disabled 
+                                            title="You have already applied for this job"
+                                        {% endif %} 
+                                        onclick="showApplicationForm(this)">
+                                            {% if job.id in applied_jobs %}
+                                                Already Applied
+                                            {% else %}
+                                                Apply Now
+                                            {% endif %}
+                                        </button>
+                                        <button class="btn btn-success" onclick="hideJobDetails(this)" style="border-radius: 30px;">Close</button>
+                                    </div>
+                                    <!-- Application Form Section -->
+                                    <div class="applicationFormSection" style="display: none; border: 1px solid #e1e1e1; border-radius: 10px; padding: 20px; margin-top: 20px; background-color: #f9f9f9;">
+                                        <h5>Job Application</h5>
+                                        <form action="{% url 'apply_for_job' job.id %}" method="post">
+                                            {% csrf_token %}
+                                            <div class="form-group">
+                                                <label for="fullname">Full Name</label>
+                                                <input type="text" class="form-control" name="fullname" placeholder="Enter your full name" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="contactNumber">Contact Number</label>
+                                                <input type="text" class="form-control" name="contactNumber" placeholder="Enter your contact number" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="address">Address</label>
+                                                <input type="text" class="form-control" name="address" placeholder="Enter your address" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="email">Email Address</label>
+                                                <input type="email" class="form-control" name="email" placeholder="Enter your email address" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="whyThisJob">Why This Job?</label>
+                                                <textarea class="form-control" name="whyThisJob" rows="3" placeholder="Tell us why you are suitable for this job" required></textarea>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">Apply</button>
+                                            <button type="button" class="btn btn-success" onclick="hideApplicationForm(this)" style="border-radius: 30px;">Close</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+
+                        <!-- JavaScript for Handling Job Details and Application Form Display -->
+                        <script>
+                            function showJobDetails(jobTitle, organization, jobDescription, button) {
+                                // Get the row below the current button
+                                const detailsRow = button.closest('tr').nextElementSibling;
+
+                                // Populate job details
+                                detailsRow.querySelector('#jobTitle').textContent = jobTitle;
+                                detailsRow.querySelector('#organization').textContent = organization;
+                                detailsRow.querySelector('#jobDescription').textContent = jobDescription;
+
+                                // Toggle the visibility of the details row
+                                detailsRow.style.display = detailsRow.style.display === 'none' ? 'table-row' : 'none';
+
+                                // Hide other details rows if they are visible
+                                const otherRows = document.querySelectorAll('.job-details-row');
+                                otherRows.forEach(row => {
+                                    if (row !== detailsRow) {
+                                        row.style.display = 'none';
+                                    }
+                                });
+
+                                // Hide the application form if it is visible
+                                const applicationForm = detailsRow.querySelector('.applicationFormSection');
+                                applicationForm.style.display = 'none';
+                            }
+
+                            function showApplicationForm(button) {
+                                const detailsRow = button.closest('.job-details-row');
+                                const applicationForm = detailsRow.querySelector('.applicationFormSection');
+
+                                // Hide the job details section and show the application form
+                                detailsRow.querySelector('div').style.display = 'none'; // Hide job details
+                                applicationForm.style.display = 'block'; // Show application form
+                            }
+
+                            function hideJobDetails(button) {
+                                // Hide the job details row
+                                button.closest('.job-details-row').style.display = 'none';
+                            }
+
+                            function hideApplicationForm(button) {
+                                // Hide the application form section
+                                const applicationForm = button.closest('.applicationFormSection');
+                                applicationForm.style.display = 'none';
+
+                                // Show job details again when the form is closed
+                                applicationForm.closest('.job-details-row').querySelector('div').style.display = 'block';
+                            }
+                        </script>
+
+
+
+                    
+                
+                </div>
+                
+
+                <!-- Newsfeed Common Side Bar Right
+          ================================================= -->
+                <div class="col-md-2 static">
+                    <div class="suggestions" id="sticky-sidebar" style="position: fixed;">
+                        <h4 style="color: rgba(20, 0, 113, 0.69); font-weight: bold;text-align: center;">Ward-Members</h4><hr>
+                        <div class="follow-user">
+                            <img src="{% static 'images/users/user-111.jpg' %}" alt="" class="profile-photo-sm pull-left" />
+                            <div>
+                                <h5><a href="timeline.html">Diana Amber</a></h5>
+                                <a href="#" class="text-green">Details</a>
+                            </div>
+                        </div>
+                        <div class="follow-user">
+                            <img src="{% static 'images/users/user-12.jpg' %}" alt="" class="profile-photo-sm pull-left" />
+                            <div>
+                                <h5><a href="timeline.html">Cris Haris</a></h5>
+                                <a href="#" class="text-green">Details</a>
+                            </div>
+                        </div>
+                        <div class="follow-user">
+                            <img src="{% static 'images/users/user-15.jpg' %}" alt="" class="profile-photo-sm pull-left" />
+                            <div>
+                                <h5><a href="timeline.html">Cris Haris</a></h5>
+                                <a href="#" class="text-green">Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer
+    ================================================= -->
+    <footer id="footer">
+        <div class="container">
+            <div class="row">
+                <div class="footer-wrapper">
+                    <div class="col-md-3 col-sm-3">
+                        <a href=""><img src="images/logo-black.png" alt="" class="footer-logo" /></a>
+                        <ul class="list-inline social-icons">
+                            <li><a href="#"><i class="icon ion-social-facebook"></i></a></li>
+                            <li><a href="#"><i class="icon ion-social-twitter"></i></a></li>
+                            <li><a href="#"><i class="icon ion-social-googleplus"></i></a></li>
+                            <li><a href="#"><i class="icon ion-social-pinterest"></i></a></li>
+                            <li><a href="#"><i class="icon ion-social-linkedin"></i></a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-2 col-sm-2">
+                        <h5>For individuals</h5>
+                        <ul class="footer-links">
+                            <li><a href="">Signup</a></li>
+                            <li><a href="">login</a></li>
+                            <li><a href="">Explore</a></li>
+                            <li><a href="">Finder app</a></li>
+                            <li><a href="">Features</a></li>
+                            <li><a href="">Language settings</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-2 col-sm-2">
+                        <h5>For businesses</h5>
+                        <ul class="footer-links">
+                            <li><a href="">Business signup</a></li>
+                            <li><a href="">Business login</a></li>
+                            <li><a href="">Benefits</a></li>
+                            <li><a href="">Resources</a></li>
+                            <li><a href="">Advertise</a></li>
+                            <li><a href="">Setup</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-2 col-sm-2">
+                        <h5>About</h5>
+                        <ul class="footer-links">
+                            <li><a href="">About us</a></li>
+                            <li><a href="">Contact us</a></li>
+                            <li><a href="">Privacy Policy</a></li>
+                            <li><a href="">Terms</a></li>
+                            <li><a href="">Help</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-3 col-sm-3">
+                        <h5>Contact Us</h5>
+                        <ul class="contact">
+                            <li><i class="icon ion-ios-telephone-outline"></i>+1 (234) 222 0754</li>
+                            <li><i class="icon ion-ios-email-outline"></i>info@thunder-team.com</li>
+                            <li><i class="icon ion-ios-location-outline"></i>228 Park Ave S NY, USA</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>Thunder Team © 2016. All rights reserved</p>
+        </div>
+    </footer>
+
+    
+
+
+    <!-- Scripts
+    ================================================= -->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCTMXfmDn0VlqWIyoOxK8997L-amWbUPiQ&callback=initMap"></script>
+    <script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/jquery.sticky-kit.min.js' %}"></script>
+    <script src="{% static 'js/jquery.scrollbar.min.js' %}"></script>
+    <script src="{% static 'js/script.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+
+</body>
+
+
+</html>

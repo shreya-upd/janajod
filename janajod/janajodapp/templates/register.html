@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    
+</head>
+<style>
+    body {
+        background-color: #f0f0f0;
+        font-family: Arial, sans-serif;
+    }
+    
+    .register-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    
+    .register-card {
+        background-color: rgba(20, 0, 113, 0.69);
+        color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+        width: 100%;
+    }
+    
+    .register-card h1 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    
+    .register-card form {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .register-card form button {
+        background-color: #f8f9fa;
+        color: rgba(20, 0, 113, 0.69);
+        border: none;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+    
+    .register-card form button:hover {
+        background-color: #e2e6ea;
+    }
+    
+    .alert-messages {
+        list-style-type: none;
+        padding: 0;
+        margin-bottom: 15px;
+    }
+    
+    .alert-messages li {
+        margin-bottom: 10px;
+        background: rgba(255, 255, 255, 0.8);
+        color: rgba(20, 0, 113, 0.69);
+        padding: 10px;
+        border-radius: 5px;
+    }
+    
+    .register-links {
+        margin-top: 15px;
+        text-align: center;
+    }
+    
+    .register-links a {
+        color: #f8f9fa;
+        text-decoration: none;
+    }
+    
+    .register-links a:hover {
+        text-decoration: underline;
+    }
+    
+</style>
+<body>
+
+<div class="register-container">
+    <div class="register-card">
+        <h1>Register Page</h1>
+
+        {% if messages %}
+            <ul class="alert-messages">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="register-btn">Register</button>
+        </form>
+
+        <br>
+        <div class="register-links">
+            <a href="{% url 'login' %}">Login</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

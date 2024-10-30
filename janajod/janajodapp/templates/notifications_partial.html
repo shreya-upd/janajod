@@ -1,0 +1,10 @@
+{% if notifications %}
+    {% for notification in notifications %}
+        <a class="dropdown-item" href="#">
+            {{ notification.message }}
+            <small class="text-muted">{{ notification.created_at|date:"d M Y H:i" }}</small>
+        </a>
+    {% endfor %}
+{% else %}
+    <a class="dropdown-item" href="#">No notifications</a>
+{% endif %}

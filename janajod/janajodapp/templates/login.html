@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    
+</head>
+<style>
+    body {
+        background-color: #f0f0f0;
+        font-family: Arial, sans-serif;
+    }
+    
+    .login-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    
+    .login-card {
+        background-color: rgba(20, 0, 113, 0.69);
+        color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+        width: 100%;
+    }
+    
+    .login-card h1 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    
+    .login-card form {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .login-card form input[type="submit"] {
+        background-color: #f8f9fa;
+        color: rgba(20, 0, 113, 0.69);
+        border: none;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+    
+    .login-card form input[type="submit"]:hover {
+        background-color: #e2e6ea;
+    }
+    
+    .login-links {
+        margin-top: 15px;
+        text-align: center;
+    }
+    
+    .login-links a {
+        color: #f8f9fa;
+        text-decoration: none;
+        margin: 0 10px;
+    }
+    
+    .login-links a:hover {
+        text-decoration: underline;
+    }
+    
+</style>
+
+<body>
+
+<div class="login-container">
+    <div class="login-card">
+        <h1>Login</h1>
+        <form action="" method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Submit" class="login-btn">
+        </form>
+
+        <div class="login-links">
+            <a href="{% url 'register' %}">Registration</a>
+            <a href="{% url 'password_reset' %}">Forgot Password?</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
