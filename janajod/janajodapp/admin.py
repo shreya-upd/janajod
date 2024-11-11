@@ -85,3 +85,12 @@ admin.site.register(Survey)
 admin.site.register(Question)
 admin.site.register(Option)
 admin.site.register(SurveyResponse)
+
+
+from django.contrib import admin
+from .models import CommitteeMember
+
+admin.site.register(CommitteeMember)
+
+
+

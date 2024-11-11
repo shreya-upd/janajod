@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,88 +6,132 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
     
+    <style>
+        body {
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        
+        .container {
+            display: flex;
+            max-width: 900px;
+            width: 100%;
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border: 6px solid green;
+        }
+        
+        .image-section {
+            flex: 1;
+            background-image: url("{% static 'images/janajodlogo.png' %}");
+            background-size: cover;
+            background-position: center;
+            background-color: rgba(102, 85, 184, 0.3);
+        }
+        
+        .register-section {
+            flex: 1;
+            background-color: rgba(20, 0, 113, 0.69);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .register-section h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .register-section form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .register-section label {
+            width: 60%;
+            color: #f8f9fa;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .register-section form input[type="text"],
+        .register-section form input[type="email"],
+        .register-section form input[type="password"] {
+            width: 60%; /* Ensure inputs take 60% of the container width */
+            padding: 8px 10px;
+            margin-bottom: 12px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .register-section form button {
+            width: 30%; /* Ensure the button has the same width as the inputs */
+            background-color: #f8f9fa;
+            color: rgba(20, 0, 113, 0.69);
+            border: none;
+            padding: 8px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .register-section form button:hover {
+            background-color: #e2e6ea;
+        }
+        
+        .alert-messages {
+            list-style-type: none;
+            padding: 0;
+            margin-bottom: 15px;
+        }
+        
+        .alert-messages li {
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            color: rgba(20, 0, 113, 0.69);
+            padding: 10px;
+            border-radius: 5px;
+        }
+        
+        .register-links {
+            margin-top: 15px;
+            text-align: center;
+        }
+        
+        .register-links a {
+            color: #f8f9fa;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        
+        .register-links a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
-<style>
-    body {
-        background-color: #f0f0f0;
-        font-family: Arial, sans-serif;
-    }
-    
-    .register-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-    }
-    
-    .register-card {
-        background-color: rgba(20, 0, 113, 0.69);
-        color: white;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        max-width: 400px;
-        width: 100%;
-    }
-    
-    .register-card h1 {
-        text-align: center;
-        margin-bottom: 20px;
-    }
-    
-    .register-card form {
-        display: flex;
-        flex-direction: column;
-    }
-    
-    .register-card form button {
-        background-color: #f8f9fa;
-        color: rgba(20, 0, 113, 0.69);
-        border: none;
-        padding: 10px;
-        border-radius: 5px;
-        cursor: pointer;
-        font-weight: bold;
-    }
-    
-    .register-card form button:hover {
-        background-color: #e2e6ea;
-    }
-    
-    .alert-messages {
-        list-style-type: none;
-        padding: 0;
-        margin-bottom: 15px;
-    }
-    
-    .alert-messages li {
-        margin-bottom: 10px;
-        background: rgba(255, 255, 255, 0.8);
-        color: rgba(20, 0, 113, 0.69);
-        padding: 10px;
-        border-radius: 5px;
-    }
-    
-    .register-links {
-        margin-top: 15px;
-        text-align: center;
-    }
-    
-    .register-links a {
-        color: #f8f9fa;
-        text-decoration: none;
-    }
-    
-    .register-links a:hover {
-        text-decoration: underline;
-    }
-    
-</style>
+
 <body>
 
-<div class="register-container">
-    <div class="register-card">
-        <h1>Register Page</h1>
+<div class="container">
+    <div class="image-section">
+        <!-- Image background is handled by CSS -->
+    </div>
+
+    <div class="register-section">
+        <h1>Register Now</h1>
 
         {% if messages %}
             <ul class="alert-messages">
@@ -96,15 +141,32 @@
             </ul>
         {% endif %}
 
-        <form method="POST">
+        <form action="" method="POST">
             {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="register-btn">Register</button>
+            
+            <label for="id_first_name">First Name:</label>
+            {{ form.first_name }}
+
+            <label for="id_last_name">Last Name:</label>
+            {{ form.last_name }}
+
+            <label for="id_username">Username:</label>
+            {{ form.username }}
+
+            <label for="id_email">Email:</label>
+            {{ form.email }}
+
+            <label for="id_password1">Password:</label>
+            {{ form.password1 }}
+
+            <label for="id_password2">Confirm Password:</label>
+            {{ form.password2 }}
+            
+            <button type="submit">Register</button>
         </form>
 
-        <br>
         <div class="register-links">
-            <a href="{% url 'login' %}">Login</a>
+            <a href="{% url 'login' %}">Already have an account? Login</a>
         </div>
     </div>
 </div>

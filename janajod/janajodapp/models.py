@@ -198,3 +198,22 @@ class Notification(models.Model):
 
     def __str__(self):
         return f"Notification for {self.user.username}"
+    
+    
+    
+    
+from django.db import models
+
+class CommitteeMember(models.Model):
+    name = models.CharField(max_length=100)
+    position = models.CharField(max_length=100)
+    contact = models.CharField(max_length=15)
+    email = models.EmailField()
+    contribution = models.TextField()
+    profile_picture = models.ImageField(upload_to='images/users/', null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+
+

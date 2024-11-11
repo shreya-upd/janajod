@@ -16,11 +16,13 @@ from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
 # janajodapp/views.py
 
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
+
 from .forms import ProfileUpdateForm, PostForm
 from django.contrib import messages
 from .models import Post
 
+
+@login_required(login_url='/login/')
 def home(request):
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
@@ -50,7 +52,7 @@ def home(request):
 from .forms import CommentForm
 from .models import Comment
 
-
+@login_required(login_url='/login/')
 def add_comment(request, post_id):
     post = Post.objects.get(id=post_id)
     if request.method == 'POST':
@@ -69,7 +71,7 @@ from django.shortcuts import get_object_or_404, redirect
 from .models import Post
 
 from django.shortcuts import get_object_or_404, redirect
-
+@login_required(login_url='/login/')
 def like_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     if request.user in post.likes.all():
@@ -81,7 +83,7 @@ def like_post(request, post_id):
     return redirect(request.META.get('HTTP_REFERER', 'default_url_if_none'))  # Use a default URL if no referrer is found
 
 from django.shortcuts import get_object_or_404, redirect
-
+@login_required(login_url='/login/')
 def dislike_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     
@@ -95,11 +97,11 @@ def dislike_post(request, post_id):
 
 
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
+
 from .models import Post
 from .forms import PostForm
 
-
+@login_required(login_url='/login/')
 def edit_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
 
@@ -116,7 +118,7 @@ def edit_post(request, post_id):
 # views.py
 from django.shortcuts import redirect, get_object_or_404
 from .models import Post
-
+@login_required(login_url='/login/')
 def delete_post(request, id):
     post = get_object_or_404(Post, id=id)
     if request.method == 'POST':
@@ -178,7 +180,7 @@ def activate(request, uidb64, token):
 # views.py
 from django.shortcuts import render, redirect
 from .models import UserEventRequest, Event
-from django.contrib.auth.decorators import login_required
+
 
 from django.shortcuts import render
 from .models import Event
@@ -189,7 +191,7 @@ from .models import UserEventRequest
 from django.shortcuts import render
 from .models import UserEventRequest, Event
 from django.db.models import Q
-
+@login_required(login_url='/login/')
 def events(request):
     # Fetch approved events from both models
     user_event_requests = UserEventRequest.objects.filter(is_approved=True).order_by('-created_at')
@@ -292,7 +294,7 @@ def servicerequest(request):
 # janajodapp/views.py
 
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
+
 from .forms import ProfileUpdateForm
 from django.contrib import messages
 
@@ -315,7 +317,7 @@ def profile(request):
 
 from django.shortcuts import render, redirect
 from .models import Job, JobApplication
-from django.contrib.auth.decorators import login_required
+
 
 from django.shortcuts import render
 from .models import Job, UserReqJob
@@ -394,7 +396,7 @@ def create_announcement(request):
 
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.decorators import login_required
+
 from .models import Feedback
 import json
 
@@ -442,7 +444,7 @@ def surveyform(request):
 # views.py
 
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
+
 from .models import Survey, Question, Option, SurveyResponse
 
 from django.shortcuts import get_object_or_404
@@ -475,17 +477,16 @@ def submit_survey(request, survey_id):
     return render(request, 'surveyform.html', {'survey': survey})
 
 
-from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render
 from .models import Notification
 
-from django.contrib.auth.decorators import login_required
+
 from django.shortcuts import render
 from .models import Notification
 
 from django.http import JsonResponse
-from django.contrib.auth.decorators import login_required
+
 from django.shortcuts import render
 from .models import Notification
 import pytz
@@ -523,7 +524,7 @@ def notifications_view(request):
 
 
 from django.http import JsonResponse
-from django.contrib.auth.decorators import login_required
+
 
 @login_required
 def mark_notifications_as_read(request):
@@ -531,3 +532,7 @@ def mark_notifications_as_read(request):
         Notification.objects.filter(user=request.user, is_read=False).update(is_read=True)
         return JsonResponse({'status': 'success'})
     return JsonResponse({'status': 'failed'}, status=400)
+
+
+# janajodapp/context_processors.py
+

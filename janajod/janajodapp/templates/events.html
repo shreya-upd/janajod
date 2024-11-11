@@ -32,44 +32,299 @@
 </head>
 <body>
 
-    <!-- Header
-    ================================================= -->
     <header id="header">
-        <nav style="display: flex; align-items: center; justify-content: space-between; background-color: rgba(20, 0, 113, 1); padding: 10px 20px; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); position: fixed; top: 0; left: 0; right: 0; z-index: 1000;">
+        <nav style="display: flex; align-items: center; justify-content: space-between; background-color: rgba(20, 0, 113, 1); padding: 10px 20px; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); position: fixed; top: 0; left: 0; right: 0; z-index: 2000;">
             <!-- Logo -->
     
             <div style="display: flex; align-items: center;">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Logo" style="height: 40px; margin-right: 20px;">
+                <img src="{% static 'images/janajodlogo.png' %}" alt="Logo" style="height: 40px; margin-right: 9px;">
             </div>
 
-            <!-- Search bar -->
-            <div style="flex-grow: 1; display: flex; align-items: center; position: relative; max-width: 500px;">
-                <input type="text" placeholder="Search" style="width: 100%; padding: 8px 16px; border: 1px solid #ccc; border-radius: 20px; background-color: #f1f1f1; font-size: 16px;">
-                <i style="position: absolute; right: 15px; color: #ccc; font-size: 18px;" class="fas fa-search"></i>
-            </div>
+            
+              <!-- Date and Time Display -->
+                    <div style="flex-grow: 1; display: flex; align-items: center; position: relative; max-width: 500px;">
+                        <input type="text" id="dateTime" 
+                            style="width: 100%; padding: 8px 16px; border: 1px solid #ccc; border-radius: 20px; 
+                                    background-color: #f1f1f1; font-size: 12px; color:green;font-weight: bold;" readonly>
+                        <i style="position: absolute; right: 15px; color: green; font-size: 18px; cursor: pointer;" class="fas fa-envelope" onclick="openModal()"></i> <!-- Mail icon -->
+                    </div>
+
+                    <!-- Feedback Modal -->
+                    <!-- Feedback Modal -->
+                        <div id="feedbackModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 999; justify-content: center; align-items: center;">
+                            <div style="background-color: white; padding: 20px; border-radius: 10px; width: 300px; text-align: center;">
+                                <h5 style="font-weight: bold;">We value your feedback!</h5>
+                                <textarea id="userFeedback" placeholder="Your Feedback" rows="4" style="width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;"></textarea>
+                                <div>
+                                    <button onclick="submitFeedback()" style="margin-right: 10px; padding: 8px 16px; background-color: #4CAF50; color: white; border: none; border-radius: 5px;">Submit</button>
+                                    <button onclick="closeModal()" style="padding: 8px 16px; background-color: #f44336; color: white; border: none; border-radius: 5px;">Close</button>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    <script>
+                        function updateDateTime() {
+                            // Get current date and time in Nepal Time
+                            const optionsTime = { timeZone: 'Asia/Kathmandu', 
+                                                hour: '2-digit', minute: '2-digit', second: '2-digit', 
+                                                hour12: true };
+
+                            const dateObj = new Date();
+
+                            // Define month names for custom formatting
+                            const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+                                                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                            
+                            // Format date as "Oct/20/2024"
+                            const day = dateObj.getUTCDate(); // Get UTC date
+                            const month = monthNames[dateObj.getUTCMonth()]; // Get UTC month (0-11)
+                            const year = dateObj.getUTCFullYear(); // Get UTC year
+
+                            const formattedDate = `${month}/${day}/${year}`;
+                            
+                            const time = new Intl.DateTimeFormat('en-US', optionsTime).format(dateObj);
+
+                            // Format: Oct/20/2024 - HH:MM:SS AM/PM
+                            document.getElementById('dateTime').value = `${formattedDate} - ${time}`;
+                        }
+
+                        function openModal() {
+                            document.getElementById('feedbackModal').style.display = 'flex';
+                        }
+
+                        function closeModal() {
+                            document.getElementById('feedbackModal').style.display = 'none';
+                        }
+
+                        function submitFeedback() {
+                            const feedback = document.getElementById('userFeedback').value;
+                        
+                            // Send the feedback data to the server
+                            fetch('/submit-feedback/', { // Ensure this matches the URL defined in your urls.py
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': getCookie('csrftoken') // Get CSRF token for security
+                                },
+                                body: JSON.stringify({ message: feedback }) // Only send the message
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.status === 'success') {
+                                    alert(data.message); // Show success message
+                                    // Reset fields and close modal
+                                    document.getElementById('userFeedback').value = '';
+                                    closeModal();
+                                } else {
+                                    alert(data.message); // Show error message
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                alert('An error occurred while submitting feedback.');
+                            });
+                        }
+                        
+                        
+                        // Function to get CSRF token for AJAX requests
+                        function getCookie(name) {
+                            let cookieValue = null;
+                            if (document.cookie && document.cookie !== '') {
+                                const cookies = document.cookie.split(';');
+                                for (let i = 0; i < cookies.length; i++) {
+                                    const cookie = cookies[i].trim();
+                                    // Check if this cookie string begins with the name we want
+                                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                        break;
+                                    }
+                                }
+                            }
+                            return cookieValue;
+                        }
+                        
+
+                        // Update date and time every second
+                        setInterval(updateDateTime, 1000);
+                        updateDateTime(); // initial call
+                    </script>
+
+
 
             <!-- Right side (Profile, Symbol Icons) -->
             <div style="display: flex; align-items: center;">
-                                <!-- Icons for Edit Profile and Logout -->
-                <i class="fas fa-user-edit" style="margin-right: 20px; font-size: 22px; color: white;"></i> <!-- Edit Profile -->
-                <i class="fas fa-sign-out-alt" style="margin-right: 20px; font-size: 22px; color: white;"></i> <!-- Logout -->
+                 <!-- Notification Icon in Navbar -->
+                <!-- Notification Icon in Navbar -->
+                <div class="dropdown" style="position: relative;">
+                    <a class="nav-link dropdown-toggle" href="#" id="notificationDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="badge" id="unreadCount" style="display: {{ unread_count|yesno:'inline, none' }}; background-color: red; color: white;">{{ unread_count }}</span>
 
-                                
+                        <i class="fas fa-bell" style="margin-right: 20px; font-size: 22px; color: white;"></i>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="notificationDropdown" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 400px; max-height: 400px; overflow-y: auto; z-index: 1050; border: 1px solid rgba(0,0,0,0.1); border-radius: 5px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); background: white;">
+                        <div class="modal-header" style="border-bottom: none;">
+                            <h5 class="modal-title" id="notificationModalLabel">Notifications</h5>
+                            <button type="button" class="close" style="margin-left: auto; color: black;" data-toggle="dropdown" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body" id="notificationBody">
+                            {% if notifications %}
+                                {% for notification in notifications %}
+                                    <div class="notification-item" style="padding: 10px 0; border-bottom: 1px solid rgba(0, 0, 0, 0.1); margin-bottom: 10px;">
+                                        <a href="#">
+                                            {{ notification.message }}
+                                            <small class="text-muted" style="display: block;">{{ notification.created_at|date:"d M Y H:i" }}</small>
+                                        </a>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <div class="text-center">No notifications</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                <script>
+                    $(document).ready(function() {
+                        // Function to fetch unread count and notifications
+                        function fetchNotifications() {
+                            $.ajax({
+                                url: "{% url 'notifications' %}",
+                                type: 'GET',
+                                success: function(data) {
+                                    // Update unread count
+                                    let newCount = data.new_count;
+                                    if (newCount > 0) {
+                                        $('#unreadCount').text(newCount).show();
+                                    } else {
+                                        $('#unreadCount').hide(); // Hide if no new notifications
+                                    }
+                                },
+                                error: function(xhr, status, error) {
+                                    console.log("Error fetching notifications: " + error);
+                                }
+                            });
+                        }
+                
+                        // Call fetchNotifications on page load
+                        fetchNotifications();
+                
+                        $('#notificationDropdown').on('click', function() {
+                            // Hide the unread count only when the dropdown is opened
+                            $('#unreadCount').hide();
+                            
+                            // Fetch notifications via AJAX and display them in the dropdown
+                            $.ajax({
+                                url: "{% url 'notifications' %}",
+                                type: 'GET',
+                                success: function(data) {
+                                    $('#notificationBody').empty(); // Clear the notification body
+                
+                                    // Update dropdown with notifications
+                                    if (data.notifications.length > 0) {
+                                        data.notifications.forEach(function(notification) {
+                                            $('#notificationBody').append(`
+                                                <div class="notification-item" style="padding: 10px 0; border-bottom: 1px solid rgba(0, 0, 0, 0.1); margin-bottom: 10px;">
+                                                    <a href="#">
+                                                        ${notification.message}
+                                                        <small class="text-muted" style="display: block;">${notification.created_at}</small>
+                                                    </a>
+                                                </div>
+                                            `);
+                                        });
+                                    } else {
+                                        $('#notificationBody').append('<div class="text-center">No notifications</div>');
+                                    }
+                
+                                    // Mark notifications as read
+                                    $.ajax({
+                                        url: "{% url 'mark_notifications_as_read' %}",
+                                        type: 'POST',
+                                        data: {
+                                            'csrfmiddlewaretoken': '{{ csrf_token }}', // Include CSRF token for security
+                                        },
+                                        success: function() {
+                                            // Optionally, handle success here
+                                        },
+                                        error: function(xhr, status, error) {
+                                            console.log("Error marking notifications as read: " + error);
+                                        }
+                                    });
+                                },
+                                error: function(xhr, status, error) {
+                                    console.log("Error: " + error);
+                                }
+                            });
+                        });
+                    });
+                </script>
+                
+            
+            
+
+
+                <!-- Icons for Edit Profile and Logout -->
+                <a href="{% url 'profile' %}">
+                    <i class="fas fa-user-edit" style="margin-right: 20px; font-size: 22px; color: white;"></i>
+                </a> <!-- Edit Profile -->
+            
+                <!-- Logout Icon -->
+                <i class="fas fa-sign-out-alt" style="margin-right: 20px; font-size: 22px; color: white;" onclick="confirmLogout()"></i> <!-- Logout -->
+                  <!-- Hamburger Menu for Smaller Screens (hidden on larger screens) -->
+                    <div class="d-md-none fixed-top" style="right: 10px; top: 10px;">
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#sidebarModal">
+                            &#8942; <!-- Three dots icon -->
+                        </button>
+                    </div>
+
+                <!-- Overlay to block page interaction (hidden by default) -->
+                <div id="overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.5); z-index: 999;"></div>
+            
+                <!-- Confirmation Dialog (hidden by default) -->
+                <div id="logoutConfirmation" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); width: 300px; padding:20px; z-index:1000; background-color: rgba(20, 0, 113, 0.69); color: white; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);">
+                    <p style="color: white; text-align: center;">Are you sure you want to logout?</p>
+                    <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+                        <button onclick="logout()" style="padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; background-color: red; color: white;">Yes</button>
+                        <button onclick="cancelLogout()" style="padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; background-color: green; color: white;">No</button>
+                    </div>
+                </div>
+            
+                <script>
+                    function confirmLogout() {
+                        // Show the overlay and confirmation dialog
+                        document.getElementById('overlay').style.display = 'block';
+                        document.getElementById('logoutConfirmation').style.display = 'block';
+                    }
+            
+                    function logout() {
+                        // Hide the overlay and confirmation dialog, then logout
+                        document.getElementById('overlay').style.display = 'none';
+                        document.getElementById('logoutConfirmation').style.display = 'none';
+                        window.location.href = 'logout/';  // Replace '/logout' with your actual logout URL
+                    }
+            
+                    function cancelLogout() {
+                        // Hide the overlay and confirmation dialog
+                        document.getElementById('overlay').style.display = 'none';
+                        document.getElementById('logoutConfirmation').style.display = 'none';
+                    }
+                </script>
             </div>
+            
         </nav>
     </header>
     <!--Header End-->
 
     <div id="page-contents">
-        <div class="container" style="max-width: 100%;
-            overflow-x: hidden; 
-        }">
+        <div class="container" style="max-width: 100%; overflow-x: hidden;">
             <div class="row">
+                 
+                <!-- Newsfeed Common Side Bar Left ================================================= -->
+                <div class="col-md-3 static sidebar1 d-none d-md-block" style="position: fixed; left: 30px; top: 80px; bottom: 15px; width: 25%; overflow: hidden;">
 
-                <!-- Newsfeed Common Side Bar Left
-          ================================================= -->
-                <div class="col-md-3 static" id="sticky-sidebar">
-                    
                     <div class="profile-card">
                         <!-- Display the user's profile image if available, otherwise use the default image -->
                         {% if user.profile.profile_image %}
@@ -77,84 +332,133 @@
                         {% else %}
                             <img src="{% static 'images/users/shrey.jpg' %}" alt="user" class="profile-photo" />
                         {% endif %}
-                        
+
                         <!-- Username -->
-                        <h5><a href="timeline.html" class="text-white">{{ user.username }}</a></h5>
-                    </div><hr>
-                   <!-- Navigation Links -->
-                   <ul class="nav-news-feed" style="list-style-type: none; padding: 10px; margin: 0; background-color: rgba(255, 255, 255, 0.8); border-radius: 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
-                    <li style="margin: 5px 0;">
-                        <div>
-                            <a href="{% url 'home' %}" 
-                               style="text-decoration: none; color: #333; padding: 12px 16px; border-radius: 20px; display: inline-block; 
-                                      background: {% if request.path == '/' %} radial-gradient(circle at top left, rgba(20, 0, 113, 0.69), transparent 50%), 
-                                      linear-gradient(to bottom, rgba(11, 156, 49, 0.5), transparent 70%) {% else %} transparent {% endif %};
-                                      position: relative; transition: transform 0.3s;">
-                                🗞️ Newsfeed
-                            </a>
+                        <h5 style="font-size: 14px;"><a href="timeline.html" class="text-white">{{ user.username }}</a></h5>
+                    </div>
+                    <hr>
+                    
+                    
+                    <!-- Navigation Links -->
+                    <ul class="nav-news-feed nav-list" style="list-style-type: none; padding: 5px; margin: 0; background-color: rgba(255, 255, 255, 0.8); border-radius: 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
+                        <li style="margin: 5px 0;">
+                            <div>
+                                <a href="{% url 'home' %}" class="nav-link"
+                                style="text-decoration: none; color: #333; padding: 10px 14px; border-radius: 20px; display: inline-block; 
+                                        background: {% if request.path == '/' %} radial-gradient(circle at top left, rgba(20, 0, 113, 0.69), transparent 50%), 
+                                        linear-gradient(to bottom, rgba(11, 156, 49, 0.5), transparent 70%) {% else %} transparent {% endif %};
+                                        position: relative; transition: transform 0.3s; font-size: 14px;">
+                                    🗞️ Newsfeed
+                                </a>
+                            </div>
+                        </li>
+                        <li style="margin: 5px 0;">
+                            <div>
+                                <a href="{% url 'events' %}" class="nav-link"
+                                style="text-decoration: none; color: #333; padding: 10px 14px; border-radius: 20px; display: inline-block; 
+                                        background: {% if request.path == '/events/' %} radial-gradient(circle at top left, rgba(20, 0, 113, 0.69), transparent 50%), 
+                                        linear-gradient(to bottom, rgba(11, 156, 49, 0.5), transparent 70%) {% else %} transparent {% endif %};
+                                        position: relative; transition: transform 0.3s; font-size: 14px;">
+                                    📅 Events
+                                </a>
+                            </div>
+                        </li>
+                        <li style="margin: 5px 0;">
+                            <div>
+                                <a href="{% url 'announce' %}" class="nav-link"
+                                style="text-decoration: none; color: #333; padding: 10px 14px; border-radius: 20px; display: inline-block; 
+                                        background: {% if request.path == '/announce/' %} radial-gradient(circle at top left, rgba(20, 0, 113, 0.69), transparent 50%), 
+                                        linear-gradient(to bottom, rgba(11, 156, 49, 0.5), transparent 70%) {% else %} transparent {% endif %};
+                                        position: relative; transition: transform 0.3s; font-size: 14px;">
+                                    📢 Find Jobs
+                                </a>
+                            </div>
+                        </li>
+                        <li style="margin: 5px 0;">
+                            <div>
+                                <a href="{% url 'complain' %}" class="nav-link"
+                                style="text-decoration: none; color: #333; padding: 10px 14px; border-radius: 20px; display: inline-block; 
+                                        background: {% if request.path == '/complain/' %} radial-gradient(circle at top left, rgba(20, 0, 113, 0.69), transparent 50%), 
+                                        linear-gradient(to bottom, rgba(11, 156, 49, 0.5), transparent 70%) {% else %} transparent {% endif %};
+                                        position: relative; transition: transform 0.3s; font-size: 14px;">
+                                    🚨 Complain Box
+                                </a>
+                            </div>
+                        </li>
+                        <li style="margin: 5px 0;">
+                            <div>
+                                <a href="{% url 'servicerequest' %}" class="nav-link"
+                                style="text-decoration: none; color: #333; padding: 10px 14px; border-radius: 20px; display: inline-block; 
+                                        background: {% if request.path == '/servicerequest/' %} radial-gradient(circle at top left, rgba(20, 0, 113, 0.69), transparent 50%), 
+                                        linear-gradient(to bottom, rgba(11, 156, 49, 0.5), transparent 70%) {% else %} transparent {% endif %};
+                                        position: relative; transition: transform 0.3s; font-size: 14px;">
+                                    🔧 Service Request
+                                </a>
+                            </div>
+                        </li>
+                        <li style="margin: 5px 0;">
+                            <div>
+                                <a href="{% url 'surveyform' %}" class="nav-link"
+                                style="text-decoration: none; color: #333; padding: 10px 14px; border-radius: 20px; display: inline-block; 
+                                        background: {% if request.path == '/surveyform/' %} radial-gradient(circle at top left, rgba(20, 0, 113, 0.69), transparent 50%), 
+                                        linear-gradient(to bottom, rgba(11, 156, 49, 0.5), transparent 70%) {% else %} transparent {% endif %};
+                                        position: relative; transition: transform 0.3s; font-size: 14px;">
+                                    🗃️ Survey Section
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                    
+                </div>
+                <style>
+                    @media (max-width: 768px) {
+                        .sidebar1 {
+                            display: none !important;
+                        }
+                    }
+                    @media (min-width: 768px) {
+                        .d-md-none {
+                            display: none !important;
+                        }
+                    }
+                    
+                    
+                </style>
+               <!-- Modal for Sidebar Options (for smaller screens) -->
+                <div class="modal fade" id="sidebarModal" tabindex="-1" role="dialog" aria-labelledby="sidebarModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="sidebarModalLabel">Select an Option</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <ul class="nav-news-feed nav-list" style="list-style-type: none; padding: 5px; margin: 0;">
+                                    <li style="margin: 5px 0;">
+                                        <a href="{% url 'home' %}" class="nav-link" style="text-decoration: none; color: #333; padding: 10px 14px; font-size: 14px;">🗞️ Newsfeed</a>
+                                    </li>
+                                    <li style="margin: 5px 0;">
+                                        <a href="{% url 'events' %}" class="nav-link" style="text-decoration: none; color: #333; padding: 10px 14px; font-size: 14px;">📅 Events</a>
+                                    </li>
+                                    <li style="margin: 5px 0;">
+                                        <a href="{% url 'announce' %}" class="nav-link" style="text-decoration: none; color: #333; padding: 10px 14px; font-size: 14px;">📢 Find Jobs</a>
+                                    </li>
+                                    <li style="margin: 5px 0;">
+                                        <a href="{% url 'complain' %}" class="nav-link" style="text-decoration: none; color: #333; padding: 10px 14px; font-size: 14px;">🚨 Complain Box</a>
+                                    </li>
+                                    <li style="margin: 5px 0;">
+                                        <a href="{% url 'servicerequest' %}" class="nav-link" style="text-decoration: none; color: #333; padding: 10px 14px; font-size: 14px;">🔧 Service Request</a>
+                                    </li>
+                                    <li style="margin: 5px 0;">
+                                        <a href="{% url 'surveyform' %}" class="nav-link" style="text-decoration: none; color: #333; padding: 10px 14px; font-size: 14px;">🗃️ Survey Section</a>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
-                    </li>
-                    <li style="margin: 5px 0;">
-                        <div>
-                            <a href="{% url 'events' %}" 
-                               style="text-decoration: none; color: #333; padding: 12px 16px; border-radius: 20px; display: inline-block; 
-                                      background: {% if request.path == '/events/' %} radial-gradient(circle at top left, rgba(20, 0, 113, 0.69), transparent 50%), 
-                                      linear-gradient(to bottom, rgba(11, 156, 49, 0.5), transparent 70%) {% else %} transparent {% endif %};
-                                      position: relative; transition: transform 0.3s;">
-                                📅 Events
-                            </a>
-                        </div>
-                    </li>
-                    <li style="margin: 5px 0;">
-                        <div>
-                            <a href="{% url 'announce' %}" 
-                               style="text-decoration: none; color: #333; padding: 12px 16px; border-radius: 20px; display: inline-block; 
-                                      background: {% if request.path == '/announce/' %} radial-gradient(circle at top left, rgba(20, 0, 113, 0.69), transparent 50%), 
-                                      linear-gradient(to bottom, rgba(11, 156, 49, 0.5), transparent 70%) {% else %} transparent {% endif %};
-                                      position: relative; transition: transform 0.3s;">
-                                📢 Find Jobs
-                            </a>
-                        </div>
-                    </li>
-                    <li style="margin: 5px 0;">
-                        <div>
-                            <a href="{% url 'complain' %}" 
-                               style="text-decoration: none; color: #333; padding: 12px 16px; border-radius: 20px; display: inline-block; 
-                                      background: {% if request.path == '/complain/' %} radial-gradient(circle at top left, rgba(20, 0, 113, 0.69), transparent 50%), 
-                                      linear-gradient(to bottom, rgba(11, 156, 49, 0.5), transparent 70%) {% else %} transparent {% endif %};
-                                      position: relative; transition: transform 0.3s;">
-                                🚨 Complain Box
-                            </a>
-                        </div>
-                    </li>
-                    <li style="margin: 5px 0;">
-                        <div>
-                            <a href="{% url 'servicerequest' %}" 
-                               style="text-decoration: none; color: #333; padding: 12px 16px; border-radius: 20px; display: inline-block; 
-                                      background: {% if request.path == '/servicerequest/' %} radial-gradient(circle at top left, rgba(20, 0, 113, 0.69), transparent 50%), 
-                                      linear-gradient(to bottom, rgba(11, 156, 49, 0.5), transparent 70%) {% else %} transparent {% endif %};
-                                      position: relative; transition: transform 0.3s;">
-                                🔧 Service Request
-                            </a>
-                        </div>
-                    </li>
-                    <li style="margin: 5px 0;">
-                        <div>
-                            <a href="{% url 'surveyform' %}" 
-                               style="text-decoration: none; color: #333; padding: 12px 16px; border-radius: 20px; display: inline-block; 
-                                      background: {% if request.path == '/surveyform/' %} radial-gradient(circle at top left, rgba(20, 0, 113, 0.69), transparent 50%), 
-                                      linear-gradient(to bottom, rgba(11, 156, 49, 0.5), transparent 70%) {% else %} transparent {% endif %};
-                                      position: relative; transition: transform 0.3s;">
-                                🗃️ Survey Section
-                            </a>
-                        </div>
-                    </li>
-                </ul>
-                
-                
-                </div>        
-                       
-                        <!-- Survey Block Ends -->
+                    </div>
+                </div>
 
 
 
@@ -162,7 +466,7 @@
 
                 
                 
-                <div class="col-md-7">
+                <div class="col-md-8" style="left: 250px;">
                     <!-- Announcement Create Box -->
                     <div class="create-announcement" style="border: 1px solid #e1e1e1; padding: 10px; border-radius: 10px; background-color: #f9f9f9; margin-bottom: 20px; height:95px;">
                         <div class="row d-flex align-items-center justify-content-between">
@@ -274,41 +578,289 @@
                 
                 
 
-<!-- Newsfeed Common Side Bar Right
-================================================= -->
-<div class="col-md-2 static">
-    <div class="suggestions" id="sticky-sidebar" style="position: fixed;">
-        <h4 style="color: rgba(20, 0, 113, 0.69); font-weight: bold;text-align: center;">Ward-Members</h4><hr>
-        <div class="follow-user">
-            <img src="{% static 'images/users/user-111.jpg' %}" alt="" class="profile-photo-sm pull-left" />
-            <div>
-                <h5><a href="timeline.html">Diana Amber</a></h5>
-                <a href="#" class="text-green">Details</a>
-            </div>
-        </div>
-        <div class="follow-user">
-            <img src="{% static 'images/users/user-12.jpg' %}" alt="" class="profile-photo-sm pull-left" />
-            <div>
-                <h5><a href="timeline.html">Cris Haris</a></h5>
-                <a href="#" class="text-green">Details</a>
-            </div>
-        </div>
-        <div class="follow-user">
-            <img src="{% static 'images/users/user-15.jpg' %}" alt="" class="profile-photo-sm pull-left" />
-            <div>
-                <h5><a href="timeline.html">Cris Haris</a></h5>
-                <a href="#" class="text-green">Details</a>
-            </div>
-        </div>
-    </div>
-</div>
+       
+                <div class="col-md-2 static">
+                    <div class="sidebar" style="padding-top: 80px;">
+                        <div class="profile-card">
+                            <h5 style="text-align: center; font-weight: bold; margin-top: 20px;">
+                                <span class="text-white">Representatives</span>
+                            </h5>
+                        </div>
+                        <hr>
+                        <div class="members-list" style="max-height: 250px; overflow-y: auto; overflow-x: hidden; padding-right: 10px;">
+                            {% for member in committee_members %}
+                            <div class="committee-member-card" style="border: 1px solid #ddd; padding: 10px; margin-bottom: 15px; text-align: center;">
+                                <div class="profile-summary" style="display: flex; align-items: center; justify-content: center; margin-bottom: 5px;">
+                                    {% if member.profile_picture %}
+                                        <img src="{{ member.profile_picture.url }}" alt="{{ member.name }}" style="width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;">
+                                    {% else %}
+                                        <img src="{% static 'images/default-profile.png' %}" alt="Default profile picture" style="width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;">
+                                    {% endif %}
+                                    <h5 style="margin: 0; font-weight: bold;">{{ member.name }}</h5>
+                                    <span onclick="toggleDetails('{{ member.id }}')" style="margin-left: 10px; cursor: pointer; color: #007bff;" title="View Details">
+                                        &#9432; <!-- Unicode for information icon -->
+                                    </span>
+                                </div>
+                                
+                                <div id="details-{{ member.id }}" style="display: none; margin-top: 5px; text-align: left;">
+                                    <p style="margin: 3px 0; font-weight: bold;">Position:</p>
+                                    <p style="margin: 3px 0;">{{ member.position }}</p>
+            
+                                    <p style="margin: 3px 0; font-weight: bold;">📞 Contact:</p>
+                                    <p style="margin: 3px 0;">{{ member.contact }}</p>
+            
+                                    <p style="margin: 3px 0; font-weight: bold;">📧 Email:</p>
+                                    <p style="margin: 3px 0;">{{ member.email }}</p>
+            
+                                    <p style="margin: 3px 0; font-weight: bold;">📝 Contribution:</p>
+                                    <p style="margin: 3px 0;">{{ member.contribution }}</p>
+            
+                                    <button onclick="toggleDetails('{{ member.id }}')" style="margin-left: 55px; background-color: green; color: white; border: none; border-radius: 30px;">
+                                        Close
+                                    </button>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <hr>
+                        <!-- People's Choice Card -->
+                                                    <!-- People's Choice Card -->
+                        <div class="peoples-choice-card">
+                            <!-- Image of the person in a circular frame that overlaps the card -->
+                            <div class="profile-image-container">
+                                <img src="{% static 'images/post-images/Balen.jpg' %}" alt="People's Choice Representative" class="profile-image">
+                            </div>
+
+                            <!-- People's Choice Title -->
+                          <h5 class="peoples-choice-title" >🌟Popular Choice🌟</h5>
+
+
+                            <!-- Buttons: Your Vote and Eye Icon for Details -->
+                            <div class="button-container">
+                                <!-- Your Vote Button -->
+                                <button class="custom-button">Your Vote</button>
+                                
+                                <!-- Eye Icon for Details -->
+                                <button class="custom-button">&#128065;</button>
+                            </div>
+                        </div>
+
+                        <!-- Add the CSS below -->
+                        <style>
+                        /* Card styling */
+                        .peoples-choice-card {
+                            background-color: rgba(60, 40, 153, 0.5);
+                            color: white;
+                            padding: 20px;
+                            text-align: center;
+                            margin-top: 60px;
+                            border-radius: 10px;
+                            position: relative;
+                            box-shadow: 0 0 0 3px rgba(135, 211, 124, 1); /* Green border with specified color */
+                            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth animation on hover */
+                        }
+
+                        /* Animation on card hover */
+                        .peoples-choice-card:hover {
+                            transform: translateY(-5px); /* Lift card slightly */
+                            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4); /* Deepen shadow on hover */
+                        }
+
+                        /* Profile image container with outer shadow */
+                        .profile-image-container {
+                            position: absolute;
+                            top: -40px;
+                            left: 50%;
+                            transform: translateX(-50%);
+                            width: 110px;
+                            height: 110px;
+                            background-color: white;
+                            border-radius: 50%;
+                            padding: 5px;
+                            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Shadow around circular frame */
+                        }
+
+                        /* Profile image */
+                        .profile-image {
+                            width: 100%;
+                            height: 100%;
+                            border-radius: 50%;
+                        }
+
+                        /* Title styling */
+                        .peoples-choice-title {
+                            font-weight: bold;
+                            margin-top: 59px;
+                            font-size: 17px;
+                            
+                        }
+
+                        /* Button container */
+                        .button-container {
+                            display: flex;
+                            justify-content: center;
+                            gap: 50px;
+                            margin-top: 15px;
+                        }
+
+                        /* Button styling with hover effect */
+                        .custom-button {
+                            background-color:rgba(135, 211, 124, 1);
+                            box-shadow: 0 0 0 1px rgba(20, 0, 113, 0.69);
+                            color: green;
+                            border: none;
+                            padding: 10px 15px;
+                            border-radius: 20px;
+                            font-weight: bold;
+                            cursor: pointer;
+                            transition: background-color 0.3s, color 0.3s, transform 0.2s; /* Smooth transition for color and scale */
+                        }
+
+                        /* Button hover animation */
+                        .custom-button:hover {
+                            background-color: green;
+                            color: white;
+                            transform: scale(1.05); /* Slight enlargement on hover */
+                        }
+                        </style>
+
+                        
+                        
+
+                    </div>
+                    
+                </div>
+                <!-- Add the People's Choice Card below the hr line -->
+                <script>
+                    function toggleDetails(memberId) {
+                        var detailsDiv = document.getElementById("details-" + memberId);
+                        detailsDiv.style.display = (detailsDiv.style.display === "none") ? "block" : "none";
+                    }
+                </script>
+                                
+                <style>
+                        /* Default styles for larger screens */
+                    /* Default styles for larger screens */
+                        .sidebar {
+                            position: fixed;
+                            right: 40px;
+                            top: 0;
+                            bottom: 0;
+                            width: 16.66667%;
+                            height: 100%;
+                            padding-top: 80px;
+                            overflow-y: auto;
+                            z-index: 1000;
+                        }
+
+                        .committee-member-card {
+                            text-align: center;
+                            padding: 10px;
+                        }
+
+                        .profile-summary {
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            margin-bottom: 5px;
+                        }
+
+                        .profile-summary img {
+                            margin-right: 10px;
+                        }
+
+                        .members-list {
+                            max-height: 300px;
+                            overflow-y: auto;
+                            overflow-x: hidden;
+                            padding-right: 10px;
+                        }
+                                                    /* Style for the scrollbar track */
+                        .members-list::-webkit-scrollbar {
+                            width: 8px; /* Adjust the width of the scrollbar */
+                        }
+
+                        .members-list::-webkit-scrollbar-track {
+                            background: #f1f1f1; /* Light background for the track */
+                        }             /* Style for the scrollbar thumb (the draggable part) */
+                        .members-list::-webkit-scrollbar-thumb {
+                            background: rgba(20, 0, 113, 0.69); /* Custom color for the scrollbar thumb */
+                            border-radius: 10px; /* Optional: round the edges of the scrollbar */
+                        }
+
+                        /* Hover effect for the scrollbar thumb */
+                        .members-list::-webkit-scrollbar-thumb:hover {
+                            background: rgba(20, 0, 113, 1); /* Darker color when hovering */
+                        }
+
+                        /* Responsive adjustments for the details section */
+                        @media (max-width: 768px) {
+                            .sidebar {
+                                position: relative;
+                                padding: 10px;
+                                width: 100%;
+                                height: auto;
+                            }
+
+                            .committee-member-card {
+                                text-align: left;
+                                padding: 5px;
+                            }
+
+                            .profile-summary {
+                                flex-direction: column;
+                                align-items: flex-start;
+                            }
+
+                            .profile-summary img {
+                                margin-right: 0;
+                                margin-bottom: 5px;
+                            }
+
+                            .profile-summary h5 {
+                                font-size: 1rem;
+                            }
+
+                            /* Adjust details section */
+                            .committee-member-card #details-{{ member.id }} {
+                                text-align: left;
+                                font-size: 0.9rem;
+                                padding: 25px 35px; /* Increased left padding for better spacing */
+                                margin-left: 10px; /* Additional left margin */
+                            }
+
+                            /* Adjust button within details section */
+                            .committee-member-card #details-{{ member.id }} button {
+                                margin-left: 0;
+                                display: block;
+                                margin: 40px auto 0;
+                            }
+                        }
+
+                        @media (max-width: 576px) {
+                            .profile-summary {
+                                align-items: center;
+                                text-align: center;
+                            }
+
+                            .committee-member-card #details-{{ member.id }} p {
+                                font-size: 0.85rem;
+                                margin-left: 40px; /* Additional left margin for paragraphs */
+                            }
+
+                            .members-list {
+                                max-height: 180px;
+                            }
+                        }
+
+                </style>   
 </div>
 </div>
 </div>
 
 <!-- Footer
 ================================================= -->
-<footer id="footer">
+{% comment %} <footer id="footer">
 <div class="container">
 <div class="row">
 <div class="footer-wrapper">
@@ -368,7 +920,7 @@
 <div class="copyright">
 <p>Thunder Team © 2016. All rights reserved</p>
 </div>
-</footer>
+</footer> {% endcomment %}
 
 
 

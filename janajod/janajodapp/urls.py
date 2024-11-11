@@ -5,6 +5,9 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
+   
+    path('login/', auth_views.LoginView.as_view(template_name ='login.html',
+                                            redirect_authenticated_user=False), name='login'),
     path('', views.home, name="home"),
     path('wardpost/', views.wardpost, name="wardpost"),
      path('events/', views.events, name='events'),
@@ -32,11 +35,11 @@ urlpatterns = [
     path('profile/<str:username>/', views.profile, name='profile'),
      path('profile/', views.profile, name='profile'),
     #login view 
-    path('login/', auth_views.LoginView.as_view(template_name ='login.html',
-                                                redirect_authenticated_user=True), name='login'),
+    
     
     #logout
-    path('logout/', auth_views.LoginView.as_view(template_name='login.html'), name='logout'),
+    path('logout/', auth_views.LogoutView.as_view(template_name='login.html'), name='logout'),
+    
 
     #for activate account through mail using link
     path('activate/<uidb64>/<token>/', views.activate, name='activate'),
@@ -53,6 +56,8 @@ urlpatterns = [
 
     #for password reset complete
     path('password_reset_complete,/', auth_views.PasswordResetCompleteView.as_view(template_name='password_reset_complete.html'), name='password_reset_complete'),
+    
 ]
+
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

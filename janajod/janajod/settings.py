@@ -64,6 +64,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'janajodapp.context_processors.committee_members_processor',
                 
             ],
         },
@@ -142,7 +143,12 @@ STATICFILES_DIRS = [
 ]
 
 
-LOGIN_REDIRECT_URL = '/newsfeed/'
+
+
+# settings.py
+LOGIN_URL = '/login/'  # Or wherever your login page is located
+LOGIN_REDIRECT_URL = '/'  # Or wherever you want the user to go after login
+LOGOUT_REDIRECT_URL = '/login/'  # Redirects to the login page after logging out
 
 
 # Default primary key field type
@@ -159,8 +165,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'its.janajod@gmail.com'
-EMAIL_HOST_PASSWORD = 'rbis ydiq orgz swhm' #password generated from security page on manage account section of your email account(search for "App Password")
+EMAIL_HOST_PASSWORD = 'lcns pkgm nxyq njlo' #password generated from security page on manage account section of your email account(search for "App Password")
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'shryupd@gmail.com'
 
-LOGIN_REDIRECT_URL = 'home'  # Redirect to the home page after login
+

@@ -26,7 +26,7 @@
     
 
     <!--Favicon-->
-    <link rel="shortcut icon" type="image/png" href="{% static 'images/fav.png' %}" />
+    <link rel="shortcut icon" type="image/png" href="{% static 'images/janajodlogo.png' %}" />
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <!-- CSS for styling -->
@@ -37,11 +37,11 @@
     <!-- Header
     ================================================= -->
     <header id="header">
-        <nav style="display: flex; align-items: center; justify-content: space-between; background-color: rgba(20, 0, 113, 1); padding: 10px 20px; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); position: fixed; top: 0; left: 0; right: 0; z-index: 1000;">
+        <nav style="display: flex; align-items: center; justify-content: space-between; background-color: rgba(20, 0, 113, 1); padding: 10px 20px; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); position: fixed; top: 0; left: 0; right: 0; z-index: 2000;">
             <!-- Logo -->
     
             <div style="display: flex; align-items: center;">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Logo" style="height: 40px; margin-right: 20px;">
+                <img src="{% static 'images/janajodlogo.png' %}" alt="Logo" style="height: 40px; margin-right: 9px;">
             </div>
 
             
@@ -49,7 +49,7 @@
                     <div style="flex-grow: 1; display: flex; align-items: center; position: relative; max-width: 500px;">
                         <input type="text" id="dateTime" 
                             style="width: 100%; padding: 8px 16px; border: 1px solid #ccc; border-radius: 20px; 
-                                    background-color: #f1f1f1; font-size: 14px; color:green;font-weight: bold;" readonly>
+                                    background-color: #f1f1f1; font-size: 12px; color:green;font-weight: bold;" readonly>
                         <i style="position: absolute; right: 15px; color: green; font-size: 18px; cursor: pointer;" class="fas fa-envelope" onclick="openModal()"></i> <!-- Mail icon -->
                     </div>
 
@@ -277,7 +277,13 @@
             
                 <!-- Logout Icon -->
                 <i class="fas fa-sign-out-alt" style="margin-right: 20px; font-size: 22px; color: white;" onclick="confirmLogout()"></i> <!-- Logout -->
-            
+                  <!-- Hamburger Menu for Smaller Screens (hidden on larger screens) -->
+                    <div class="d-md-none fixed-top" style="right: 10px; top: 10px;">
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#sidebarModal">
+                            &#8942; <!-- Three dots icon -->
+                        </button>
+                    </div>
+
                 <!-- Overlay to block page interaction (hidden by default) -->
                 <div id="overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.5); z-index: 999;"></div>
             
@@ -301,7 +307,7 @@
                         // Hide the overlay and confirmation dialog, then logout
                         document.getElementById('overlay').style.display = 'none';
                         document.getElementById('logoutConfirmation').style.display = 'none';
-                        window.location.href = '/logout';  // Replace '/logout' with your actual logout URL
+                        window.location.href = 'logout/';  // Replace '/logout' with your actual logout URL
                     }
             
                     function cancelLogout() {
@@ -319,10 +325,10 @@
     <div id="page-contents">
         <div class="container" style="max-width: 100%; overflow-x: hidden;">
             <div class="row">
-    
+                 
                 <!-- Newsfeed Common Side Bar Left ================================================= -->
-                <div class="col-md-3 static"  id="sticky-sidebar"  >
-                    
+                <div class="col-md-3 static sidebar1 d-none d-md-block" style="position: fixed; left: 30px; top: 80px; bottom: 15px; width: 25%; overflow: hidden;">
+
                     <div class="profile-card">
                         <!-- Display the user's profile image if available, otherwise use the default image -->
                         {% if user.profile.profile_image %}
@@ -330,86 +336,140 @@
                         {% else %}
                             <img src="{% static 'images/users/shrey.jpg' %}" alt="user" class="profile-photo" />
                         {% endif %}
-    
+
                         <!-- Username -->
-                        <h5><a href="timeline.html" class="text-white">{{ user.username }}</a></h5>
+                        <h5 style="font-size: 14px;"><a href="timeline.html" class="text-white">{{ user.username }}</a></h5>
                     </div>
-                     <hr>
+                    <hr>
+                    
+                    
                     <!-- Navigation Links -->
-                    <ul class="nav-news-feed" style="list-style-type: none; padding: 10px; margin: 0; background-color: rgba(255, 255, 255, 0.8); border-radius: 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
+                    <ul class="nav-news-feed nav-list" style="list-style-type: none; padding: 5px; margin: 0; background-color: rgba(255, 255, 255, 0.8); border-radius: 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
                         <li style="margin: 5px 0;">
                             <div>
-                                <a href="{% url 'home' %}" 
-                                   style="text-decoration: none; color: #333; padding: 12px 16px; border-radius: 20px; display: inline-block; 
-                                          background: {% if request.path == '/' %} radial-gradient(circle at top left, rgba(20, 0, 113, 0.69), transparent 50%), 
-                                          linear-gradient(to bottom, rgba(11, 156, 49, 0.5), transparent 70%) {% else %} transparent {% endif %};
-                                          position: relative; transition: transform 0.3s;">
+                                <a href="{% url 'home' %}" class="nav-link"
+                                style="text-decoration: none; color: #333; padding: 10px 14px; border-radius: 20px; display: inline-block; 
+                                        background: {% if request.path == '/' %} radial-gradient(circle at top left, rgba(20, 0, 113, 0.69), transparent 50%), 
+                                        linear-gradient(to bottom, rgba(11, 156, 49, 0.5), transparent 70%) {% else %} transparent {% endif %};
+                                        position: relative; transition: transform 0.3s; font-size: 14px;">
                                     🗞️ Newsfeed
                                 </a>
                             </div>
                         </li>
                         <li style="margin: 5px 0;">
                             <div>
-                                <a href="{% url 'events' %}" 
-                                   style="text-decoration: none; color: #333; padding: 12px 16px; border-radius: 20px; display: inline-block; 
-                                          background: {% if request.path == '/events/' %} radial-gradient(circle at top left, rgba(20, 0, 113, 0.69), transparent 50%), 
-                                          linear-gradient(to bottom, rgba(11, 156, 49, 0.5), transparent 70%) {% else %} transparent {% endif %};
-                                          position: relative; transition: transform 0.3s;">
+                                <a href="{% url 'events' %}" class="nav-link"
+                                style="text-decoration: none; color: #333; padding: 10px 14px; border-radius: 20px; display: inline-block; 
+                                        background: {% if request.path == '/events/' %} radial-gradient(circle at top left, rgba(20, 0, 113, 0.69), transparent 50%), 
+                                        linear-gradient(to bottom, rgba(11, 156, 49, 0.5), transparent 70%) {% else %} transparent {% endif %};
+                                        position: relative; transition: transform 0.3s; font-size: 14px;">
                                     📅 Events
                                 </a>
                             </div>
                         </li>
                         <li style="margin: 5px 0;">
                             <div>
-                                <a href="{% url 'announce' %}" 
-                                   style="text-decoration: none; color: #333; padding: 12px 16px; border-radius: 20px; display: inline-block; 
-                                          background: {% if request.path == '/announce/' %} radial-gradient(circle at top left, rgba(20, 0, 113, 0.69), transparent 50%), 
-                                          linear-gradient(to bottom, rgba(11, 156, 49, 0.5), transparent 70%) {% else %} transparent {% endif %};
-                                          position: relative; transition: transform 0.3s;">
+                                <a href="{% url 'announce' %}" class="nav-link"
+                                style="text-decoration: none; color: #333; padding: 10px 14px; border-radius: 20px; display: inline-block; 
+                                        background: {% if request.path == '/announce/' %} radial-gradient(circle at top left, rgba(20, 0, 113, 0.69), transparent 50%), 
+                                        linear-gradient(to bottom, rgba(11, 156, 49, 0.5), transparent 70%) {% else %} transparent {% endif %};
+                                        position: relative; transition: transform 0.3s; font-size: 14px;">
                                     📢 Find Jobs
                                 </a>
                             </div>
                         </li>
                         <li style="margin: 5px 0;">
                             <div>
-                                <a href="{% url 'complain' %}" 
-                                   style="text-decoration: none; color: #333; padding: 12px 16px; border-radius: 20px; display: inline-block; 
-                                          background: {% if request.path == '/complain/' %} radial-gradient(circle at top left, rgba(20, 0, 113, 0.69), transparent 50%), 
-                                          linear-gradient(to bottom, rgba(11, 156, 49, 0.5), transparent 70%) {% else %} transparent {% endif %};
-                                          position: relative; transition: transform 0.3s;">
+                                <a href="{% url 'complain' %}" class="nav-link"
+                                style="text-decoration: none; color: #333; padding: 10px 14px; border-radius: 20px; display: inline-block; 
+                                        background: {% if request.path == '/complain/' %} radial-gradient(circle at top left, rgba(20, 0, 113, 0.69), transparent 50%), 
+                                        linear-gradient(to bottom, rgba(11, 156, 49, 0.5), transparent 70%) {% else %} transparent {% endif %};
+                                        position: relative; transition: transform 0.3s; font-size: 14px;">
                                     🚨 Complain Box
                                 </a>
                             </div>
                         </li>
                         <li style="margin: 5px 0;">
                             <div>
-                                <a href="{% url 'servicerequest' %}" 
-                                   style="text-decoration: none; color: #333; padding: 12px 16px; border-radius: 20px; display: inline-block; 
-                                          background: {% if request.path == '/servicerequest/' %} radial-gradient(circle at top left, rgba(20, 0, 113, 0.69), transparent 50%), 
-                                          linear-gradient(to bottom, rgba(11, 156, 49, 0.5), transparent 70%) {% else %} transparent {% endif %};
-                                          position: relative; transition: transform 0.3s;">
+                                <a href="{% url 'servicerequest' %}" class="nav-link"
+                                style="text-decoration: none; color: #333; padding: 10px 14px; border-radius: 20px; display: inline-block; 
+                                        background: {% if request.path == '/servicerequest/' %} radial-gradient(circle at top left, rgba(20, 0, 113, 0.69), transparent 50%), 
+                                        linear-gradient(to bottom, rgba(11, 156, 49, 0.5), transparent 70%) {% else %} transparent {% endif %};
+                                        position: relative; transition: transform 0.3s; font-size: 14px;">
                                     🔧 Service Request
                                 </a>
                             </div>
                         </li>
                         <li style="margin: 5px 0;">
                             <div>
-                                <a href="{% url 'surveyform' %}" 
-                                   style="text-decoration: none; color: #333; padding: 12px 16px; border-radius: 20px; display: inline-block; 
-                                          background: {% if request.path == '/surveyform/' %} radial-gradient(circle at top left, rgba(20, 0, 113, 0.69), transparent 50%), 
-                                          linear-gradient(to bottom, rgba(11, 156, 49, 0.5), transparent 70%) {% else %} transparent {% endif %};
-                                          position: relative; transition: transform 0.3s;">
+                                <a href="{% url 'surveyform' %}" class="nav-link"
+                                style="text-decoration: none; color: #333; padding: 10px 14px; border-radius: 20px; display: inline-block; 
+                                        background: {% if request.path == '/surveyform/' %} radial-gradient(circle at top left, rgba(20, 0, 113, 0.69), transparent 50%), 
+                                        linear-gradient(to bottom, rgba(11, 156, 49, 0.5), transparent 70%) {% else %} transparent {% endif %};
+                                        position: relative; transition: transform 0.3s; font-size: 14px;">
                                     🗃️ Survey Section
                                 </a>
                             </div>
                         </li>
                     </ul>
                     
-                    
-                    
                 </div>
-    
-                <div class="col-md-7">
+                <style>
+                    @media (max-width: 768px) {
+                        .sidebar1 {
+                            display: none !important;
+                        }
+                    }
+                    @media (min-width: 768px) {
+                        .d-md-none {
+                            display: none !important;
+                        }
+                    }
+                    
+                    
+                </style>
+               <!-- Modal for Sidebar Options (for smaller screens) -->
+                <div class="modal fade" id="sidebarModal" tabindex="-1" role="dialog" aria-labelledby="sidebarModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="sidebarModalLabel">Select an Option</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <ul class="nav-news-feed nav-list" style="list-style-type: none; padding: 5px; margin: 0;">
+                                    <li style="margin: 5px 0;">
+                                        <a href="{% url 'home' %}" class="nav-link" style="text-decoration: none; color: #333; padding: 10px 14px; font-size: 14px;">🗞️ Newsfeed</a>
+                                    </li>
+                                    <li style="margin: 5px 0;">
+                                        <a href="{% url 'events' %}" class="nav-link" style="text-decoration: none; color: #333; padding: 10px 14px; font-size: 14px;">📅 Events</a>
+                                    </li>
+                                    <li style="margin: 5px 0;">
+                                        <a href="{% url 'announce' %}" class="nav-link" style="text-decoration: none; color: #333; padding: 10px 14px; font-size: 14px;">📢 Find Jobs</a>
+                                    </li>
+                                    <li style="margin: 5px 0;">
+                                        <a href="{% url 'complain' %}" class="nav-link" style="text-decoration: none; color: #333; padding: 10px 14px; font-size: 14px;">🚨 Complain Box</a>
+                                    </li>
+                                    <li style="margin: 5px 0;">
+                                        <a href="{% url 'servicerequest' %}" class="nav-link" style="text-decoration: none; color: #333; padding: 10px 14px; font-size: 14px;">🔧 Service Request</a>
+                                    </li>
+                                    <li style="margin: 5px 0;">
+                                        <a href="{% url 'surveyform' %}" class="nav-link" style="text-decoration: none; color: #333; padding: 10px 14px; font-size: 14px;">🗃️ Survey Section</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              
+
+
+
+
+                <!-- main content-->
+                <div class="col-md-8" style="left: 250px;">
                                                 <!-- Post Create Box -->
                         <div class="create-post" style="border: 1px solid #e1e1e1; border-radius: 10px; background-color: #f9f9f9;">
                             <form method="POST" enctype="multipart/form-data">
@@ -668,41 +728,315 @@
                                         {% empty %}
                                             <p>No posts available.</p>
                                         {% endfor %}
+                                        
                                     </div>
 
+                                    <style>
+                                        /* Default styling for larger screens */
+                                        .col-md-8 {
+                                            left: 250px;
+                                        }
 
+                                        /* Override for screens smaller than 992px */
+                                        @media (max-width: 991px) {
+                                            .col-md-8 {
+                                                left: 0 !important; /* Set to 0, or omit left styling */
+                                            }
+                                        }
+
+                                   </style>
                     
                     
                 </div>
+                                        
+               
     
                 <!-- Newsfeed Common Side Bar Right ================================================= -->
-                <div class="col-md-2 static">
-                    <div class="suggestions" id="sticky-sidebar" style="position: fixed;">
-                        <h4 style="color: rgba(20, 0, 113, 0.69); font-weight: bold; text-align: center;">Members</h4>
-                        <hr>
-                        <div class="follow-user">
-                            <img src="{% static 'images/users/user-111.jpg' %}" alt="" class="profile-photo-sm pull-left" />
-                            <div>
-                                <h5><a href="timeline.html">Srijana</a></h5>
-                                <a href="#" class="text-green">Details</a>
+              
+                    
+                    <div class="col-md-2 static">
+                        <div class="sidebar" style="padding-top: 80px;">
+                            <div class="profile-card">
+                                <h5 style="text-align: center; font-weight: bold; margin-top: 20px;">
+                                    <span class="text-white">Representatives</span>
+                                </h5>
                             </div>
-                        </div>
-                        <div class="follow-user">
-                            <img src="{% static 'images/users/user-12.jpg' %}" alt="" class="profile-photo-sm pull-left" />
-                            <div>
-                                <h5><a href="timeline.html">Damodar</a></h5>
-                                <a href="#" class="text-green">Details</a>
+                            <hr>
+                            <div class="members-list" style="max-height: 250px; overflow-y: auto; overflow-x: hidden; padding-right: 10px;">
+                                {% for member in committee_members %}
+                                <div class="committee-member-card" style="border: 1px solid #ddd; padding: 10px; margin-bottom: 15px; text-align: center;">
+                                    <div class="profile-summary" style="display: flex; align-items: center; justify-content: center; margin-bottom: 5px;">
+                                        {% if member.profile_picture %}
+                                            <img src="{{ member.profile_picture.url }}" alt="{{ member.name }}" style="width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;">
+                                        {% else %}
+                                            <img src="{% static 'images/default-profile.png' %}" alt="Default profile picture" style="width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;">
+                                        {% endif %}
+                                        <h5 style="margin: 0; font-weight: bold;">{{ member.name }}</h5>
+                                        <span onclick="toggleDetails('{{ member.id }}')" style="margin-left: 10px; cursor: pointer; color: #007bff;" title="View Details">
+                                            &#9432; <!-- Unicode for information icon -->
+                                        </span>
+                                    </div>
+                                    
+                                    <div id="details-{{ member.id }}" style="display: none; margin-top: 5px; text-align: left;">
+                                        <p style="margin: 3px 0; font-weight: bold;">Position:</p>
+                                        <p style="margin: 3px 0;">{{ member.position }}</p>
+                
+                                        <p style="margin: 3px 0; font-weight: bold;">📞 Contact:</p>
+                                        <p style="margin: 3px 0;">{{ member.contact }}</p>
+                
+                                        <p style="margin: 3px 0; font-weight: bold;">📧 Email:</p>
+                                        <p style="margin: 3px 0;">{{ member.email }}</p>
+                
+                                        <p style="margin: 3px 0; font-weight: bold;">📝 Contribution:</p>
+                                        <p style="margin: 3px 0;">{{ member.contribution }}</p>
+                
+                                        <button onclick="toggleDetails('{{ member.id }}')" style="margin-left: 55px; background-color: green; color: white; border: none; border-radius: 30px;">
+                                            Close
+                                        </button>
+                                    </div>
+                                </div>
+                                {% endfor %}
                             </div>
-                        </div>
-                        <div class="follow-user">
-                            <img src="{% static 'images/users/user-15.jpg' %}" alt="" class="profile-photo-sm pull-left" />
-                            <div>
-                                <h5><a href="timeline.html">Khimraj</a></h5>
-                                <a href="#" class="text-green">Details</a>
+                            <hr>
+                            <!-- People's Choice Card -->
+                                                        <!-- People's Choice Card -->
+                            <div class="peoples-choice-card">
+                                <!-- Image of the person in a circular frame that overlaps the card -->
+                                <div class="profile-image-container">
+                                    <img src="{% static 'images/post-images/Balen.jpg' %}" alt="People's Choice Representative" class="profile-image">
+                                </div>
+
+                                <!-- People's Choice Title -->
+                              <h5 class="peoples-choice-title" >🌟Popular Choice🌟</h5>
+
+
+                                <!-- Buttons: Your Vote and Eye Icon for Details -->
+                                <div class="button-container">
+                                    <!-- Your Vote Button -->
+                                    <button class="custom-button">Your Vote</button>
+                                    
+                                    <!-- Eye Icon for Details -->
+                                    <button class="custom-button">&#128065;</button>
+                                </div>
                             </div>
+
+                            <!-- Add the CSS below -->
+                            <style>
+                            /* Card styling */
+                            .peoples-choice-card {
+                                background-color: rgba(60, 40, 153, 0.5);
+                                color: white;
+                                padding: 20px;
+                                text-align: center;
+                                margin-top: 60px;
+                                border-radius: 10px;
+                                position: relative;
+                                box-shadow: 0 0 0 3px rgba(135, 211, 124, 1); /* Green border with specified color */
+                                transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth animation on hover */
+                            }
+
+                            /* Animation on card hover */
+                            .peoples-choice-card:hover {
+                                transform: translateY(-5px); /* Lift card slightly */
+                                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4); /* Deepen shadow on hover */
+                            }
+
+                            /* Profile image container with outer shadow */
+                            .profile-image-container {
+                                position: absolute;
+                                top: -40px;
+                                left: 50%;
+                                transform: translateX(-50%);
+                                width: 110px;
+                                height: 110px;
+                                background-color: white;
+                                border-radius: 50%;
+                                padding: 5px;
+                                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Shadow around circular frame */
+                            }
+
+                            /* Profile image */
+                            .profile-image {
+                                width: 100%;
+                                height: 100%;
+                                border-radius: 50%;
+                            }
+
+                            /* Title styling */
+                            .peoples-choice-title {
+                                font-weight: bold;
+                                margin-top: 59px;
+                                font-size: 17px;
+                                
+                            }
+
+                            /* Button container */
+                            .button-container {
+                                display: flex;
+                                justify-content: center;
+                                gap: 50px;
+                                margin-top: 15px;
+                            }
+
+                            /* Button styling with hover effect */
+                            .custom-button {
+                                background-color:rgba(135, 211, 124, 1);
+                                box-shadow: 0 0 0 1px rgba(20, 0, 113, 0.69);
+                                color: green;
+                                border: none;
+                                padding: 10px 15px;
+                                border-radius: 20px;
+                                font-weight: bold;
+                                cursor: pointer;
+                                transition: background-color 0.3s, color 0.3s, transform 0.2s; /* Smooth transition for color and scale */
+                            }
+
+                            /* Button hover animation */
+                            .custom-button:hover {
+                                background-color: green;
+                                color: white;
+                                transform: scale(1.05); /* Slight enlargement on hover */
+                            }
+                            </style>
+
+                            
+                            
+
                         </div>
+                        
                     </div>
-                </div>
+                    <!-- Add the People's Choice Card below the hr line -->
+                    <script>
+                        function toggleDetails(memberId) {
+                            var detailsDiv = document.getElementById("details-" + memberId);
+                            detailsDiv.style.display = (detailsDiv.style.display === "none") ? "block" : "none";
+                        }
+                    </script>
+                                    
+                    <style>
+                            /* Default styles for larger screens */
+                        /* Default styles for larger screens */
+                            .sidebar {
+                                position: fixed;
+                                right: 40px;
+                                top: 0;
+                                bottom: 0;
+                                width: 16.66667%;
+                                height: 100%;
+                                padding-top: 80px;
+                                overflow-y: auto;
+                                z-index: 1000;
+                            }
+
+                            .committee-member-card {
+                                text-align: center;
+                                padding: 10px;
+                            }
+
+                            .profile-summary {
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                margin-bottom: 5px;
+                            }
+
+                            .profile-summary img {
+                                margin-right: 10px;
+                            }
+
+                            .members-list {
+                                max-height: 300px;
+                                overflow-y: auto;
+                                overflow-x: hidden;
+                                padding-right: 10px;
+                            }
+                                                        /* Style for the scrollbar track */
+                            .members-list::-webkit-scrollbar {
+                                width: 8px; /* Adjust the width of the scrollbar */
+                            }
+
+                            .members-list::-webkit-scrollbar-track {
+                                background: #f1f1f1; /* Light background for the track */
+                            }             /* Style for the scrollbar thumb (the draggable part) */
+                            .members-list::-webkit-scrollbar-thumb {
+                                background: rgba(20, 0, 113, 0.69); /* Custom color for the scrollbar thumb */
+                                border-radius: 10px; /* Optional: round the edges of the scrollbar */
+                            }
+
+                            /* Hover effect for the scrollbar thumb */
+                            .members-list::-webkit-scrollbar-thumb:hover {
+                                background: rgba(20, 0, 113, 1); /* Darker color when hovering */
+                            }
+
+                            /* Responsive adjustments for the details section */
+                            @media (max-width: 768px) {
+                                .sidebar {
+                                    position: relative;
+                                    padding: 10px;
+                                    width: 100%;
+                                    height: auto;
+                                }
+
+                                .committee-member-card {
+                                    text-align: left;
+                                    padding: 5px;
+                                }
+
+                                .profile-summary {
+                                    flex-direction: column;
+                                    align-items: flex-start;
+                                }
+
+                                .profile-summary img {
+                                    margin-right: 0;
+                                    margin-bottom: 5px;
+                                }
+
+                                .profile-summary h5 {
+                                    font-size: 1rem;
+                                }
+
+                                /* Adjust details section */
+                                .committee-member-card #details-{{ member.id }} {
+                                    text-align: left;
+                                    font-size: 0.9rem;
+                                    padding: 25px 35px; /* Increased left padding for better spacing */
+                                    margin-left: 10px; /* Additional left margin */
+                                }
+
+                                /* Adjust button within details section */
+                                .committee-member-card #details-{{ member.id }} button {
+                                    margin-left: 0;
+                                    display: block;
+                                    margin: 40px auto 0;
+                                }
+                            }
+
+                            @media (max-width: 576px) {
+                                .profile-summary {
+                                    align-items: center;
+                                    text-align: center;
+                                }
+
+                                .committee-member-card #details-{{ member.id }} p {
+                                    font-size: 0.85rem;
+                                    margin-left: 40px; /* Additional left margin for paragraphs */
+                                }
+
+                                .members-list {
+                                    max-height: 180px;
+                                }
+                            }
+
+                    </style>                
+
+                                
+                                
+                                
+                                
+                
+                
+                
             </div>
         </div>
     </div>
@@ -731,12 +1065,12 @@
     
     <!-- Footer
     ================================================= -->
-    <footer id="footer">
+    {% comment %} <footer id="footer">
         <div class="container">
             <div class="row">
                 <div class="footer-wrapper">
                     <div class="col-md-3 col-sm-3">
-                        <a href=""><img src="images/logo-black.png" alt="" class="footer-logo" /></a>
+                        <a href=""><img src="images/janajodlogo.png" alt="" class="footer-logo" /></a>
                         <ul class="list-inline social-icons">
                             <li><a href="#"><i class="icon ion-social-facebook"></i></a></li>
                             <li><a href="#"><i class="icon ion-social-twitter"></i></a></li>
@@ -779,7 +1113,7 @@
             </div>
         </div>
        
-    </footer>
+    </footer> {% endcomment %}
 
     
 
