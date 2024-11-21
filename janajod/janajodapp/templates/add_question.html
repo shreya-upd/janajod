@@ -1,0 +1,14 @@
+{% extends 'adminbase.html' %}
+
+{% block content %}
+    <h1 style="text-align: center; color: green;">Add Question to Survey: {{ survey.title }}</h1>
+    <form method="post" action="">
+        {% csrf_token %}
+        <div style="margin-bottom: 20px;">
+            <label for="question_text">Question Text:</label>
+            <input type="text" id="question_text" name="question_text" style="width: 100%; padding: 10px; margin-top: 5px;" required>
+        </div>
+        <button type="submit" style="padding: 10px 20px; background-color: green; color: white; border: none; cursor: pointer;">Add Question</button>
+        <a href="{% url 'survey_questions' survey.id %}" style="padding: 10px 20px; background-color: red; color: white; text-decoration: none;">Cancel</a>
+    </form>
+{% endblock %}

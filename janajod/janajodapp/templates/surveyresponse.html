@@ -1,0 +1,113 @@
+{% extends 'adminbase.html' %}
+{% load static %}
+
+{% block content %}
+<h2 style="color:green;text-align: center;text-decoration: underline;margin-bottom: 12px;">
+    Survey Responses</h2>
+<hr><hr>
+
+<!-- Filters -->
+<form method="get" class="filters">
+    <label for="survey">By Survey:</label>
+    <select name="survey" id="survey">
+        <option value="All" {% if selected_survey == "All" %}selected{% endif %}>All</option>
+        {% for survey in surveys %}
+        <option value="{{ survey }}" {% if survey == selected_survey %}selected{% endif %}>{{ survey }}</option>
+        {% endfor %}
+    </select>
+
+    <label for="user">By User:</label>
+    <select name="user" id="user">
+        <option value="All" {% if selected_user == "All" %}selected{% endif %}>All</option>
+        {% for user in users %}
+        <option value="{{ user }}" {% if user == selected_user %}selected{% endif %}>{{ user }}</option>
+        {% endfor %}
+    </select>
+
+    <label for="question">By Question:</label>
+    <select name="question" id="question">
+        <option value="All" {% if selected_question == "All" %}selected{% endif %}>All</option>
+        {% for question in questions %}
+        <option value="{{ question }}" {% if question == selected_question %}selected{% endif %}>{{ question }}</option>
+        {% endfor %}
+    </select>
+
+    <button type="submit">Filter</button>
+</form>
+
+<!-- Responses Table -->
+<table class="response-table">
+    <thead>
+        <tr>
+            <th>User</th>
+            <th>Survey</th>
+            <th>Question</th>
+            <th>Selected Option</th>
+            <th>Submitted On</th>
+            <th>Action</th>  <!-- Changed column name to Action -->
+        </tr>
+    </thead>
+    <tbody>
+        {% for response in responses %}
+        <tr>
+            <td>{{ response.user.username }}</td>
+            <td>{{ response.survey.title }}</td>
+            <td>{{ response.question.text }}</td>
+            <td>{{ response.selected_option.text }}</td>
+            <td>{{ response.submitted_on|date:"M. d, Y, g:i a" }}</td>
+            <td>
+                <!-- Delete button inside form -->
+                <form action="{% url 'surveyresponse_confirm_delete' response.pk %}" method="get">
+                    {% csrf_token %}
+                    <button type="submit" style="color: white; background-color: red; border: none; padding: 5px 10px; cursor: pointer;">
+                        Delete
+                    </button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
+{% block extrahead %}
+    <link rel="stylesheet" href="{% static 'admin/css/styles.css' %}">
+    <style>
+        /* Custom styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .filters {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+        .response-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .response-table th, .response-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        .response-table th {
+            background-color: #f4f4f4;
+        }
+        /* Delete button styles */
+        button[type="submit"] {
+            color: white;
+            background-color: red;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        button[type="submit"]:hover {
+            background-color: darkred;
+        }
+    </style>
+{% endblock %}

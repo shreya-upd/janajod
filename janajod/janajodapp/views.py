@@ -28,8 +28,14 @@ from django.contrib.auth.decorators import login_required
 
 @login_required
 def custom_admin_home(request):
-    users = Profile.objects.all()  # Query some data, like all profiles
-    return render(request, 'custom_admin_home.html', {'users': users})
+    # users = Profile.objects.all()  # Query some data, like all profiles
+    # return render(request, 'custom_admin_home.html', {'users': users})
+     if request.user.is_superuser or request.user.is_staff:  # Checking for superuser or admin
+        users = Profile.objects.all()  # Query some data, like all profiles
+        return render(request, 'custom_admin_home.html', {'users': users})
+     else:
+        # Redirect non-admin users to newsfeed page
+        return redirect('home')
 
 from django.contrib.auth.models import User
 
@@ -639,6 +645,253 @@ def add_service_request(request):
 
     return render(request, 'addservicereq.html', {'form': form})
 
+from django.shortcuts import render, get_object_or_404
+from .models import Survey, Question, Option
+
+def survey_admin(request):
+    surveys = Survey.objects.all()
+    return render(request, 'surveyadmin.html', {'surveys': surveys})
+
+def survey_questions(request, survey_id):
+    survey = get_object_or_404(Survey, id=survey_id)
+    questions = Question.objects.filter(survey=survey)
+    return render(request, 'surveyque.html', {'survey': survey, 'questions': questions})
+
+def survey_options(request, survey_id):
+    survey = get_object_or_404(Survey, id=survey_id)
+    options = Option.objects.filter(question__survey=survey)
+    return render(request, 'surveyoption.html', {'survey': survey, 'options': options})
+
+
+from .models import Survey, Question, Option
+
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Survey, Option
+
+def survey_edit(request, id):
+    # Fetch the survey object or return 404 if not found
+    survey = get_object_or_404(Survey, id=id)
+    questions = survey.question_set.all()
+    options = Option.objects.filter(question__survey=survey)
+
+    # Check if the form is being submitted via POST
+    if request.method == "POST":
+        # Update the survey title
+        survey_title = request.POST.get('title')
+        if survey_title:
+            print(f"Updating Survey Title: {survey_title}")  # Debugging line
+            survey.title = survey_title
+            try:
+                survey.save()
+                print(f"Survey '{survey.id}' updated successfully.")  # Debugging line
+            except Exception as e:
+                print(f"Error saving survey: {e}")  # Debugging line
+
+        # Update questions
+        for question in questions:
+            question_text = request.POST.get(f'question_{question.id}')
+            if question_text:
+                print(f"Updating Question {question.id}: {question_text}")  # Debugging line
+                question.text = question_text
+                try:
+                    question.save()
+                    print(f"Question {question.id} updated.")  # Debugging line
+                except Exception as e:
+                    print(f"Error saving question {question.id}: {e}")  # Debugging line
+
+        # Update options
+        for option in options:
+            option_text = request.POST.get(f'option_{option.id}')
+            if option_text:
+                print(f"Updating Option {option.id}: {option_text}")  # Debugging line
+                option.text = option_text
+                try:
+                    option.save()
+                    print(f"Option {option.id} updated.")  # Debugging line
+                except Exception as e:
+                    print(f"Error saving option {option.id}: {e}")  # Debugging line
+
+        # Redirect to the survey administration page after saving changes
+        return redirect('survey_admin')  # Make sure this URL name is correct
+
+    # Render the survey edit page with existing data
+    return render(request, 'surveyedit.html', {
+        'survey': survey,
+        'questions': questions,
+        'options': options,
+    })
+
+def add_question(request, survey_id):
+    survey = get_object_or_404(Survey, id=survey_id)
+    
+    if request.method == "POST":
+        question_text = request.POST.get('question_text')
+        if question_text:
+            Question.objects.create(survey=survey, text=question_text)
+            return redirect('survey_questions', survey.id)  # Redirect back to the questions list
+
+    return render(request, 'add_question.html', {'survey': survey})
+
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Survey, Question, Option
+
+def add_option(request, survey_id):
+    survey = get_object_or_404(Survey, id=survey_id)
+    
+    if request.method == 'POST':
+        # Get selected question ID and option text from the form
+        question_id = request.POST.get('question')
+        option_text = request.POST.get('option_text')
+
+        # Get the selected question object
+        question = get_object_or_404(Question, id=question_id)
+        
+        # Create the new option for the selected question
+        Option.objects.create(question=question, text=option_text)
+        
+        # Redirect to the options page for the survey
+        return redirect('survey_options', survey_id=survey.id)
+
+    # If it's a GET request, pass the survey and its questions to the template
+    questions = Question.objects.filter(survey=survey)
+    return render(request, 'add_option.html', {'survey': survey, 'questions': questions})
+
+from django.shortcuts import get_object_or_404, redirect
+from .models import Question
+
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Survey, Question, Option
+
+def delete_question(request, question_id):
+    question = get_object_or_404(Question, id=question_id)
+    
+    # Delete the associated options for the question
+    options = Option.objects.filter(question=question)
+    options.delete()
+    
+    # Delete the question
+    question.delete()
+
+    return redirect('survey_edit', id=question.survey.id)  # Redirect to the survey edit page
+
+
+# views.py
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Survey
+from django.contrib import messages
+
+def survey_delete(request, survey_id):
+    survey = get_object_or_404(Survey, id=survey_id)
+
+    if request.method == 'POST':  # If the user confirms deletion
+        survey.delete()
+        messages.success(request, 'Survey deleted successfully.')
+        return redirect('survey_admin')  # Redirect back to the survey admin page
+
+    return render(request, 'surveydelete.html', {'survey': survey})
+
+
+def add_survey(request):
+    if request.method == 'POST':
+        # Get survey title
+        title = request.POST.get('title')
+        if not title:
+            return render(request, 'addsurvey.html', {'error': 'Survey title is required'})
+
+        # Create the survey
+        survey = Survey.objects.create(title=title)
+
+        # Get questions and options
+        questions = request.POST.getlist('question')
+        for question_idx, question_text in enumerate(questions):
+            question = Question.objects.create(survey=survey, text=question_text)
+
+            # Get options for the current question
+            options_key = f'options_for_{question_idx}'
+            options = request.POST.getlist(options_key)
+            for option_text in options:
+                Option.objects.create(question=question, text=option_text)
+
+        return redirect('survey_admin')  # Redirect to survey admin page
+
+    return render(request, 'addsurvey.html')
+
+
+# views.py
+from django.http import Http404
+from django.shortcuts import render
+from .models import Survey, SurveyResponse, User
+from django.shortcuts import render, get_object_or_404
+from .models import Survey, SurveyResponse, User
+
+from django.shortcuts import render
+from .models import SurveyResponse
+
+def survey_responses(request):
+    # Fetch all survey responses and order them by submission date
+    responses = SurveyResponse.objects.select_related('user', 'survey', 'question', 'selected_option').order_by('-submitted_on')
+
+    # Filter parameters if applied
+    survey_filter = request.GET.get('survey', 'All')
+    user_filter = request.GET.get('user', 'All')
+    question_filter = request.GET.get('question', 'All')
+
+    if survey_filter != 'All':
+        responses = responses.filter(survey__title=survey_filter)
+    if user_filter != 'All':
+        responses = responses.filter(user__username=user_filter)
+    if question_filter != 'All':
+        responses = responses.filter(question__text=question_filter)
+
+    # Get distinct values for filters
+    surveys = SurveyResponse.objects.values_list('survey__title', flat=True).distinct()
+    users = SurveyResponse.objects.values_list('user__username', flat=True).distinct()
+    questions = SurveyResponse.objects.values_list('question__text', flat=True).distinct()
+
+    context = {
+        'responses': responses,
+        'surveys': surveys,
+        'users': users,
+        'questions': questions,
+        'selected_survey': survey_filter,
+        'selected_user': user_filter,
+        'selected_question': question_filter,
+    }
+    return render(request, 'surveyresponse.html', context)
+
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import SurveyResponse
+from django.contrib import messages
+
+def surveyresponse_confirm_delete(request, pk):
+    response = get_object_or_404(SurveyResponse, pk=pk)
+    
+    if request.method == 'POST':  # If the user confirms the deletion
+        response.delete()
+        messages.success(request, 'Survey response deleted successfully.')
+        return redirect('survey_responses')  # Redirect to the survey response list page
+    
+    # If the user cancels, redirect them back
+    if 'cancel' in request.POST:
+        return redirect('survey_responses')
+    
+    return render(request, 'surveyresponsedel.html', {'response': response})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -647,6 +900,10 @@ def add_service_request(request):
 
 @login_required(login_url='/login/')
 def home(request):
+    if request.user.is_superuser or request.user.is_staff:
+        # Redirect admin users to custom admin home
+        return redirect('custom_admin_home')  
+    
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():

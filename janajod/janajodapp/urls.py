@@ -40,7 +40,34 @@ urlpatterns = [
      path('viewservicerequests/add/', views.add_service_request, name='add_service_request'),
    path('viewservicerequest/delete/<int:pk>/', views.delete_service_request, name='delete_service_request'),
     path('viewservicerequest/confirm-delete/<int:pk>/', views.confirm_delete_service_request, name='confirm_delete_service_request'),
+    
+    
+    path('customadmin/surveys/', views.survey_admin, name='survey_admin'),
+      path('customadmin/survey/<int:survey_id>/questions/', views.survey_questions, name='survey_questions'),
+       path('customsurvey/<int:survey_id>/add_question/', views.add_question, name='question_add'),
+    path('customadmin/survey/<int:survey_id>/options/', views.survey_options, name='survey_options'),
+    #  path('customsurvey/<int:survey_id>/question/<int:question_id>/add_option/', views.add_option, name='option_add'),
+    path('customsurvey/<int:survey_id>/option/add/', views.add_option, name='option_add'),
+    path('customadmin/surveys/<int:id>/edit/', views.survey_edit, name='survey_edit'),
+     path('customsurvey/delete/<int:survey_id>/', views.survey_delete, name='survey_delete'),
+     path('add_survey/', views.add_survey, name='add_survey'),
+      path('delete-question/<int:question_id>/', views.delete_question, name='delete_question'),
+      path('survey-responses/', views.survey_responses, name='survey_responses'),
+     
+    path('surveyresponse/<int:pk>/confirm-delete/', views.surveyresponse_confirm_delete, name='surveyresponse_confirm_delete'),
+    # path('customsurvey/<int:survey_id>/responses/add/', views.add_survey_response, name='add_survey_response'),
+    # path('customsurvey/<int:survey_id>/responses/<int:response_id>/edit/', views.change_survey_response, name='change_survey_response'),
+    # path('customsurvey/<int:survey_id>/responses/<int:response_id>/delete/', views.delete_survey_response, name='delete_survey_response'),
+    # path('admin/question/<int:pk>/change/', views.question_change, name='question_change'),
+    # path('admin/question/<int:pk>/delete/', views.question_delete, name='question_delete'),
+    # path('admin/question/add/', views.question_add, name='question_add'),
 
+    # path('admin/option/<int:pk>/change/', views.option_change, name='option_change'),
+    # path('admin/option/<int:pk>/delete/', views.option_delete, name='option_delete'),
+    # path('admin/option/add/', views.option_add, name='option_add'),
+
+
+     
     path('viewpostadmin/', views.viewpostadmin, name='viewpostadmin'),
     path('adminedit_post/<int:post_id>/', views.adminedit_post, name='adminedit_post'),
     path('admindelete_post/<int:post_id>/', views.admin_delete_post, name='admindelete_post'),

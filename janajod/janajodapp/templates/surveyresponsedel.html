@@ -1,0 +1,21 @@
+{% extends 'adminbase.html' %}
+
+{% block content %}
+    <h2 style="text-align: center; color: red; text-decoration: underline; margin-bottom: 20px;">
+        Are you sure you want to delete the response made by <strong>{{ response.user.username }}</strong> for the survey "<strong>{{ response.survey.title }}</strong>"?
+    </h2>
+
+    <form method="post">
+        {% csrf_token %}
+        
+        <!-- Confirm Delete Button (Red) -->
+        <button type="submit" style="background-color: red; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; display: inline-block;">
+            Confirm Delete
+        </button>
+        
+        <!-- Cancel Button (Green) -->
+        <a href="{% url 'survey_responses' %}" style="color: white; text-decoration: none; background-color: green; padding: 10px 20px; border-radius: 5px; display: inline-block; text-align: center; margin-left: 10px;">
+            Cancel
+        </a>
+    </form>
+{% endblock %}

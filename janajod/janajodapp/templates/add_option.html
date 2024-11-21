@@ -1,0 +1,28 @@
+{% extends 'adminbase.html' %}
+
+{% block content %}
+    <h1 style="text-align: center; color: green;">Add Option to Question for Survey: "{{ survey.title }}"</h1>
+    <form method="post" action="">
+        {% csrf_token %}
+        
+        <!-- Dropdown to select a question -->
+        <div style="margin-bottom: 20px;">
+            <label for="question">Select Question:</label>
+            <select id="question" name="question" style="width: 100%; padding: 10px; margin-top: 5px;" required>
+                <option value="">-- Select a Question --</option>
+                {% for question in questions %}
+                    <option value="{{ question.id }}">{{ question.text }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <!-- Input field to add option text -->
+        <div style="margin-bottom: 20px;">
+            <label for="option_text">Option Text:</label>
+            <input type="text" id="option_text" name="option_text" style="width: 100%; padding: 10px; margin-top: 5px;" required>
+        </div>
+        
+        <button type="submit" style="padding: 10px 20px; background-color: green; color: white; border: none; cursor: pointer;">Add Option</button>
+        <a href="{% url 'survey_options' survey.id %}" style="padding: 10px 20px; background-color: red; color: white; text-decoration: none;">Cancel</a>
+    </form>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'adminbase.html' %}
+
+{% block content %}
+    <h2 style="color:green;text-align: center;text-decoration: underline;margin-bottom: 12px;">
+        Questions for Survey: {{ survey.title }}
+    </h2>
+    <hr><hr>
+
+    <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+        <thead>
+            <tr style="background-color: #f4f4f4; text-align: left; border-bottom: 2px solid #ddd;">
+                <th style="padding: 10px; border: 1px solid #ddd;">Question Text</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for question in questions %}
+                <tr style="border-bottom: 1px solid #ddd;">
+                    <td style="padding: 10px; border: 1px solid #ddd;">{{ question.text }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="1" style="text-align: center; padding: 10px; border: 1px solid #ddd;">
+                        No questions available for this survey.
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <hr><hr>
+
+    <!-- Buttons in a flex container -->
+    <div style="display: flex; gap: 20px; justify-content: center;">
+        <a href="{% url 'question_add' survey.id %}" style="background-color: green; color: white; text-decoration: none; padding: 10px 20px; border-radius: 5px; display: inline-block; text-align: center;">
+            Add New Question
+        </a>
+
+        <a href="{% url 'survey_admin' %}" style="background-color: blue; color: white; text-decoration: none; padding: 10px 20px; border-radius: 5px; display: inline-block; text-align: center;">
+            Back to Surveys
+        </a>
+    </div>
+{% endblock %}

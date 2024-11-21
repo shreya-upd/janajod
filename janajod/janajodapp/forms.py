@@ -265,3 +265,34 @@ class UserEventRequestForm(forms.ModelForm):
     class Meta:
         model = UserEventRequest  # Adjust this if your model is named differently
         fields = ['title', 'user', 'description','is_approved']  # Example fields, adjust as needed
+
+
+from django import forms
+from django.forms import inlineformset_factory
+from .models import Survey, Question, Option
+
+class SurveyForm(forms.ModelForm):
+    class Meta:
+        model = Survey
+        fields = ['title']
+
+class QuestionForm(forms.ModelForm):
+    class Meta:
+        model = Question
+        fields = ['text']
+
+class OptionForm(forms.ModelForm):
+    class Meta:
+        model = Option
+        fields = ['text']
+
+# Inline formset for options within a question
+OptionFormSet = inlineformset_factory(
+    Question, Option, form=OptionForm, extra=1, can_delete=True
+)
+
+# Inline formset for questions within a survey
+QuestionFormSet = inlineformset_factory(
+    Survey, Question, form=QuestionForm, extra=1, can_delete=True
+)
+

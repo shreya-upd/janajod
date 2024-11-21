@@ -1,0 +1,50 @@
+<form method="post">
+    {% csrf_token %}
+    <h1 style="text-align: center; color: green;">Add Survey</h1>
+    <hr><hr>
+    <label for="title">Survey Title:</label>
+    <input type="text" name="title" required>
+
+    <div id="questions">
+        <h3>Questions</h3>
+        <div class="question">
+            <label>Question:</label>
+            <input type="text" name="question" required>
+            <div class="options">
+                <h4>Options</h4>
+                <input type="text" name="options_for_0" required>
+                <button type="button" onclick="addOption(this)">Add Option</button>
+            </div>
+        </div>
+    </div>
+    <button type="button" onclick="addQuestion()">Add Question</button>
+    <br><hr><hr>
+    
+    <button type="submit"  style="padding: 10px 20px; background-color: green; color: white; border: none; cursor: pointer;">Save Survey</button>
+    <a href="{% url 'survey_admin' %}" style="padding: 10px 20px; background-color: red; color: white; text-decoration: none;">Cancel</a>
+</form>
+
+<script>
+let questionCount = 1; // Track question count
+function addQuestion() {
+    const questionHtml = `
+        <div class="question">
+            <label>Question:</label>
+            <input type="text" name="question" required>
+            <div class="options">
+                <h4>Options</h4>
+                <input type="text" name="options_for_${questionCount}" required>
+                <button type="button" onclick="addOption(this)">Add Option</button>
+            </div>
+        </div>
+    `;
+    document.getElementById('questions').insertAdjacentHTML('beforeend', questionHtml);
+    questionCount++;
+}
+
+function addOption(button) {
+    const optionsDiv = button.previousElementSibling.parentElement;
+    const newOptionHtml = `<input type="text" name="options_for_${questionCount - 1}" required>`;
+    optionsDiv.insertAdjacentHTML('beforeend', newOptionHtml);
+}
+</script>

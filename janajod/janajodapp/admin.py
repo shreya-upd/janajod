@@ -85,7 +85,35 @@ from .models import Survey, Question, Option,SurveyResponse
 admin.site.register(Survey)
 admin.site.register(Question)
 admin.site.register(Option)
-admin.site.register(SurveyResponse)
+# admin.site.register(SurveyResponse)
+
+from django.contrib import admin
+from .models import Survey, Question, Option, SurveyResponse
+from django.utils.html import format_html
+
+class SurveyResponseAdmin(admin.ModelAdmin):
+    # List display for SurveyResponse
+    list_display = ('user', 'survey', 'question', 'selected_option', 'submitted_on', 'response_details')
+    
+    # Adding search functionality to search by user or survey title
+    search_fields = ('user__username', 'survey__title', 'question__text', 'selected_option__text')
+    
+    # Adding filters to make it easier to filter responses based on user or survey
+    list_filter = ('survey', 'user', 'question')
+
+    # Create custom function to show response details
+    def response_details(self, obj):
+        return format_html('<a href="{}">View Details</a>', obj.pk)  # link to the change page for response details
+
+    # Making the 'response_details' a clickable link in the list display
+    response_details.short_description = 'Details'
+
+# Register the SurveyResponse model with the custom admin class
+admin.site.register(SurveyResponse, SurveyResponseAdmin)
+
+
+    # other configurations like list_display, list_filter etc. remain as is
+
 
 
 from django.contrib import admin

@@ -1,0 +1,45 @@
+{% extends 'adminbase.html' %}
+
+{% block content %}
+    <h2 style="color:green;text-align: center;text-decoration: underline;margin-bottom: 12px;">Options for Survey: {{ survey.title }}</h2>
+    <hr><hr>
+
+   
+
+    <!-- Options Table -->
+    <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+        <thead>
+            <tr style="background-color: #f4f4f4; text-align: left; border-bottom: 2px solid #ddd;">
+                <th style="padding: 10px; border: 1px solid #ddd;">Option Text</th>
+                <th style="padding: 10px; border: 1px solid #ddd;">Question</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for option in options %}
+                <tr style="border-bottom: 1px solid #ddd;">
+                    <td style="padding: 10px; border: 1px solid #ddd;">{{ option.text }}</td>
+                    <td style="padding: 10px; border: 1px solid #ddd;">{{ option.question.text }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="2" style="text-align: center; padding: 10px; border: 1px solid #ddd;">
+                        No options available for this survey. <a href="{% url 'option_add' survey.id %}" style="color: green;">Add New</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <hr><hr>
+    <!-- Button and Link in the same line -->
+    <div style="display: flex; gap: 20px; justify-content: center;">
+        <a href="{% url 'survey_admin' %}" style="color: white; text-decoration: none; background-color: blue; padding: 10px 20px; border-radius: 5px; display: inline-block; text-align: center;">
+            Back to Surveys
+        </a>
+         <!-- Add New Option Link -->
+    <a href="{% url 'option_add' survey.id %}" style="color: white; text-decoration: none; background-color: green; padding: 10px 20px; border-radius: 5px; display: inline-block; text-align: center;">
+        Add New Option
+    </a>
+   
+    </div>
+    
+{% endblock %}

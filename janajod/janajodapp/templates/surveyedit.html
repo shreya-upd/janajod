@@ -1,0 +1,42 @@
+{% extends 'adminbase.html' %}
+
+{% block content %}
+    <h1 style="text-align: center; color: green;">Edit Survey</h1>
+    <form method="post" action="">
+        {% csrf_token %}
+
+        <div style="margin-bottom: 20px;">
+            <label for="title">Survey Title:</label>
+            <input type="text" id="title" name="title" value="{{ survey.title }}" style="width: 100%; padding: 10px; margin-top: 5px;">
+        </div>
+
+        <h2>Questions</h2>
+        {% for question in questions %}
+            <div style="margin-bottom: 10px;">
+                <label for="question_{{ question.id }}">Question {{ forloop.counter }}:</label>
+                <input type="text" id="question_{{ question.id }}" name="question_{{ question.id }}" value="{{ question.text }}" style="width: 80%; padding: 10px; margin-top: 5px;">
+                
+                <!-- Delete Icon -->
+                <form method="post" action="{% url 'delete_question' question.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" style="background: none; border: none; cursor: pointer; color: red;">
+                        &#x1F5D1; <!-- Trash can emoji -->
+                    </button>
+                </form>
+            </div>
+        {% endfor %}
+
+        <h2>Options</h2>
+        {% for option in options %}
+            <div style="margin-bottom: 10px;">
+                <label for="option_{{ option.id }}">Option for Question "{{ option.question.text }}" (Option {{ forloop.counter }}):</label>
+                <input type="text" id="option_{{ option.id }}" name="option_{{ option.id }}" value="{{ option.text }}" style="width: 100%; padding: 10px; margin-top: 5px;">
+            </div>
+        {% endfor %}
+
+        <div style="margin-top: 20px;">
+            <button type="submit" style="padding: 10px 20px; background-color: green; color: white; border: none; cursor: pointer;">Save Changes</button>
+            <a href="{% url 'survey_admin' %}" style="padding: 10px 20px; background-color: red; color: white; text-decoration: none;">Cancel</a>
+        </div>
+    </form>
+{% endblock %}
