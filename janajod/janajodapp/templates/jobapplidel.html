@@ -1,0 +1,28 @@
+{% extends 'adminbase.html' %}
+
+{% block content %}
+    <h2 style="color: green; text-align: center; text-decoration: underline;">Delete Job Application</h2>
+    <hr><hr>
+
+    <h3 style="color: green; text-align: center;">
+        Are you sure you want to delete the job application of {{ application.applicant_name }} for the job "{{ application.job.job_title }}"?
+    </h3>
+
+    <div style="text-align: center;">
+        <form method="post">
+            {% csrf_token %}
+            <div style="display: flex; gap: 20px; justify-content: center; margin-top: 10px;">
+                <!-- Confirm Deletion Button -->
+                <button type="submit" style="background-color: red; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+                    Delete
+                </button>
+
+                <!-- Cancel Button -->
+                <a href="{% url 'admin_job_applications' %}" style="color: white; text-decoration: none; background-color: blue; padding: 10px 20px; border-radius: 5px; display: inline-block; text-align: center;">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}

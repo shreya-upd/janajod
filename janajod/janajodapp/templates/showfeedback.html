@@ -1,0 +1,36 @@
+{% extends 'adminbase.html' %}
+
+{% block content %}
+    <!-- Centered and Underlined Heading for Feedback -->
+    <h2 style="color: green; text-align: center; text-decoration: underline; margin-bottom: 12px;">User Feedback</h2>
+    <hr><hr>
+
+    <!-- Feedback List with Style and Delete Button -->
+    <div>
+      
+        <ul style="list-style: none; padding: 0;">
+            {% for feedback in feedbacks %}
+                <li style="border: 1px solid #ddd; padding: 15px; margin-bottom: 10px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                    <h4 style="color: green;">{{ feedback.user.username }}</h4>
+                    <p style="margin: 5px 0; font-style: italic;">{{ feedback.message }}</p>
+                    <small style="color: gray;">{{ feedback.created_at|date:"F j, Y, g:i a" }}</small>
+
+                    <!-- Delete Button with Styled Form -->
+                    <div style="display: flex; gap: 10px; margin-top: 15px;">
+                        <form method="POST" action="{% url 'delete_feedback' feedback.id %}">
+                            {% csrf_token %}
+                            <button type="submit" style="background-color: red; color: white; padding: 5px 10px; border: none; border-radius: 5px; cursor: pointer;">
+                                Delete Feedback
+                            </button>
+                        </form>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    {% if not feedbacks %}
+        <p class="text-center text-muted">No feedback available at the moment.</p>
+    {% endif %}
+    <hr><hr>
+{% endblock %}

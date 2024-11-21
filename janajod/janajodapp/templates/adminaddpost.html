@@ -1,0 +1,57 @@
+{% extends 'adminbase.html' %} <!-- Extend your base template -->
+
+{% block content %}
+    <h2 style="color:green; text-align: center; text-decoration: underline; margin-bottom: 12px;">Add New Post</h2>
+    <hr><hr>
+    <form method="POST" enctype="multipart/form-data" action="{% url 'admin_add_post' %}">
+        {% csrf_token %}
+
+        <!-- Form Fields with layout -->
+        <div style="max-width: 600px; margin: 20px auto; background-color: #f9f9f9; padding: 20px; border: 1px solid #ddd; border-radius: 5px;">
+            <!-- Author Field -->
+            <label for="author" style="font-weight: bold;">Author:</label>
+            <select name="author" id="author" required style="width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px;">
+                {% for user in users %}
+                <option value="{{ user.id }}">{{ user.username }}</option>
+                {% endfor %}
+            </select>
+
+            <!-- Content Field -->
+            <label for="content" style="font-weight: bold;">Content:</label>
+            <textarea name="content" id="content" rows="5" required style="width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px;"></textarea>
+
+            <!-- Media Field -->
+            <label for="media" style="font-weight: bold;">Media:</label>
+            <input type="file" name="media" id="media" style="width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px;">
+
+            <!-- Likes Field -->
+            <label for="likes" style="font-weight: bold;">Likes:</label>
+            <select name="likes" id="likes" multiple style="width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px;">
+                {% for user in users %}
+                <option value="{{ user.id }}">{{ user.username }}</option>
+                {% endfor %}
+            </select>
+
+            <!-- Dislikes Field -->
+            <label for="dislikes" style="font-weight: bold;">Dislikes:</label>
+            <select name="dislikes" id="dislikes" multiple style="width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px;">
+                {% for user in users %}
+                <option value="{{ user.id }}">{{ user.username }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <hr><hr>
+
+        <!-- Button and Link in the same line -->
+        <div style="display: flex; gap: 20px; justify-content: center;">
+            <button type="submit" style="background-color: green; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+                Add Post
+            </button>
+
+            <a href="{% url 'viewpostadmin' %}" style="color: white; text-decoration: none; background-color: blue; padding: 10px 20px; border-radius: 5px; display: inline-block; text-align: center;">
+                Back to Post List
+            </a>
+        </div>
+    </form>
+{% endblock %}

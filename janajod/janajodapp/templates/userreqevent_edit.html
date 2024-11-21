@@ -1,0 +1,49 @@
+{% extends 'adminbase.html' %}
+
+{% block content %}
+    <h2 style="color: green; text-align: center; text-decoration: underline; margin-bottom: 12px;">
+        Edit User Event Request: {{ event.title }}
+    </h2>
+    <hr><hr>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <!-- Title -->
+        <div>
+            <label for="title">Title:</label>
+            <input type="text" name="title" value="{{ event.title }}" required style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ddd;">
+        </div>
+        
+        <!-- Description -->
+        <div>
+            <label for="description">Description:</label>
+            <textarea name="description" required style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ddd;">{{ event.description }}</textarea>
+        </div>
+        
+        <!-- Image -->
+        <div>
+            <label for="image">Image:</label>
+            <input type="file" name="image" style="padding: 8px; border-radius: 5px; border: 1px solid #ddd;">
+        </div>
+        
+        <!-- Is Approved -->
+        <div>
+            <label for="is_approved">Is Approved:</label>
+            <input type="checkbox" name="is_approved" {% if event.is_approved %}checked{% endif %} style="margin-left: 10px;">
+        </div>
+        
+        <hr><hr>
+
+        <!-- Button and Link in the same line -->
+        <div style="display: flex; gap: 20px; justify-content: center;">
+            <button type="submit" style="background-color: green; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+                Save Changes
+            </button>
+
+            <a href="{% url 'userreqevent_list' %}" style="color: white; text-decoration: none; background-color: blue; padding: 10px 20px; border-radius: 5px; display: inline-block; text-align: center;">
+                Back to Event Requests List
+            </a>
+        </div>
+    </form>
+{% endblock %}

@@ -37,7 +37,7 @@
             <!-- Logo -->
     
             <div style="display: flex; align-items: center;">
-                <img src="{% static 'images/janajodlogo.png' %}" alt="Logo" style="height: 40px; margin-right: 9px;">
+                <img src="{% static 'images/janajodlogo.jpg' %}" alt="Logo" style="height: 40px; margin-right: 9px;">
             </div>
 
             
@@ -273,16 +273,17 @@
             
                 <!-- Logout Icon -->
                 <i class="fas fa-sign-out-alt" style="margin-right: 20px; font-size: 22px; color: white;" onclick="confirmLogout()"></i> <!-- Logout -->
-                  <!-- Hamburger Menu for Smaller Screens (hidden on larger screens) -->
-                    <div class="d-md-none fixed-top" style="right: 10px; top: 10px;">
-                        <button class="btn btn-primary" data-toggle="modal" data-target="#sidebarModal">
-                            &#8942; <!-- Three dots icon -->
-                        </button>
-                    </div>
 
+                <!-- Hamburger Menu for Smaller Screens (hidden on larger screens) -->
+                <div class="d-md-none fixed-top" style="right: 10px; top: 10px;">
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#sidebarModal">
+                        &#8942; <!-- Three dots icon -->
+                    </button>
+                </div>
+                
                 <!-- Overlay to block page interaction (hidden by default) -->
                 <div id="overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.5); z-index: 999;"></div>
-            
+                
                 <!-- Confirmation Dialog (hidden by default) -->
                 <div id="logoutConfirmation" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); width: 300px; padding:20px; z-index:1000; background-color: rgba(20, 0, 113, 0.69); color: white; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);">
                     <p style="color: white; text-align: center;">Are you sure you want to logout?</p>
@@ -291,27 +292,28 @@
                         <button onclick="cancelLogout()" style="padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; background-color: green; color: white;">No</button>
                     </div>
                 </div>
-            
+                
                 <script>
                     function confirmLogout() {
                         // Show the overlay and confirmation dialog
                         document.getElementById('overlay').style.display = 'block';
                         document.getElementById('logoutConfirmation').style.display = 'block';
                     }
-            
+                
                     function logout() {
                         // Hide the overlay and confirmation dialog, then logout
                         document.getElementById('overlay').style.display = 'none';
                         document.getElementById('logoutConfirmation').style.display = 'none';
-                        window.location.href = 'logout/';  // Replace '/logout' with your actual logout URL
+                        window.location.href = '{% url 'logout' %}';  // Replace with Django's URL tag for logout
                     }
-            
+                
                     function cancelLogout() {
                         // Hide the overlay and confirmation dialog
                         document.getElementById('overlay').style.display = 'none';
                         document.getElementById('logoutConfirmation').style.display = 'none';
                     }
                 </script>
+                
             </div>
             
         </nav>

@@ -6,21 +6,22 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
-from .models import Profile
+from .models import Profile,Notification
 
 admin.site.unregister(User)  
 admin.site.register(User, UserAdmin)  
 admin.site.register(Profile)
 
 
+
 # janajodapp/admin.py
 
 from django.contrib import admin
-from .models import Profile, Post, Comment
+from .models import Profile, Post
 
 
 admin.site.register(Post)
-admin.site.register(Comment)
+
 
 
 from django.contrib import admin
@@ -94,3 +95,40 @@ admin.site.register(CommitteeMember)
 
 
 
+
+
+
+from django.contrib import admin
+from django.contrib.auth.models import User  # Default User model
+
+# Customizing the UserAdmin class for better display
+class UserAdmin(admin.ModelAdmin):
+    # Define which fields to display in the user list
+    list_display = ('username', 'email', 'first_name', 'last_name', 'is_staff', 'is_active', 'date_joined', 'last_login')
+    
+    # Add search functionality on the user list page
+    search_fields = ('username', 'email', 'first_name', 'last_name')
+    
+    # Add filters on the right-hand side of the user list
+    list_filter = ('is_staff', 'is_active')
+    
+    # Custom actions to activate or deactivate users
+    actions = ['activate_users', 'deactivate_users']
+    
+    # Action to activate selected users
+    def activate_users(self, request, queryset):
+        queryset.update(is_active=True)
+        self.message_user(request, f"{queryset.count()} user(s) activated.")
+    
+    # Action to deactivate selected users
+    def deactivate_users(self, request, queryset):
+        queryset.update(is_active=False)
+        self.message_user(request, f"{queryset.count()} user(s) deactivated.")
+    
+    # Short descriptions for custom actions
+    activate_users.short_description = "Activate selected users"
+    deactivate_users.short_description = "Deactivate selected users"
+
+# Register the User model with the customized UserAdmin class
+admin.site.unregister(User)  # Unregister the default User model
+admin.site.register(User, UserAdmin)  # Register the User model with the customized admin

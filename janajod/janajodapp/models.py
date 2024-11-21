@@ -2,6 +2,7 @@ from django.db import models
 from django.db import models
 from django.contrib.auth.models import User
 
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     full_name = models.CharField(max_length=100)
@@ -123,18 +124,6 @@ class Job(models.Model):
 
 
 
-class JobApplication(models.Model):
-    job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='applications')
-    applicant_name = models.CharField(max_length=100)
-    contact_number = models.CharField(max_length=15)
-    address = models.CharField(max_length=255)
-    email = models.EmailField()
-    why_this_job = models.TextField()
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True) 
-
-    def __str__(self):
-        return f"Application by {self.applicant_name} for {self.job.job_title}"
-
 
 class UserReqJob(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -148,6 +137,23 @@ class UserReqJob(models.Model):
         return f"{self.job_title} at {self.organization}"
 
 
+class JobApplication(models.Model):
+    job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='applications', null=True, blank=True)
+    user_job = models.ForeignKey(UserReqJob, on_delete=models.CASCADE, related_name='user_applications', null=True, blank=True)
+    applicant_name = models.CharField(max_length=100)
+    contact_number = models.CharField(max_length=15)
+    address = models.CharField(max_length=255)
+    email = models.EmailField()
+    why_this_job = models.TextField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True) 
+
+    def __str__(self):
+        if self.job:
+            return f"Application by {self.applicant_name} for {self.job.job_title}"
+        else:
+            return f"Application by {self.applicant_name} for {self.user_job.job_title}"
+
+
 
 from django.db import models
 
@@ -158,7 +164,8 @@ class Feedback(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.name
+     return f"Feedback from {self.user.username}"
+
 
 # models.py
 from django.db import models

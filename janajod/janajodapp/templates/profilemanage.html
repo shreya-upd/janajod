@@ -1,0 +1,97 @@
+{% extends 'adminbase.html' %}
+
+{% block content %}
+<style>
+    /* Button styling for "Add New Profile" */
+    .add-profile-btn {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        padding: 8px 15px;
+        text-decoration: none;
+        color: white;
+        background-color: #007bff;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+
+    /* Table styling */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 50px; /* Space below the button */
+    }
+
+    table th, table td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    /* Alternating row colors */
+    table tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    table tr:nth-child(odd) {
+        background-color: #e0f7e0; /* Light green */
+    }
+
+    /* Table header styling */
+    table th {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    /* Edit and Delete buttons */
+    .btn-edit {
+        color: white;
+        padding: 5px 10px;
+        text-decoration: none;
+        background-color: #28a745;
+        border-radius: 17px;
+        margin-bottom: 2px; 
+        display: inline-block; 
+    }
+
+    .btn-delete {
+        display: inline-block; 
+        color: white;
+        padding: 5px 10px;
+        text-decoration: none;
+        background-color: #dc3545;
+        border-radius: 17px;
+    }
+</style>
+
+<!-- "Add New Profile" button at the top-right corner -->
+
+
+<!-- Profile list table -->
+<table>
+    <tr>
+        <th>User</th>
+        <th>Contact</th>
+        <th>Address</th>
+        <th>Bio</th>
+        <th>Profile Image</th>
+        <th>Actions</th>
+    </tr>
+    {% for profile in profiles %}
+    <tr>
+        <td>{{ profile.user.username }}</td>
+        <td>{{ profile.contact_number }}</td>
+        <td>{{ profile.address }}</td>
+        <td>{{ profile.bio }}</td>
+        <td>
+            <img src="{{ profile.profile_image.url }}" alt="Profile Image" style="width: 50px; height: 50px; border-radius: 50%;">
+        </td>
+        <td>
+            <a href="{% url 'edit_profile' profile.id %}" class="btn btn-edit">Edit</a><br>
+            <a href="{% url 'confirm_delete_profile' profile.id %}" class="btn btn-delete">Delete</a>
+
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

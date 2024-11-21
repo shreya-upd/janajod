@@ -1,0 +1,36 @@
+{% extends 'adminbase.html' %}
+{% load static %}
+{% block content %}
+    <div class="main-content" style="display: flex; justify-content: center; align-items: center; height: calc(100vh - 50px);">
+        <div style="text-align: center;">
+
+            <!-- Welcome Message -->
+            <h1 style="font-size: 4em; color: #007bff; margin-bottom: 20px;">Welcome Back, <span style="color:green;">Admin!</span></h1>
+  
+            <!-- Logo with Animation -->
+            <div class="logo-container" style="margin-top: 50px; animation: fadeInScale 2s ease-in-out;">
+                <img src="{% static 'images/janajodlogo.jpg' %}" alt="Janajod Logo" style="width: 500px; height: auto; animation: fadeInScale 2s ease-in-out;">
+            </div>
+
+            <!-- Additional Text Below the Logo -->
+        </div>
+    </div>
+
+    <style>
+        /* Define the animation */
+        @keyframes fadeInScale {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(1.1);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+{% endblock %}

@@ -39,7 +39,7 @@
             <!-- Logo -->
     
             <div style="display: flex; align-items: center;">
-                <img src="{% static 'images/janajodlogo.png' %}" alt="Logo" style="height: 40px; margin-right: 9px;">
+                <img src="{% static 'images/janajodlogo.jpg' %}" alt="Logo" style="height: 40px; margin-right: 9px;">
             </div>
 
             
@@ -275,16 +275,17 @@
             
                 <!-- Logout Icon -->
                 <i class="fas fa-sign-out-alt" style="margin-right: 20px; font-size: 22px; color: white;" onclick="confirmLogout()"></i> <!-- Logout -->
-                  <!-- Hamburger Menu for Smaller Screens (hidden on larger screens) -->
-                    <div class="d-md-none fixed-top" style="right: 10px; top: 10px;">
-                        <button class="btn btn-primary" data-toggle="modal" data-target="#sidebarModal">
-                            &#8942; <!-- Three dots icon -->
-                        </button>
-                    </div>
 
+                <!-- Hamburger Menu for Smaller Screens (hidden on larger screens) -->
+                <div class="d-md-none fixed-top" style="right: 10px; top: 10px;">
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#sidebarModal">
+                        &#8942; <!-- Three dots icon -->
+                    </button>
+                </div>
+                
                 <!-- Overlay to block page interaction (hidden by default) -->
                 <div id="overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.5); z-index: 999;"></div>
-            
+                
                 <!-- Confirmation Dialog (hidden by default) -->
                 <div id="logoutConfirmation" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); width: 300px; padding:20px; z-index:1000; background-color: rgba(20, 0, 113, 0.69); color: white; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);">
                     <p style="color: white; text-align: center;">Are you sure you want to logout?</p>
@@ -293,27 +294,28 @@
                         <button onclick="cancelLogout()" style="padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; background-color: green; color: white;">No</button>
                     </div>
                 </div>
-            
+                
                 <script>
                     function confirmLogout() {
                         // Show the overlay and confirmation dialog
                         document.getElementById('overlay').style.display = 'block';
                         document.getElementById('logoutConfirmation').style.display = 'block';
                     }
-            
+                
                     function logout() {
                         // Hide the overlay and confirmation dialog, then logout
                         document.getElementById('overlay').style.display = 'none';
                         document.getElementById('logoutConfirmation').style.display = 'none';
-                        window.location.href = 'logout/';  // Replace '/logout' with your actual logout URL
+                        window.location.href = '{% url 'logout' %}';  // Replace with Django's URL tag for logout
                     }
-            
+                
                     function cancelLogout() {
                         // Hide the overlay and confirmation dialog
                         document.getElementById('overlay').style.display = 'none';
                         document.getElementById('logoutConfirmation').style.display = 'none';
                     }
                 </script>
+                
             </div>
             
         </nav>
@@ -490,8 +492,24 @@
                             </div>
                             <!-- Announce Button -->
                             <div class="col-md-6 d-flex align-items-center justify-content-end">
-                                <button id="announceButton" class="btn btn-primary" style="padding: 10px; font-size: 16px; margin-left: 150px; margin-top: 16px;" data-toggle="modal" data-target="#announcementModal">Announce Now</button>
+                                <!-- Announce Now Button -->
+                                <button id="announceButton" class="btn btn-primary" style="padding: 12px; font-size: 16px; margin-left: 50px;margin-top: 2px;" data-toggle="modal" data-target="#announcementModal">
+                                    Announce Now
+                                </button>
+                                
+                                <!-- Eye Icon Button for Applications -->
+                                <button id="applicationsButton" style="padding: 10px; font-size: 16px; background-color: rgba(20, 0, 113, 0.69); border-radius: 30px; margin-top: 15px; color:white;">
+                                    <i class="fas fa-eye" style="margin-right: 5px;"></i> Applications
+                                </button>
+
+                                <script>
+                                    document.getElementById('applicationsButton').addEventListener('click', function() {
+                                        window.location.href = "{% url 'user_job_applications' %}";
+                                    });
+                                </script>
+
                             </div>
+                            
                         </div>
                     </div>
 
@@ -535,8 +553,8 @@
 
 
                      
-                    <!-- Job Listings Table -->
-                    <div class="find-jobs-table" style="border: 1px solid #e1e1e1; border-radius: 10px; background-color: #f9f9f9; margin-bottom: 12px;">
+                      <!-- Job Listings Table -->
+                      <div class="find-jobs-table" style="border: 1px solid #e1e1e1; border-radius: 10px; background-color: #f9f9f9; margin-bottom: 12px;">
                         <h4 style="font-weight: bold; text-align: center; margin-bottom: 20px;">Who's Hiring?</h4>
                         <hr>
                         <table class="table table-striped">
@@ -557,15 +575,19 @@
                                     <td>{{ job.posted_on|date:"d M Y" }}</td>
                                     <td>
                                         <button class="btn btn-success btn-sm" 
-                                        {% if job.id in applied_jobs %}
-                                            disabled title="You have already applied for this job"
-                                        {% endif %} 
-                                        onclick="showJobDetails('{{ job.job_title }}', '{{ job.organization }}', '{{ job.job_description|escapejs }}', this)">
-                                        {% if job.id in applied_jobs %}
-                                            Already Applied
-                                        {% else %}
-                                            View Details
-                                        {% endif %}
+                                            {% for applied_job in applied_jobs %}
+                                                {% if applied_job.1 == job.id %}
+                                                    disabled title="You have already applied for this job"
+                                                {% endif %}
+                                            {% endfor %}
+                                            onclick="showJobDetails('{{ job.job_title }}', '{{ job.organization }}', '{{ job.job_description|escapejs }}', this)">
+                                            {% for applied_job in applied_jobs %}
+                                                {% if applied_job.1 == job.id %}
+                                                    Already Applied
+                                                {% else %}
+                                                    View Details
+                                                {% endif %}
+                                            {% endfor %}
                                         </button>
                                     </td>
                                 </tr>
@@ -578,16 +600,19 @@
                                             <p><strong>Organization:</strong> <span id="organization"></span></p>
                                             <p><strong>Job Description:</strong> <span id="jobDescription"></span></p>
                                             <button class="btn btn-primary" 
-                                            {% if job.id in applied_jobs %} 
-                                                disabled 
-                                                title="You have already applied for this job"
-                                            {% endif %} 
-                                            onclick="showApplicationForm(this)">
-                                                {% if job.id in applied_jobs %}
-                                                    Already Applied
-                                                {% else %}
-                                                    Apply Now
-                                                {% endif %}
+                                                {% for applied_job in applied_jobs %}
+                                                    {% if applied_job.1 == job.id %}
+                                                        disabled title="You have already applied for this job"
+                                                    {% endif %}
+                                                {% endfor %} 
+                                                onclick="showApplicationForm(this)">
+                                                    {% for applied_job in applied_jobs %}
+                                                        {% if applied_job.1 == job.id %}
+                                                            Already Applied
+                                                        {% else %}
+                                                            Apply Now
+                                                        {% endif %}
+                                                    {% endfor %}
                                             </button>
                                             <button class="btn btn-success" onclick="hideJobDetails(this)" style="border-radius: 30px;">Close</button>
                                         </div>
@@ -624,7 +649,7 @@
                                 </tr>
                                 {% endfor %}
                     
-                                <!-- Loop through AdminPostedJob entries -->
+                                <!-- Loop through Admin Posted Jobs (Job model) -->
                                 {% for job in admin_posted_jobs %}
                                 <tr>
                                     <td>{{ job.organization }}</td>
@@ -632,15 +657,19 @@
                                     <td>{{ job.posted_on|date:"d M Y" }}</td>
                                     <td>
                                         <button class="btn btn-success btn-sm" 
-                                        {% if job.id in applied_jobs %}
-                                            disabled title="You have already applied for this job"
-                                        {% endif %} 
-                                        onclick="showJobDetails('{{ job.job_title }}', '{{ job.organization }}', '{{ job.job_description|escapejs }}', this)">
-                                        {% if job.id in applied_jobs %}
-                                            Already Applied
-                                        {% else %}
-                                            View Details
-                                        {% endif %}
+                                            {% for applied_job in applied_jobs %}
+                                                {% if applied_job.0 == job.id %}
+                                                    disabled title="You have already applied for this job"
+                                                {% endif %}
+                                            {% endfor %}
+                                            onclick="showJobDetails('{{ job.job_title }}', '{{ job.organization }}', '{{ job.job_description|escapejs }}', this)">
+                                            {% for applied_job in applied_jobs %}
+                                                {% if applied_job.0 == job.id %}
+                                                    Already Applied
+                                                {% else %}
+                                                    View Details
+                                                {% endif %}
+                                            {% endfor %}
                                         </button>
                                     </td>
                                 </tr>
@@ -653,16 +682,19 @@
                                             <p><strong>Organization:</strong> <span id="organization"></span></p>
                                             <p><strong>Job Description:</strong> <span id="jobDescription"></span></p>
                                             <button class="btn btn-primary" 
-                                            {% if job.id in applied_jobs %} 
-                                                disabled 
-                                                title="You have already applied for this job"
-                                            {% endif %} 
-                                            onclick="showApplicationForm(this)">
-                                                {% if job.id in applied_jobs %}
-                                                    Already Applied
-                                                {% else %}
-                                                    Apply Now
-                                                {% endif %}
+                                                {% for applied_job in applied_jobs %}
+                                                    {% if applied_job.0 == job.id %}
+                                                        disabled title="You have already applied for this job"
+                                                    {% endif %}
+                                                {% endfor %} 
+                                                onclick="showApplicationForm(this)">
+                                                    {% for applied_job in applied_jobs %}
+                                                        {% if applied_job.0 == job.id %}
+                                                            Already Applied
+                                                        {% else %}
+                                                            Apply Now
+                                                        {% endif %}
+                                                    {% endfor %}
                                             </button>
                                             <button class="btn btn-success" onclick="hideJobDetails(this)" style="border-radius: 30px;">Close</button>
                                         </div>
@@ -701,6 +733,8 @@
                             </tbody>
                         </table>
                     </div>
+                    
+
                 
 
                         <!-- JavaScript for Handling Job Details and Application Form Display -->

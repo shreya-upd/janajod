@@ -1,0 +1,21 @@
+{% extends 'adminbase.html' %}
+
+{% block content %}
+<h2 style="text-align: center; color: green;">Edit Profile: {{ profile.user.username }}</h2>
+<hr><hr>
+
+<form method="POST" enctype="multipart/form-data" style="max-width: 600px; margin: auto;">
+    {% csrf_token %}
+    {{ form.as_p }}
+    
+    <div style="display: flex; justify-content: center; gap: 20px;">
+        <button type="submit" style="background-color: green; color: white; padding: 10px 20px; border: none; border-radius: 5px;">
+            Save Changes
+        </button>
+        <a href="{% url 'profilemanage' %}" style="background-color: blue; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+            Back To profile
+        </a>
+    </div>
+</form>
+<hr><hr>
+{% endblock %}

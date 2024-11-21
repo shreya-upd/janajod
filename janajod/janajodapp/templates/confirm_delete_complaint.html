@@ -1,0 +1,21 @@
+{% extends 'adminbase.html' %}
+
+{% block content %}
+    <h2 style="color: red; text-align: center; text-decoration: underline; margin-bottom: 12px;">
+        Are you sure you want to delete the complaint made by {{ complaint.fullname }}?
+    </h2>
+    <hr><hr>
+
+    <form method="post" style="text-align: center; margin-top: 20px;">
+        {% csrf_token %}
+        <button type="submit" style="background-color: red; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+            Confirm Delete
+        </button>
+    </form>
+
+    <div style="text-align: center; margin-top: 20px;">
+        <a href="{% url 'show_complaint' complaint.id %}" style="color: white; text-decoration: none; background-color: green; padding: 10px 20px; border-radius: 5px;">
+            Cancel
+        </a>
+    </div>
+{% endblock %}

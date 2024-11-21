@@ -1,0 +1,63 @@
+{% extends 'adminbase.html' %}
+
+{% block content %}
+    <h2 style="color: green; text-align: center; text-decoration: underline; margin-bottom: 12px;">
+        Edit Service Request: {{ service_request.fullname }} - {{ service_request.service_type }}
+    </h2>
+    <hr><hr>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- Fullname -->
+        <div>
+            <label for="fullname">Fullname:</label>
+            <input type="text" name="fullname" value="{{ service_request.fullname }}" required style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ddd;">
+        </div>
+
+        <!-- Location -->
+        <div>
+            <label for="location">Location:</label>
+            <input type="text" name="location" value="{{ service_request.location }}" required style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ddd;">
+        </div>
+
+        <!-- Service Type -->
+        <div>
+            <label for="service_type">Service Type:</label>
+            <input type="text" name="service_type" value="{{ service_request.service_type }}" required style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ddd;">
+        </div>
+
+        <!-- Description -->
+        <div>
+            <label for="description">Description:</label>
+            <textarea name="description" required style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ddd;">{{ service_request.description }}</textarea>
+        </div>
+
+        <!-- Contact -->
+        <div>
+            <label for="contact">Contact:</label>
+            <input type="text" name="contact" value="{{ service_request.contact }}" required style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ddd;">
+        </div>
+
+        <!-- Email -->
+        <div>
+            <label for="email">Email:</label>
+            <input type="email" name="email" value="{{ service_request.email }}" required style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ddd;">
+        </div>
+
+        <hr><hr>
+
+        <!-- Buttons -->
+        <div style="display: flex; gap: 20px; justify-content: center;">
+            <button type="submit" style="background-color: green; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+                Save Changes
+            </button>
+
+            <a href="{% url 'view_service_requests' %}" style="color: white; text-decoration: none; background-color: blue; padding: 10px 20px; border-radius: 5px; display: inline-block; text-align: center;">
+                Back to Service Requests
+            </a>
+
+           
+        </div>
+    </form>
+{% endblock %}

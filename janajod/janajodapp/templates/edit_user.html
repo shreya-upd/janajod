@@ -1,0 +1,22 @@
+{% extends 'adminbase.html' %}
+
+{% block content %}
+    <h2 style="color:green;text-align: center;text-decoration: underline;margin-bottom: 12px;">Edit User: {{ user.username }}</h2>
+    <hr><hr>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <hr><hr>
+
+        <!-- Button and Link in the same line -->
+        <div style="display: flex; gap: 20px; justify-content: center;">
+            <button type="submit" style="background-color: green; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+                Save Changes
+            </button>
+
+            <a href="{% url 'user_list' %}" style="color: white; text-decoration: none; background-color: blue; padding: 10px 20px; border-radius: 5px; display: inline-block; text-align: center;">
+                Back to User List
+            </a>
+        </div>
+    </form>
+{% endblock %}

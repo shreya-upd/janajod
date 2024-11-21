@@ -1,0 +1,75 @@
+{% extends 'adminbase.html' %}
+
+{% block content %}
+    <style>
+        /* Button styling for "Save Changes" and "Cancel" */
+        .form-btns {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .btn-save {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn-cancel {
+            background-color: #dc3545;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Form styling */
+        .form-container {
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 50%;
+            margin: 0 auto;
+        }
+
+        .form-container h3 {
+            color: green;
+            text-decoration: underline;
+            text-align: center;
+        }
+
+        .form-container label {
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+        }
+
+        .form-container input, .form-container textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+
+    <!-- Add Job Application Form -->
+    <div class="form-container">
+        <h3>Add New Job Application</h3>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}  <!-- This will render the form fields automatically -->
+            <div class="form-btns">
+                <button type="submit" class="btn-save">Save Changes</button>
+                <a href="{% url 'admin_job_applications' %}" class="btn-cancel">Cancel</a>
+            </div>
+        </form>
+        
+    </div>
+{% endblock %}

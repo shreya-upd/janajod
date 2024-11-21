@@ -1,0 +1,94 @@
+{% extends 'adminbase.html' %}
+
+{% block content %}
+    <style>
+        /* Button styling for "Add New Job Application" */
+        .add-job-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 8px 15px;
+            text-decoration: none;
+            color: white;
+            background-color: #007bff;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        /* Table styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 50px; /* Space below the button */
+        }
+
+        table th, table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        /* Alternating row colors */
+        table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        table tr:nth-child(odd) {
+            background-color: #e0f7e0; /* Light green */
+        }
+
+        /* Table header styling */
+        table th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        /* Edit and Delete buttons */
+        .btn-edit {
+            color: white;
+            padding: 5px 10px;
+            text-decoration: none;
+            background-color: #28a745;
+            border-radius: 17px;
+            margin-bottom: 2px; 
+            display: inline-block; 
+        }
+
+        .btn-delete {
+            display: inline-block; 
+            color: white;
+            padding: 5px 10px;
+            text-decoration: none;
+            background-color: #dc3545;
+            border-radius: 17px;
+        }
+    </style>
+
+    <!-- "Add New Job Application" button at the top-right corner -->
+    <a href="{% url 'add_job_application' %}" class="add-job-btn">Add New Job Application</a>
+
+    <!-- Job Applications list table -->
+    <table>
+        <tr>
+            <th>Applicant Name</th>
+            <th>Job Title</th>
+            <th>Contact</th>
+            <th>Email</th>
+            <th>Why This Job</th>
+            <th>Actions</th>
+        </tr>
+        {% for application in applications %}
+        <tr>
+            <td>{{ application.applicant_name }}</td>
+            <td>{{ application.job.job_title }}</td>
+            <td>{{ application.contact_number }}</td>
+            <td>{{ application.email }}</td>
+            <td>{{ application.why_this_job }}</td>
+            <td>
+                <a href="{% url 'edit_job_application' application.pk %}" class="btn-edit">Edit</a><br>
+                <a href="{% url 'delete_job_application' application.pk %}" class="btn-delete">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

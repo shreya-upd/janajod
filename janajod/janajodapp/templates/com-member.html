@@ -1,0 +1,55 @@
+{% extends 'adminbase.html' %}
+
+{% block content %}
+    <!-- Centered and Underlined Heading -->
+    <h2 style="color: green; text-align: center; text-decoration: underline; margin-bottom: 12px;">Committee Members</h2>
+    <hr><hr>
+    
+    <!-- Form to Add New Committee Member with Centered Heading and Styled Button -->
+    <div style="text-align: center; margin-bottom: 20px;">
+        <h3 style="color: green; text-decoration: underline;">Add Committee Member</h3>
+        <!-- Box container for the form -->
+        <div style="display: inline-block; text-align: left; padding: 20px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div style="display: flex; gap: 20px; justify-content: center; margin-top: 10px;">
+                    <button type="submit" style="background-color: green; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+                        Add Committee Member
+                    </button>
+                    <a href="{% url 'committee_members' %}" style="color: white; text-decoration: none; background-color: blue; padding: 10px 20px; border-radius: 5px; display: inline-block; text-align: center;">
+                        Back to Committee List
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <hr>
+    <!-- List of Committee Members with Style and Edit/Delete Buttons -->
+    <div>
+        <h3 style="color: green; text-decoration: underline; text-align: center;">Current Committee Members</h3>
+        <ul style="list-style: none; padding: 0;">
+            {% for member in members %}
+                <li style="border: 1px solid #ccc; padding: 15px; margin-bottom: 10px; border-radius: 8px;">
+                    <strong>{{ member.name }}</strong> - {{ member.position }}
+                    <br>Contact: {{ member.contact }}
+                    <br>Email: {{ member.email }}
+                    <br>Contribution: {{ member.contribution }}
+                    <br>
+                    {% if member.profile_picture %}
+                        <img src="{{ member.profile_picture.url }}" alt="{{ member.name }}" style="width: 50px; height: auto; border-radius: 50%; margin-top: 10px;">
+                    {% else %}
+                        No profile picture
+                    {% endif %}
+                    <br>
+                    <!-- Edit and Delete Links in the Same Line -->
+                    <div style="display: flex; gap: 10px; margin-top: 10px;">
+                        <a href="{% url 'edit_committee_member' member.pk %}" style="color: blue; text-decoration: none; font-weight: bold;">Edit</a>
+                        <a href="{% url 'delete_committee_member' member.pk %}" style="color: red; text-decoration: none; font-weight: bold;">Delete</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

@@ -1,0 +1,112 @@
+{% extends 'adminbase.html' %}
+
+{% block content %}
+<style>
+    /* Button styling for "Add Event" */
+    .add-event-btn {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        padding: 8px 15px;
+        text-decoration: none;
+        color: white;
+        background-color: #007bff;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+
+    /* Table styling */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 50px; /* Space below the button */
+    }
+
+    table th, table td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    /* Alternating row colors */
+    table tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    table tr:nth-child(odd) {
+        background-color: #e0f7e0; /* Light green */
+    }
+
+    /* Table header styling */
+    table th {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    /* Actions buttons */
+    .btn-show {
+        color: white;
+        padding: 5px 10px;
+        text-decoration: none;
+        background-color: #007bff;
+        border-radius: 17px;
+        display: inline-block;
+        margin-bottom: 2px;
+    }
+
+    .btn-edit {
+        color: white;
+        padding: 5px 10px;
+        text-decoration: none;
+        background-color: #28a745;
+        border-radius: 17px;
+        display: inline-block;
+        margin-bottom: 2px;
+    }
+
+    .btn-delete {
+        display: inline-block;
+        color: white;
+        padding: 5px 10px;
+        text-decoration: none;
+        background-color: #dc3545;
+        border-radius: 17px;
+    }
+</style>
+
+<!-- "Add Event" button at the top-right corner -->
+<a href="{% url 'add_event' %}" class="add-event-btn">Add Event</a>
+
+<!-- Events list table -->
+<table>
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Created At</th>
+            <th>Is Approved</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for event in events %}
+            <tr>
+                <td>{{ event.title }}</td>
+                <td>{{ event.author.username }}</td>
+                <td>{{ event.created_at }}</td>
+                <td>{{ event.is_approved }}</td>
+                <td>
+                    <!-- Show button for event details -->
+                    <a href="{% url 'edit_event' event.id %}" class="btn-show">Edit</a>
+                    <a href="{% url 'edit_event' event.id %}" class="btn-edit">Approve</a>
+                    <a href="{% url 'delete_event' event.id %}" class="btn-delete">Delete</a>
+                </td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="5" class="text-center">No events found</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

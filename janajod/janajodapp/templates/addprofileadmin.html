@@ -1,0 +1,62 @@
+{% extends 'adminbase.html' %}
+
+{% block content %}
+<style>
+    .form-container {
+        margin: 50px auto;
+        width: 50%;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        background-color: #f9f9f9;
+    }
+
+    .form-container h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .form-container form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-container label {
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    .form-container input,
+    .form-container textarea,
+    .form-container select {
+        margin-bottom: 15px;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .form-container button {
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .form-container button:hover {
+        background-color: #218838;
+    }
+</style>
+
+<div class="form-container">
+    <h2>Add New Profile</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Add Profile</button>
+    </form>
+</div>
+{% endblock %}

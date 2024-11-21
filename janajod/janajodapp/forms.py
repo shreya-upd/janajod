@@ -55,6 +55,7 @@ class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['profile_image', 'full_name', 'contact_number', 'address', 'bio']
+        
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
@@ -171,3 +172,96 @@ class ServiceRequestForm(forms.ModelForm):
 
 
 
+# customadmin-forms.py
+from django import forms
+from django.contrib.auth.models import User
+
+class UserEditForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = [
+            'username',
+            'email',
+            'first_name',
+            'last_name',
+            'is_staff',
+            'is_active',
+            'date_joined',
+            'last_login'
+        ]
+        widgets = {
+            'date_joined': forms.DateInput(attrs={'type': 'date'}),
+            'last_login': forms.DateInput(attrs={'type': 'date'}),
+        }
+
+
+# forms.py
+from django import forms
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
+
+class UserCreateForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+    first_name = forms.CharField(required=False)
+    last_name = forms.CharField(required=False)
+
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'first_name', 'last_name', 'is_staff', 'is_active']
+
+
+from django import forms
+from .models import CommitteeMember
+
+class CommitteeMemberForm(forms.ModelForm):
+    class Meta:
+        model = CommitteeMember
+        fields = ['name', 'position', 'contact', 'email', 'contribution', 'profile_picture']
+
+
+
+from django import forms
+from .models import Event
+
+class EventForm(forms.ModelForm):
+    class Meta:
+        model = Event
+        fields = ['title', 'description', 'image', 'is_approved']
+
+
+# forms.py
+from django import forms
+from .models import JobApplication
+
+class JobApplicationForm(forms.ModelForm):
+    class Meta:
+        model = JobApplication
+        fields = ['job', 'user_job', 'applicant_name', 'contact_number', 'address', 'email', 'why_this_job']
+        
+from django import forms
+from .models import Job
+
+class JobForm(forms.ModelForm):
+    class Meta:
+        model = Job
+        fields = ['organization', 'job_title', 'job_description']
+        widgets = {
+            'job_description': forms.Textarea(attrs={'rows': 5, 'cols': 40}),
+        }
+
+from django import forms
+from .models import UserReqJob
+
+class UserReqJobForm(forms.ModelForm):
+    class Meta:
+        model = UserReqJob
+        fields = ['job_title', 'organization', 'job_description', 'is_approved']
+
+# janajodapp/forms.py
+from django import forms
+from .models import UserEventRequest  # Assuming you have an EventRequest model
+
+class UserEventRequestForm(forms.ModelForm):
+    class Meta:
+        model = UserEventRequest  # Adjust this if your model is named differently
+        fields = ['title', 'user', 'description','is_approved']  # Example fields, adjust as needed

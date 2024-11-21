@@ -1,0 +1,23 @@
+{% extends 'adminbase.html' %}
+
+{% block content %}
+    <h2 style="color: green; text-align: center; text-decoration: underline; margin-bottom: 12px;">Add Event</h2>
+    <hr><hr>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <hr><hr>
+
+        <!-- Button and Link in the same line -->
+        <div style="display: flex; gap: 20px; justify-content: center; margin-top: 20px;">
+            <button type="submit" style="background-color: green; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+                Save Event
+            </button>
+
+            <a href="{% url 'admin_events' %}" style="color: white; text-decoration: none; background-color: blue; padding: 10px 20px; border-radius: 5px; display: inline-block; text-align: center;">
+                Back to Events List
+            </a>
+        </div>
+    </form>
+{% endblock %}

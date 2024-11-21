@@ -1,0 +1,18 @@
+{% extends 'adminbase.html' %}
+
+{% block content %}
+    <h2>Are you sure you want to delete {{ profile.full_name }}?</h2>
+    <form method="post">
+        {% csrf_token %}
+        
+        <!-- Confirm Delete Button (Red) -->
+        <button type="submit" style="background-color: red; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+            Confirm Delete
+        </button>
+        
+        <!-- Cancel Button (Green) -->
+        <a href="{% url 'profilemanage' %}" style="color: white; text-decoration: none; background-color: green; padding: 10px 20px; border-radius: 5px; display: inline-block; text-align: center;">
+            Cancel
+        </a>
+    </form>
+{% endblock %}

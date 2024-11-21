@@ -1,0 +1,106 @@
+{% extends 'adminbase.html' %}  <!-- Extend your base template -->
+
+{% block content %}
+<style>
+    /* Button styling for "Add Post" */
+    .add-post-btn {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        padding: 8px 15px;
+        text-decoration: none;
+        color: white;
+        background-color: #007bff;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+
+    /* Table styling */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 50px; /* Space below the button */
+    }
+
+    table th, table td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    /* Alternating row colors */
+    table tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    table tr:nth-child(odd) {
+        background-color: #e0f7e0; /* Light green */
+    }
+
+    /* Table header styling */
+    table th {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    /* Edit and Delete buttons */
+    .btn-edit {
+        color: white;
+        padding: 5px 10px;
+        text-decoration: none;
+        background-color: #28a745;
+        border-radius: 17px;
+        margin-bottom: 2px; 
+        display: inline-block; 
+    }
+
+    .btn-delete {
+        display: inline-block; 
+        color: white;
+        padding: 5px 10px;
+        text-decoration: none;
+        background-color: #dc3545;
+        border-radius: 17px;
+    }
+</style>
+
+<!-- "Add Post" button at the top-right corner -->
+<a href="{% url 'admin_add_post' %}" class="add-post-btn">Add Post</a>
+
+<!-- Post list table -->
+<table>
+    <thead>
+        <tr>
+            <th>Author</th>
+            <th>Content</th>
+            <th>Media</th>
+            <th>Likes</th>
+            <th>Dislikes</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for post in posts %}
+        <tr>
+            <td>{{ post.author }}</td>
+            <td>{{ post.content }}</td>
+            <td>{% if post.media %}{{ post.media.name }}{% else %}No Image{% endif %}</td>
+            <td>{{ post.likes.count }}</td>
+            <td>{{ post.dislikes.count }}</td>
+            <td>
+                <!-- Action Buttons -->
+                <a href="{% url 'adminedit_post' post.id %}" class="btn-edit">Edit</a>
+
+
+                <a href="{% url 'admindelete_post' post.id %}" class="btn-delete">Delete</a>
+
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6">No posts available.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

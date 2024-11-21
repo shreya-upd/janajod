@@ -1,0 +1,95 @@
+{% extends 'adminbase.html' %}
+
+{% block content %}
+    <style>
+        /* Button styling for "Add New Request" */
+        .add-request-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 8px 15px;
+            text-decoration: none;
+            color: white;
+            background-color: #007bff;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        /* Table styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 50px; /* Space below the button */
+        }
+
+        table th, table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        /* Alternating row colors */
+        table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        table tr:nth-child(odd) {
+            background-color: #e0f7e0; /* Light green */
+        }
+
+        /* Table header styling */
+        table th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        /* Edit and Delete buttons */
+        .btn-edit {
+            color: white;
+            padding: 5px 10px;
+            text-decoration: none;
+            background-color: #28a745;
+            border-radius: 17px;
+            margin-bottom: 2px; 
+            display: inline-block; 
+        }
+
+        .btn-delete {
+            display: inline-block; 
+            color: white;
+            padding: 5px 10px;
+            text-decoration: none;
+            background-color: #dc3545;
+            border-radius: 17px;
+        }
+    </style>
+
+    <!-- "Add New Request" button at the top-right corner -->
+    <a href="{% url 'add_service_request' %}" class="add-request-btn">Add New Request</a>
+
+
+    <!-- Service Request list table -->
+    <table>
+        <tr>
+            <th>Fullname</th>
+            <th>Location</th>
+            <th>Service Type</th>
+            <th>Created At</th>
+            <th>User</th>
+            <th>Actions</th>
+        </tr>
+        {% for request in service_requests %}
+        <tr>
+            <td>{{ request.fullname }}</td>
+            <td>{{ request.location }}</td>
+            <td>{{ request.service_type }}</td>
+            <td>{{ request.created_at|date:"M d, Y H:i" }}</td>
+            <td>{{ request.user.username }}</td>
+            <td>
+                <a href="{% url 'service_request_detail' request.id %}" class="btn btn-edit">Edit</a><br>
+                <a href="{% url 'confirm_delete_service_request' request.id %}" class="btn btn-delete">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

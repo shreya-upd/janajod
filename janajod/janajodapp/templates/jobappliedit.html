@@ -1,0 +1,30 @@
+{% extends 'adminbase.html' %}
+
+{% block content %}
+    <h2 style="color: green; text-align: center; text-decoration: underline;">Edit Job Application</h2>
+    <hr><hr>
+
+    <h3 style="color: green; text-align: center;">Edit Application for {{ application.applicant_name }} (Job: {{ application.job.job_title }})</h3>
+    
+    <div style="text-align: center;">
+        <div style="display: inline-block; text-align: left; padding: 20px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                
+                <div style="display: flex; gap: 20px; justify-content: center; margin-top: 10px;">
+                    <!-- Save Changes Button -->
+                    <button type="submit" style="background-color: green; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+                        Save Changes
+                    </button>
+                    
+                    <!-- Cancel Button -->
+                    <a href="{% url 'admin_job_applications' %}" style="color: white; text-decoration: none; background-color: blue; padding: 10px 20px; border-radius: 5px; display: inline-block; text-align: center;">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
