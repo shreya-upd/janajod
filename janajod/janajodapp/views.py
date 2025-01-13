@@ -129,6 +129,20 @@ def admin_complain(request):
     complaints = Complaint.objects.all()
     return render(request, 'admincomplaints.html', {'complaints': complaints})
 
+from .models import Complaint
+from .forms import ComplaintForm
+def update_complaint_status(request, complaint_id):
+    complaint = get_object_or_404(Complaint, id=complaint_id)
+    if request.method == 'POST':
+        form = ComplaintForm(request.POST, instance=complaint)
+        if form.is_valid():
+            form.save()
+            return redirect('admin_complaints')  # Adjust the URL name if necessary
+    else:
+        form = ComplaintForm(instance=complaint)
+    
+    return render(request, 'update_complaint_status.html', {'form': form, 'complaint': complaint})
+
 from django.shortcuts import render, redirect
 from .forms import ComplaintForm  # Define this form in forms.py
 
@@ -157,19 +171,44 @@ def show_complaint(request, complaint_id):
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Complaint
 from .forms import ComplaintForm
+from .models import Complaint
+from .forms import ComplaintForm
+# views.py
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Complaint
+from .forms import ComplaintForm
 
+def create_notification(user, message):
+    """Create a notification for a specific user."""
+    notification = Notification.objects.create(
+        user=user,
+        message=message,
+    )
+    notification.save()
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Complaint
+from .forms import ComplaintForm, AdminComplaintForm
+from django.contrib.auth.decorators import login_required
+
+@login_required
 def edit_complaint(request, complaint_id):
     complaint = get_object_or_404(Complaint, id=complaint_id)
-    
-    if request.method == 'POST':
-        form = ComplaintForm(request.POST, request.FILES, instance=complaint)
-        if form.is_valid():
-            form.save()
-            return redirect('show_complaint', complaint_id=complaint.id)
+
+    # Check if the user is an admin or not
+    if request.user.is_staff:
+        # Admin user - use AdminComplaintForm to include 'status' field
+        form = AdminComplaintForm(request.POST or None, request.FILES or None, instance=complaint)
     else:
-        form = ComplaintForm(instance=complaint)
+        # Normal user - use ComplaintForm (status not included)
+        form = ComplaintForm(request.POST or None, request.FILES or None, instance=complaint)
+
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        return redirect('show_complaint', complaint_id=complaint.id)  # Redirect to the complaint details page
 
     return render(request, 'edit_complaint.html', {'form': form, 'complaint': complaint})
+
+
 
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Complaint
@@ -993,7 +1032,23 @@ def edit_post(request, post_id):
     else:
         form = PostForm(instance=post)
 
-    return render(request, 'edit_post.html', {'form': form, 'post': post})
+    return render(request, 'editpost.html', {'form': form, 'post': post})
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Post
+from .forms import PostForm  # Assuming you have a form for posts
+
+def edit_post_page(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES, instance=post)
+        if form.is_valid():
+            form.save()
+            return redirect('post_list')  # Redirect to the list of posts after saving
+    else:
+        form = PostForm(instance=post)
+
+    return render(request, 'editpost.html', {'form': form, 'post': post})
 
 # views.py
 from django.shortcuts import redirect, get_object_or_404
@@ -1128,27 +1183,28 @@ def announce(request):
     
 #     return render(request, 'complain.html')
 
-
-from django.shortcuts import render, redirect
-from django.contrib import messages  # Import messages
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from .forms import ComplaintForm
-from .models import Complaint  
+from .models import Complaint
+
+@login_required
 def complain(request):
     if request.method == 'POST':
         form = ComplaintForm(request.POST, request.FILES)
         if form.is_valid():
             complaint = form.save(commit=False)
-            complaint.user = request.user  # Assuming you want to save the user
+            complaint.user = request.user  # Automatically associate the logged-in user
+            complaint.status = 'received'  # Default status for new complaints
             complaint.save()
-            messages.success(request, "Your complaint has been submitted successfully!")  # Set success message
+            messages.success(request, "Your complaint has been submitted successfully!")
             return redirect('complain')  # Redirect to avoid form resubmission
     else:
         form = ComplaintForm()
-        
-        # Fetch the user's complaints to display them in the modal
-    user_complaints = Complaint.objects.filter(user=request.user)
-    return render(request, 'complain.html', {'form': form, 'user_complaints': user_complaints}) 
 
+    # Fetch the user's complaints to display them
+    user_complaints = Complaint.objects.filter(user=request.user)
+    return render(request, 'complain.html', {'form': form, 'user_complaints': user_complaints})
 
 from django.shortcuts import render, redirect
 from django.contrib import messages
@@ -1207,9 +1263,14 @@ from .models import Job, UserReqJob
 
 from django.shortcuts import render
 from .models import Job, JobApplication, UserReqJob
+from django.shortcuts import render
+from .models import Job, JobApplication, UserReqJob
+
 def job_listings(request):
-    # Fetch all jobs (both admin and user-announced jobs)
-    jobs = Job.objects.all().order_by('-posted_on')
+    search_term = request.GET.get('search', '')  # Get search term from the query parameters
+    
+    # Fetch all jobs (both admin and user-announced jobs) and filter by search term if present
+    jobs = Job.objects.filter(job_title__icontains=search_term).order_by('-posted_on')
     
     # Fetch applied jobs for the logged-in user
     applied_jobs = JobApplication.objects.filter(user=request.user).exclude(job_id__isnull=True, user_job_id__isnull=True)
@@ -1218,18 +1279,22 @@ def job_listings(request):
     applied_jobs = applied_jobs.values_list('job_id', 'user_job_id')
     applied_jobs = list(applied_jobs)
 
-    # Fetch approved UserReqJob entries (user-announced jobs)
-    approved_user_req_jobs = UserReqJob.objects.filter(is_approved=True).order_by('-posted_on')
+    # Fetch approved UserReqJob entries (user-announced jobs) and filter by search term if present
+    approved_user_req_jobs = UserReqJob.objects.filter(is_approved=True, job_title__icontains=search_term).order_by('-posted_on')
     
-    # Admin posted jobs (Job model)
-    admin_posted_jobs = Job.objects.all().order_by('-posted_on')
+    # Admin posted jobs (Job model) and filter by search term if present
+    admin_posted_jobs = Job.objects.filter(job_title__icontains=search_term).order_by('-posted_on')
 
     return render(request, 'announce.html', {
         'jobs': jobs,
         'applied_jobs': applied_jobs,
         'admin_posted_jobs': admin_posted_jobs,
-        'approved_user_req_jobs': approved_user_req_jobs
+        'approved_user_req_jobs': approved_user_req_jobs,
+        'search_term': search_term,  # Pass the search term to retain it in the form
     })
+
+    
+
 
 
 
@@ -1465,8 +1530,65 @@ def mark_notifications_as_read(request):
     return JsonResponse({'status': 'failed'}, status=400)
 
 
+
+# views.py
+from django.shortcuts import render, redirect
+from .models import CommitteeMember, Vote
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from .models import CommitteeMember, Vote
+
+@login_required
+def vote_for_representative(request, member_id):
+    member = CommitteeMember.objects.get(id=member_id)
+
+    # Check if the user has already voted
+    existing_vote = Vote.objects.filter(user=request.user, member=member).first()
+    
+    if existing_vote:
+        return JsonResponse({'error': 'You have already voted for this representative.'}, status=400)
+
+    # If not voted, create a new vote
+    Vote.objects.create(user=request.user, member=member)
+    return JsonResponse({'message': 'Your vote has been successfully recorded.'})
+
+@login_required
+def committee_members(request):
+    members = CommitteeMember.objects.all()
+
+    # Check if user has already voted for any member
+    voted_members = Vote.objects.filter(user=request.user).values_list('member_id', flat=True)
+    
+    return render(request, 'committee.html', {
+        'committee_members': members,
+        'voted_members': voted_members  # Pass the voted member IDs to the template
+    })
+    
+from django.http import JsonResponse
+from .models import CommitteeMember, Vote
+def get_votes_for_representatives(request):
+    # Query the committee members
+    representatives = CommitteeMember.objects.all()
+    data = []
+
+    # Loop through each member and count their votes
+    for member in representatives:
+        vote_count = Vote.objects.filter(member=member).count()  # Count votes for the current representative
+        data.append({
+            'name': member.name,
+            'vote_count': vote_count,
+            'position': member.position,
+            'profile_picture': member.profile_picture.url if member.profile_picture else None,
+        })
+
+    return JsonResponse({'representatives': data})
+
+
 # janajodapp/context_processors.py
 from django.contrib.auth import logout
 def logout_view(request):
     logout(request)
     return redirect('login')
+

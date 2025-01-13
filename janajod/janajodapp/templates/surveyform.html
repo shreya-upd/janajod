@@ -279,49 +279,49 @@
                 <!-- Logout Icon -->
                 <i class="fas fa-sign-out-alt" style="margin-right: 20px; font-size: 22px; color: white;" onclick="confirmLogout()"></i> <!-- Logout -->
 
-<!-- Hamburger Menu for Smaller Screens (hidden on larger screens) -->
-<div class="d-md-none fixed-top" style="right: 10px; top: 10px;">
-    <button class="btn btn-primary" data-toggle="modal" data-target="#sidebarModal">
-        &#8942; <!-- Three dots icon -->
-    </button>
-</div>
+                <!-- Hamburger Menu for Smaller Screens (hidden on larger screens) -->
+                <div class="d-md-none fixed-top" style="right: 10px; top: 10px;">
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#sidebarModal">
+                        &#8942; <!-- Three dots icon -->
+                    </button>
+                </div>
 
-<!-- Overlay to block page interaction (hidden by default) -->
-<div id="overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.5); z-index: 999;"></div>
+                <!-- Overlay to block page interaction (hidden by default) -->
+                <div id="overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.5); z-index: 999;"></div>
 
-<!-- Confirmation Dialog (hidden by default) -->
-<div id="logoutConfirmation" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); width: 300px; padding:20px; z-index:1000; background-color: rgba(20, 0, 113, 0.69); color: white; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);">
-    <p style="color: white; text-align: center;">Are you sure you want to logout?</p>
-    <div style="display: flex; justify-content: space-between; margin-top: 20px;">
-        <button onclick="logout()" style="padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; background-color: red; color: white;">Yes</button>
-        <button onclick="cancelLogout()" style="padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; background-color: green; color: white;">No</button>
-    </div>
-</div>
+                <!-- Confirmation Dialog (hidden by default) -->
+                <div id="logoutConfirmation" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); width: 300px; padding:20px; z-index:1000; background-color: rgba(20, 0, 113, 0.69); color: white; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);">
+                    <p style="color: white; text-align: center;">Are you sure you want to logout?</p>
+                    <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+                        <button onclick="logout()" style="padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; background-color: red; color: white;">Yes</button>
+                        <button onclick="cancelLogout()" style="padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; background-color: green; color: white;">No</button>
+                    </div>
+                </div>
 
-<script>
-    function confirmLogout() {
-        // Show the overlay and confirmation dialog
-        document.getElementById('overlay').style.display = 'block';
-        document.getElementById('logoutConfirmation').style.display = 'block';
-    }
+                <script>
+                    function confirmLogout() {
+                        // Show the overlay and confirmation dialog
+                        document.getElementById('overlay').style.display = 'block';
+                        document.getElementById('logoutConfirmation').style.display = 'block';
+                    }
 
-    function logout() {
-        // Hide the overlay and confirmation dialog, then logout
-        document.getElementById('overlay').style.display = 'none';
-        document.getElementById('logoutConfirmation').style.display = 'none';
-        window.location.href = '{% url 'logout' %}';  // Replace with Django's URL tag for logout
-    }
+                    function logout() {
+                        // Hide the overlay and confirmation dialog, then logout
+                        document.getElementById('overlay').style.display = 'none';
+                        document.getElementById('logoutConfirmation').style.display = 'none';
+                        window.location.href = '{% url 'logout' %}';  // Replace with Django's URL tag for logout
+                    }
 
-    function cancelLogout() {
-        // Hide the overlay and confirmation dialog
-        document.getElementById('overlay').style.display = 'none';
-        document.getElementById('logoutConfirmation').style.display = 'none';
-    }
-</script>
+                    function cancelLogout() {
+                        // Hide the overlay and confirmation dialog
+                        document.getElementById('overlay').style.display = 'none';
+                        document.getElementById('logoutConfirmation').style.display = 'none';
+                    }
+                </script>
 
-            </div>
-            
-        </nav>
+                            </div>
+                            
+                        </nav>
     </header>
     <!--Header End-->
 
@@ -330,7 +330,8 @@
             <div class="row">
                  
                 <!-- Newsfeed Common Side Bar Left ================================================= -->
-                <div class="col-md-3 static sidebar1 d-none d-md-block" style="position: fixed; left: 30px; top: 80px; bottom: 15px; width: 25%; overflow: hidden;">
+                  <!-- Newsfeed Common Side Bar Left ================================================= -->
+                  <div class="col-md-3 static sidebar1 d-none d-md-block" style="position: fixed; left: 30px; top: 80px; bottom: 15px; width: 25%; overflow: hidden;  ">
 
                     <div class="profile-card">
                         <!-- Display the user's profile image if available, otherwise use the default image -->
@@ -347,7 +348,7 @@
                     
                     
                     <!-- Navigation Links -->
-                    <ul class="nav-news-feed nav-list" style="list-style-type: none; padding: 5px; margin: 0; background-color: rgba(255, 255, 255, 0.8); border-radius: 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
+                    <ul class="nav-news-feed nav-list" style="list-style-type: none;font-size: 100px;font-weight: bold; padding: 5px; margin: 0;  border-radius: 8px; box-shadow: 0 3px 3px  rgba(140, 20, 252,1);">
                         <li style="margin: 5px 0;">
                             <div>
                                 <a href="{% url 'home' %}" class="nav-link"
@@ -392,7 +393,7 @@
                                 </a>
                             </div>
                         </li>
-                        <li style="margin: 5px 0;">
+                        {% comment %} <li style="margin: 5px 0;">
                             <div>
                                 <a href="{% url 'servicerequest' %}" class="nav-link"
                                 style="text-decoration: none; color: #333; padding: 10px 14px; border-radius: 20px; display: inline-block; 
@@ -402,7 +403,7 @@
                                     🔧 Service Request
                                 </a>
                             </div>
-                        </li>
+                        </li> {% endcomment %}
                         <li style="margin: 5px 0;">
                             <div>
                                 <a href="{% url 'surveyform' %}" class="nav-link"
@@ -490,7 +491,7 @@
                         </div>
                     </div>
                     {% for survey in surveys %}
-                        <div class="survey-form" style="border: 1px solid #e1e1e1; border-radius: 10px; background-color: #f9f9f9; padding: 20px; margin-bottom: 20px;">
+                        <div class="survey-form" style="border: 1px solid #e1e1e1; border-radius: 10px; background-color: rgb(243,236,253); padding: 20px; margin-bottom: 20px;box-shadow: 0 4px 4px rgba(0, 255, 0, 0.5);">
                            
                             <table style="width: 100%; border-collapse: collapse;">
                                 <tr>
@@ -564,7 +565,7 @@
                         <hr>
                         <div class="members-list" style="max-height: 250px; overflow-y: auto; overflow-x: hidden; padding-right: 10px;">
                             {% for member in committee_members %}
-                            <div class="committee-member-card" style="border: 1px solid #ddd; padding: 10px; margin-bottom: 15px; text-align: center;">
+                            <div class="committee-member-card" style="border: 1px solid #ddd; padding: 10px;background-color: rgb(243,236,253); margin-bottom: 15px; text-align: center;">
                                 <div class="profile-summary" style="display: flex; align-items: center; justify-content: center; margin-bottom: 5px;">
                                     {% if member.profile_picture %}
                                         <img src="{{ member.profile_picture.url }}" alt="{{ member.name }}" style="width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;">
@@ -599,107 +600,232 @@
                         </div>
                         <hr>
                         <!-- People's Choice Card -->
-                                                    <!-- People's Choice Card -->
                         <div class="peoples-choice-card">
-                            <!-- Image of the person in a circular frame that overlaps the card -->
                             <div class="profile-image-container">
-                                <img src="{% static 'images/post-images/Balen.jpg' %}" alt="People's Choice Representative" class="profile-image">
+                                <img src="{% static 'images/post-images/vote.jpg' %}" alt="People's Choice Representative" class="profile-image">
                             </div>
-
-                            <!-- People's Choice Title -->
-                          <h5 class="peoples-choice-title" >🌟Popular Choice🌟</h5>
-
-
-                            <!-- Buttons: Your Vote and Eye Icon for Details -->
+                            <h5 class="peoples-choice-title"><p style="font-weight: bold;">See People's choice</p></h5>
                             <div class="button-container">
-                                <!-- Your Vote Button -->
-                                <button class="custom-button">Your Vote</button>
-                                
-                                <!-- Eye Icon for Details -->
-                                <button class="custom-button">&#128065;</button>
+                                <button class="custom-button" onclick="openVoteModal()">Your Vote</button>
+                                <button class="custom-button" onclick="openVoteDetailsModal()">👁️</button> <!-- Eye icon for vote details -->
                             </div>
                         </div>
 
-                        <!-- Add the CSS below -->
-                        <style>
-                        /* Card styling */
-                        .peoples-choice-card {
-                            background-color: rgba(60, 40, 153, 0.5);
-                            color: white;
-                            padding: 20px;
-                            text-align: center;
-                            margin-top: 60px;
-                            border-radius: 10px;
-                            position: relative;
-                            box-shadow: 0 0 0 3px rgba(135, 211, 124, 1); /* Green border with specified color */
-                            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth animation on hover */
+                        <!-- Modal for Voting -->
+                        <div id="voteModal" class="modal custom-vote-modal" style="display: none;">
+                            <div class="modal-content" style="background-color: white; border-radius: 10px; max-width: 500px; margin: 50px auto; padding: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);">
+                                <span class="close" onclick="closeVoteModal()" style="float: right; cursor: pointer; font-size: 20px;">&times;</span>
+                                <h3 style="text-align: center; font-weight: bold; margin-bottom: 20px;">Vote for Your Representative</h3>
+                                <ul style="list-style: none; padding: 0; max-height: 300px; overflow-y: auto;">
+                                    {% for member in committee_members %}
+                                    <li id="member-{{ member.id }}" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 10px;">
+                                        <div style="display: flex; align-items: center;">
+                                            {% if member.profile_picture %}
+                                                <img src="{{ member.profile_picture.url }}" alt="{{ member.name }}" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
+                                            {% else %}
+                                                <img src="{% static 'images/default-profile.png' %}" alt="Default profile picture" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
+                                            {% endif %}
+                                            <span style="font-weight: bold;">{{ member.name }}</span>
+                                        </div>
+                                        <button id="vote-button-{{ member.id }}" onclick="handleVote('{{ member.id }}', '{{ member.name }}')" class="vote-button" style="background-color: green; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">
+                                            Vote
+                                        </button>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Modal for Vote Counts (Details) -->
+                        <div id="voteDetailsModal" class="modal custom-vote-details-modal" style="display: none;">
+                            <div class="modal-content" style="background-color: white; border-radius: 10px; max-width: 500px; margin: 50px auto; padding: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);">
+                                <span class="close" onclick="closeVoteDetailsModal()" style="float: right; cursor: pointer; font-size: 20px;">&times;</span>
+                                <h3 style="text-align: center; font-weight: bold; margin-bottom: 20px;">Vote Counts for Representatives</h3>
+                                <ul id="voteList" style="list-style: none; padding: 0; max-height: 300px; overflow-y: auto;">
+                                    <!-- Representative list will be injected here by JavaScript -->
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- JavaScript Code -->
+                        <script>
+                        let votedMemberId = null; // Tracks the currently voted member
+
+                        // Open the modal to vote
+                        function openVoteModal() {
+                            document.getElementById("voteModal").style.display = "block";
                         }
 
-                        /* Animation on card hover */
-                        .peoples-choice-card:hover {
-                            transform: translateY(-5px); /* Lift card slightly */
-                            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4); /* Deepen shadow on hover */
+                        // Close the vote modal
+                        function closeVoteModal() {
+                            document.getElementById("voteModal").style.display = "none";
                         }
 
-                        /* Profile image container with outer shadow */
-                        .profile-image-container {
-                            position: absolute;
-                            top: -40px;
-                            left: 50%;
-                            transform: translateX(-50%);
-                            width: 110px;
-                            height: 110px;
-                            background-color: white;
-                            border-radius: 50%;
-                            padding: 5px;
-                            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Shadow around circular frame */
+                        // Open the modal to display vote counts
+                        function openVoteDetailsModal() {
+                            document.getElementById("voteDetailsModal").style.display = "block";
+
+                            // Fetch the vote counts for each representative
+                            fetch('/get_votes_for_representatives/')
+                                .then(response => response.json())
+                                .then(data => {
+                                    const representatives = data.representatives;
+                                    let html = '';
+
+                                    // Create a list of committee members with their vote count
+                                    representatives.forEach(rep => {
+                                        html += `
+                                            <li style="display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 10px;">
+                                                <div style="display: flex; align-items: center;">
+                                                    <img src="${rep.profile_picture ? rep.profile_picture : '{% static 'images/default-profile.png' %}'}" alt="${rep.name}" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
+                                                    <span style="font-weight: bold;">${rep.name}</span>
+                                                </div>
+                                                <span style="font-weight: bold;">Votes: ${rep.vote_count}</span>
+                                            </li>
+                                        `;
+                                    });
+
+                                    // Insert the list of representatives into the modal
+                                    document.getElementById("voteList").innerHTML = html;
+                                })
+                                .catch(error => {
+                                    console.error('Error:', error);
+                                    alert('An error occurred while fetching the vote data.');
+                                });
                         }
 
-                        /* Profile image */
-                        .profile-image {
-                            width: 100%;
-                            height: 100%;
-                            border-radius: 50%;
+                        // Close the votes modal
+                        function closeVoteDetailsModal() {
+                            document.getElementById("voteDetailsModal").style.display = "none";
                         }
 
-                        /* Title styling */
-                        .peoples-choice-title {
-                            font-weight: bold;
-                            margin-top: 59px;
-                            font-size: 17px;
-                            
+                        // Handle the voting logic
+                        function handleVote(memberId, memberName) {
+                            const voteButton = document.getElementById(`vote-button-${memberId}`);
+
+                            // Make the vote request
+                            fetch(`/vote_for_representative/${memberId}/`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': getCookie('csrftoken'),
+                                },
+                                body: JSON.stringify({ memberId: memberId })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.message) {
+                                    voteButton.textContent = 'Voted';
+                                    voteButton.disabled = true;
+                                    alert(data.message);
+                                } else if (data.error) {
+                                    alert(data.error);
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                alert('An error occurred while submitting your vote.');
+                            });
                         }
 
-                        /* Button container */
-                        .button-container {
-                            display: flex;
-                            justify-content: center;
-                            gap: 50px;
-                            margin-top: 15px;
+                        // Helper function to get CSRF token
+                        function getCookie(name) {
+                            let cookieValue = null;
+                            if (document.cookie && document.cookie !== '') {
+                                const cookies = document.cookie.split(';');
+                                for (let i = 0; i < cookies.length; i++) {
+                                    const cookie = cookies[i].trim();
+                                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                        break;
+                                    }
+                                }
+                            }
+                            return cookieValue;
                         }
+                        </script>
 
-                        /* Button styling with hover effect */
-                        .custom-button {
-                            background-color:rgba(135, 211, 124, 1);
-                            box-shadow: 0 0 0 1px rgba(20, 0, 113, 0.69);
-                            color: green;
-                            border: none;
-                            padding: 10px 15px;
-                            border-radius: 20px;
-                            font-weight: bold;
-                            cursor: pointer;
-                            transition: background-color 0.3s, color 0.3s, transform 0.2s; /* Smooth transition for color and scale */
-                        }
 
-                        /* Button hover animation */
-                        .custom-button:hover {
-                            background-color: green;
-                            color: white;
-                            transform: scale(1.05); /* Slight enlargement on hover */
-                        }
-                        </style>
+                    <!-- Add the CSS below -->
+                    <style>
+                    /* Card styling */
+                    .peoples-choice-card {
+                        background-color: rgba(60, 40, 153, 0.5);
+                        color: white;
+                        padding: 20px;
+                        text-align: center;
+                        margin-top: 60px;
+                        border-radius: 10px;
+                        position: relative;
+                        box-shadow: 0 0 0 3px rgba(135, 211, 124, 1); /* Green border with specified color */
+                        transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth animation on hover */
+                    }
 
+                    /* Animation on card hover */
+                    .peoples-choice-card:hover {
+                        transform: translateY(-5px); /* Lift card slightly */
+                        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4); /* Deepen shadow on hover */
+                    }
+
+                    /* Profile image container with outer shadow */
+                    .profile-image-container {
+                        position: absolute;
+                        top: -40px;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        width: 110px;
+                        height: 110px;
+                        background-color: white;
+                        border-radius: 50%;
+                        padding: 5px;
+                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Shadow around circular frame */
+                    }
+
+                    /* Profile image */
+                    .profile-image {
+                        width: 100%;
+                        height: 100%;
+                        border-radius: 50%;
+                    }
+
+                    /* Title styling */
+                    .peoples-choice-title {
+                        font-weight: bold;
+                        margin-top: 59px;
+                        font-size: 17px;
                         
+                    }
+
+                    /* Button container */
+                    .button-container {
+                        display: flex;
+                        justify-content: center;
+                        gap: 50px;
+                        margin-top: 15px;
+                    }
+
+                    /* Button styling with hover effect */
+                    .custom-button {
+                        background-color:rgba(135, 211, 124, 1);
+                        box-shadow: 0 0 0 1px rgba(20, 0, 113, 0.69);
+                        color: green;
+                        border: none;
+                        padding: 10px 15px;
+                        border-radius: 20px;
+                        font-weight: bold;
+                        cursor: pointer;
+                        transition: background-color 0.3s, color 0.3s, transform 0.2s; /* Smooth transition for color and scale */
+                    }
+
+                    /* Button hover animation */
+                    .custom-button:hover {
+                        background-color: green;
+                        color: white;
+                        transform: scale(1.05); /* Slight enlargement on hover */
+                    }
+                    </style>
+
+                    
                         
 
                     </div>

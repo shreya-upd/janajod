@@ -277,47 +277,45 @@
             
                 <!-- Logout Icon -->
                 <i class="fas fa-sign-out-alt" style="margin-right: 20px; font-size: 22px; color: white;" onclick="confirmLogout()"></i> <!-- Logout -->
+                  <!-- Hamburger Menu for Smaller Screens (hidden on larger screens) -->
+                    <div class="d-md-none fixed-top" style="right: 10px; top: 10px;">
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#sidebarModal">
+                            &#8942; <!-- Three dots icon -->
+                        </button>
+                    </div>
 
-<!-- Hamburger Menu for Smaller Screens (hidden on larger screens) -->
-<div class="d-md-none fixed-top" style="right: 10px; top: 10px;">
-    <button class="btn btn-primary" data-toggle="modal" data-target="#sidebarModal">
-        &#8942; <!-- Three dots icon -->
-    </button>
-</div>
-
-<!-- Overlay to block page interaction (hidden by default) -->
-<div id="overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.5); z-index: 999;"></div>
-
-<!-- Confirmation Dialog (hidden by default) -->
-<div id="logoutConfirmation" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); width: 300px; padding:20px; z-index:1000; background-color: rgba(20, 0, 113, 0.69); color: white; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);">
-    <p style="color: white; text-align: center;">Are you sure you want to logout?</p>
-    <div style="display: flex; justify-content: space-between; margin-top: 20px;">
-        <button onclick="logout()" style="padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; background-color: red; color: white;">Yes</button>
-        <button onclick="cancelLogout()" style="padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; background-color: green; color: white;">No</button>
-    </div>
-</div>
-
-<script>
-    function confirmLogout() {
-        // Show the overlay and confirmation dialog
-        document.getElementById('overlay').style.display = 'block';
-        document.getElementById('logoutConfirmation').style.display = 'block';
-    }
-
-    function logout() {
-        // Hide the overlay and confirmation dialog, then logout
-        document.getElementById('overlay').style.display = 'none';
-        document.getElementById('logoutConfirmation').style.display = 'none';
-        window.location.href = '{% url 'logout' %}';  // Replace with Django's URL tag for logout
-    }
-
-    function cancelLogout() {
-        // Hide the overlay and confirmation dialog
-        document.getElementById('overlay').style.display = 'none';
-        document.getElementById('logoutConfirmation').style.display = 'none';
-    }
-</script>
-
+                <!-- Overlay to block page interaction (hidden by default) -->
+                <div id="overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.5); z-index: 999;"></div>
+            
+                <!-- Confirmation Dialog (hidden by default) -->
+                <div id="logoutConfirmation" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); width: 300px; padding:20px; z-index:1000; background-color: rgba(20, 0, 113, 0.69); color: white; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);">
+                    <p style="color: white; text-align: center;">Are you sure you want to logout?</p>
+                    <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+                        <button onclick="logout()" style="padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; background-color: red; color: white;">Yes</button>
+                        <button onclick="cancelLogout()" style="padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; background-color: green; color: white;">No</button>
+                    </div>
+                </div>
+            
+                <script>
+                    function confirmLogout() {
+                        // Show the overlay and confirmation dialog
+                        document.getElementById('overlay').style.display = 'block';
+                        document.getElementById('logoutConfirmation').style.display = 'block';
+                    }
+            
+                    function logout() {
+                        // Hide the overlay and confirmation dialog, then logout
+                        document.getElementById('overlay').style.display = 'none';
+                        document.getElementById('logoutConfirmation').style.display = 'none';
+                        window.location.href = 'logout/';  // Replace '/logout' with your actual logout URL
+                    }
+            
+                    function cancelLogout() {
+                        // Hide the overlay and confirmation dialog
+                        document.getElementById('overlay').style.display = 'none';
+                        document.getElementById('logoutConfirmation').style.display = 'none';
+                    }
+                </script>
             </div>
             
         </nav>
@@ -329,7 +327,7 @@
             <div class="row">
                  
                 <!-- Newsfeed Common Side Bar Left ================================================= -->
-                <div class="col-md-3 static sidebar1 d-none d-md-block" style="position: fixed; left: 30px; top: 80px; bottom: 15px; width: 25%; overflow: hidden;">
+                <div class="col-md-3 static sidebar1 d-none d-md-block" style="position: fixed; left: 30px; top: 80px; bottom: 15px; width: 25%; overflow: hidden;  ">
 
                     <div class="profile-card">
                         <!-- Display the user's profile image if available, otherwise use the default image -->
@@ -346,7 +344,7 @@
                     
                     
                     <!-- Navigation Links -->
-                    <ul class="nav-news-feed nav-list" style="list-style-type: none; padding: 5px; margin: 0; background-color: rgba(255, 255, 255, 0.8); border-radius: 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
+                    <ul class="nav-news-feed nav-list" style="list-style-type: none;font-size: 100px;font-weight: bold; padding: 5px; margin: 0;  border-radius: 8px; box-shadow: 0 3px 3px  rgba(140, 20, 252,1);">
                         <li style="margin: 5px 0;">
                             <div>
                                 <a href="{% url 'home' %}" class="nav-link"
@@ -391,7 +389,7 @@
                                 </a>
                             </div>
                         </li>
-                        <li style="margin: 5px 0;">
+                        {% comment %} <li style="margin: 5px 0;">
                             <div>
                                 <a href="{% url 'servicerequest' %}" class="nav-link"
                                 style="text-decoration: none; color: #333; padding: 10px 14px; border-radius: 20px; display: inline-block; 
@@ -401,7 +399,7 @@
                                     🔧 Service Request
                                 </a>
                             </div>
-                        </li>
+                        </li> {% endcomment %}
                         <li style="margin: 5px 0;">
                             <div>
                                 <a href="{% url 'surveyform' %}" class="nav-link"
@@ -472,7 +470,7 @@
 
                 <!-- main content-->
                 <div class="col-md-8" style="left: 250px;">
-                                                <!-- Post Create Box -->
+                                           <!-- Post Create Box -->
                         <div class="create-post" style="border: 1px solid #e1e1e1; border-radius: 10px; background-color: #f9f9f9;">
                             <form method="POST" enctype="multipart/form-data">
                                 {% csrf_token %}
@@ -490,9 +488,9 @@
                                                 <input type="text" name="content" class="form-control" style="border: none; background-color: #f1f1f1; flex-grow: 1; font-size: 16px; padding: 10px; border-radius: 20px; margin-top: 5px;" placeholder="What's on your mind?" />
                                             </div>
                                             
-                                            <!-- Media Icon (Trigger Modal) -->
+                                            <!-- Media Icon (Trigger File Input) -->
                                             <div style="margin-right: 10px;">
-                                                <a href="#" style="text-decoration: none; color:rgba(20, 0, 113, 0.69); display: flex; align-items: center;" data-toggle="modal" data-target="#photoVideoModal">
+                                                <a href="#" style="text-decoration: none; color:rgba(20, 0, 113, 0.69); display: flex; align-items: center;" id="mediaIcon">
                                                     <span style="font-size: 24px; margin-right: 5px;">🖼️</span>
                                                 </a>
                                             </div>
@@ -506,52 +504,32 @@
                                         </div>
 
                                         <!-- Hidden File Input for Selected Media -->
-                                        <input type="file" name="media" id="hiddenMediaInput" style="display: none;">
+                                        <input type="file" name="media" id="hiddenMediaInput" style="display: none;" accept="image/*, video/*">
                                         <div id="mediaPreview" style="margin-top: 10px;"></div> <!-- Preview area for selected media -->
                                     </div>
                                 </div>
                             </form>
-
-                            <!-- Photo/Video Modal -->
-                            <div class="modal fade" id="photoVideoModal" tabindex="-1" role="dialog" aria-labelledby="photoVideoModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="photoVideoModalLabel" style="color:rgba(20, 0, 113, 0.69); text-align:center; font-weight: bold;">Upload Photo/Video</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form id="uploadForm" enctype="multipart/form-data">
-                                                <div class="form-group" style="color:rgba(20, 0, 113, 0.69);">
-                                                    <label for="photoInput">Select Photo/Video: </label>
-                                                    <input type="file" class="form-control-file" id="photoInput" accept="image/*, video/*" required>
-                                                </div>
-                                            </form>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-success" data-dismiss="modal" style="border-radius: 30px;">Close</button>
-                                            <button type="button" class="btn btn-primary" id="submitUpload">Save</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                         <!-- Post Create Box End -->
 
                         <script>
-                            document.getElementById('submitUpload').addEventListener('click', function() {
-                                const photoInput = document.getElementById('photoInput');
-                                const hiddenMediaInput = document.getElementById('hiddenMediaInput');
+                            // Trigger the hidden file input when the gallery icon is clicked
+                            document.getElementById('mediaIcon').addEventListener('click', function(e) {
+                                e.preventDefault(); // Prevent the default link behavior
+                                document.getElementById('hiddenMediaInput').click(); // Trigger the file input
+                            });
+
+                            // Handle file selection and display the preview
+                            document.getElementById('hiddenMediaInput').addEventListener('change', function() {
+                                const fileInput = document.getElementById('hiddenMediaInput');
                                 const mediaPreview = document.getElementById('mediaPreview');
 
-                                // Clear previous previews
+                                // Clear previous preview
                                 mediaPreview.innerHTML = '';
 
                                 // Check if a file has been selected
-                                if (photoInput.files.length > 0) {
-                                    const file = photoInput.files[0];
+                                if (fileInput.files.length > 0) {
+                                    const file = fileInput.files[0];
                                     const fileURL = URL.createObjectURL(file); // Create a local URL for the selected file
 
                                     // Create an HTML element to display the selected media
@@ -578,20 +556,15 @@
                                     if (mediaElement) {
                                         mediaPreview.appendChild(mediaElement);
                                     }
-
-                                    // Transfer the selected file to the hidden input for form submission
-                                    hiddenMediaInput.files = photoInput.files;
-
-                                    // Close the modal after selecting the file
-                                    $('#photoVideoModal').modal('hide');
                                 }
                             });
                         </script>
 
 
+
                             
                                    <!-- Display Posts -->
-                                    <div class="post-content mt-4">
+                                    <div class="post-content mt-4" style="box-shadow: 0 4px 8px rgba(0, 255, 0, 0.5);">
                                         {% for post in posts %}
                                             <div class="post" style="border: 1px solid #e1e1e1; padding: 15px; border-radius: 10px; margin-bottom: 20px; background-color: #fff;">
                                                 <div class="user-info d-flex justify-content-between align-items-center" style="margin-bottom: 10px; background-color: #f9f9f9;">
@@ -599,7 +572,7 @@
                                                     <div style="display: flex; align-items: center; flex-wrap: wrap;">
                                                         <h5 style="margin: 0; display: flex; align-items: center;">
                                                             <img src="{{ post.author.profile.profile_image.url }}" alt="user" class="profile-photo-md" style="border-radius: 50%; width: 40px; height: 40px; margin-right: 10px;" />
-                                                            <a href="{% url 'profile' post.author.username %}" class="profile-link">{{ post.author.profile.full_name }}</a>
+                                                            <span class="profile-link">{{ post.author.profile.full_name }}</span>
                                                         </h5>
 
                                                         <!-- Conditional Role Display -->
@@ -617,14 +590,19 @@
                                                         <div style="display: flex; align-items: center; margin-left: auto;">
                                                             {% if post.author == request.user %} <!-- Check if the current user is the author -->
                                                                 <!-- Edit Icon -->
-                                                                <a href="#" class="text-secondary" title="Edit" data-toggle="modal" data-target="#editPostModal-{{ post.id }}">
+                                                                <a href="{% url 'edit_post_page' post.id %}" class="text-secondary" title="Edit">
                                                                     <i class="fa fa-edit" style="font-size: 18px; margin-right: 15px;"></i>
                                                                 </a>
 
                                                                 <!-- Delete Icon Triggering the Modal -->
-                                                                <a href="#" class="text-danger" data-toggle="modal" data-target="#deletePostModal-{{ post.id }}">
-                                                                    <i class="fa fa-trash" style="font-size: 18px;"></i>
-                                                                </a>
+                                                               <!-- Delete Icon Triggering the POST -->
+                                                                <form action="{% url 'delete_post' post.id %}" method="POST" style="display:inline;">
+                                                                    {% csrf_token %}
+                                                                    <button type="submit" class="text-danger" style="background: none; border: none;">
+                                                                        <i class="fa fa-trash" style="font-size: 18px;"></i>
+                                                                    </button>
+                                                                </form>
+
                                                             {% endif %}
                                                         </div>
                                                     </div>
@@ -764,9 +742,9 @@
                                 </h5>
                             </div>
                             <hr>
-                            <div class="members-list" style="max-height: 250px; overflow-y: auto; overflow-x: hidden; padding-right: 10px;">
+                            <div class="members-list" style="max-height: 250px; overflow-y: auto; overflow-x: hidden; padding-right: 10px; ">
                                 {% for member in committee_members %}
-                                <div class="committee-member-card" style="border: 1px solid #ddd; padding: 10px; margin-bottom: 15px; text-align: center;">
+                                <div class="committee-member-card" style="border: 1px solid #ddd; padding: 10px; margin-bottom: 15px; text-align: center;background-color: rgb(243,236,253);">
                                     <div class="profile-summary" style="display: flex; align-items: center; justify-content: center; margin-bottom: 5px;">
                                         {% if member.profile_picture %}
                                             <img src="{{ member.profile_picture.url }}" alt="{{ member.name }}" style="width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;">
@@ -799,28 +777,153 @@
                                 </div>
                                 {% endfor %}
                             </div>
-                            <hr>
-                            <!-- People's Choice Card -->
-                                                        <!-- People's Choice Card -->
-                            <div class="peoples-choice-card">
-                                <!-- Image of the person in a circular frame that overlaps the card -->
-                                <div class="profile-image-container">
-                                    <img src="{% static 'images/post-images/Balen.jpg' %}" alt="People's Choice Representative" class="profile-image">
+                                                            <hr>
+                                <!-- People's Choice Card -->
+                                <div class="peoples-choice-card">
+                                    <div class="profile-image-container">
+                                        <img src="{% static 'images/post-images/vote.jpg' %}" alt="People's Choice Representative" class="profile-image">
+                                    </div>
+                                    <h5 class="peoples-choice-title"><p style="font-weight: bold;">See People's choice</p></h5>
+                                    <div class="button-container">
+                                        <button class="custom-button" onclick="openVoteModal()">Your Vote</button>
+                                        <button class="custom-button" onclick="openVoteDetailsModal()">👁️</button> <!-- Eye icon for vote details -->
+                                    </div>
                                 </div>
 
-                                <!-- People's Choice Title -->
-                              <h5 class="peoples-choice-title" >🌟Popular Choice🌟</h5>
-
-
-                                <!-- Buttons: Your Vote and Eye Icon for Details -->
-                                <div class="button-container">
-                                    <!-- Your Vote Button -->
-                                    <button class="custom-button">Your Vote</button>
-                                    
-                                    <!-- Eye Icon for Details -->
-                                    <button class="custom-button">&#128065;</button>
+                                <!-- Modal for Voting -->
+                                <div id="voteModal" class="modal custom-vote-modal" style="display: none;">
+                                    <div class="modal-content" style="background-color: white; border-radius: 10px; max-width: 500px; margin: 50px auto; padding: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);">
+                                        <span class="close" onclick="closeVoteModal()" style="float: right; cursor: pointer; font-size: 20px;">&times;</span>
+                                        <h3 style="text-align: center; font-weight: bold; margin-bottom: 20px;">Vote for Your Representative</h3>
+                                        <ul style="list-style: none; padding: 0; max-height: 300px; overflow-y: auto;">
+                                            {% for member in committee_members %}
+                                            <li id="member-{{ member.id }}" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 10px;">
+                                                <div style="display: flex; align-items: center;">
+                                                    {% if member.profile_picture %}
+                                                        <img src="{{ member.profile_picture.url }}" alt="{{ member.name }}" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
+                                                    {% else %}
+                                                        <img src="{% static 'images/default-profile.png' %}" alt="Default profile picture" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
+                                                    {% endif %}
+                                                    <span style="font-weight: bold;">{{ member.name }}</span>
+                                                </div>
+                                                <button id="vote-button-{{ member.id }}" onclick="handleVote('{{ member.id }}', '{{ member.name }}')" class="vote-button" style="background-color: green; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">
+                                                    Vote
+                                                </button>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
                                 </div>
-                            </div>
+
+                                <!-- Modal for Vote Counts (Details) -->
+                                <div id="voteDetailsModal" class="modal custom-vote-details-modal" style="display: none;">
+                                    <div class="modal-content" style="background-color: white; border-radius: 10px; max-width: 500px; margin: 50px auto; padding: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);">
+                                        <span class="close" onclick="closeVoteDetailsModal()" style="float: right; cursor: pointer; font-size: 20px;">&times;</span>
+                                        <h3 style="text-align: center; font-weight: bold; margin-bottom: 20px;">Vote Counts for Representatives</h3>
+                                        <ul id="voteList" style="list-style: none; padding: 0; max-height: 300px; overflow-y: auto;">
+                                            <!-- Representative list will be injected here by JavaScript -->
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <!-- JavaScript Code -->
+                                <script>
+                                let votedMemberId = null; // Tracks the currently voted member
+
+                                // Open the modal to vote
+                                function openVoteModal() {
+                                    document.getElementById("voteModal").style.display = "block";
+                                }
+
+                                // Close the vote modal
+                                function closeVoteModal() {
+                                    document.getElementById("voteModal").style.display = "none";
+                                }
+
+                                // Open the modal to display vote counts
+                                function openVoteDetailsModal() {
+                                    document.getElementById("voteDetailsModal").style.display = "block";
+
+                                    // Fetch the vote counts for each representative
+                                    fetch('/get_votes_for_representatives/')
+                                        .then(response => response.json())
+                                        .then(data => {
+                                            const representatives = data.representatives;
+                                            let html = '';
+
+                                            // Create a list of committee members with their vote count
+                                            representatives.forEach(rep => {
+                                                html += `
+                                                    <li style="display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 10px;">
+                                                        <div style="display: flex; align-items: center;">
+                                                            <img src="${rep.profile_picture ? rep.profile_picture : '{% static 'images/default-profile.png' %}'}" alt="${rep.name}" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
+                                                            <span style="font-weight: bold;">${rep.name}</span>
+                                                        </div>
+                                                        <span style="font-weight: bold;">Votes: ${rep.vote_count}</span>
+                                                    </li>
+                                                `;
+                                            });
+
+                                            // Insert the list of representatives into the modal
+                                            document.getElementById("voteList").innerHTML = html;
+                                        })
+                                        .catch(error => {
+                                            console.error('Error:', error);
+                                            alert('An error occurred while fetching the vote data.');
+                                        });
+                                }
+
+                                // Close the votes modal
+                                function closeVoteDetailsModal() {
+                                    document.getElementById("voteDetailsModal").style.display = "none";
+                                }
+
+                                // Handle the voting logic
+                                function handleVote(memberId, memberName) {
+                                    const voteButton = document.getElementById(`vote-button-${memberId}`);
+
+                                    // Make the vote request
+                                    fetch(`/vote_for_representative/${memberId}/`, {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'X-CSRFToken': getCookie('csrftoken'),
+                                        },
+                                        body: JSON.stringify({ memberId: memberId })
+                                    })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        if (data.message) {
+                                            voteButton.textContent = 'Voted';
+                                            voteButton.disabled = true;
+                                            alert(data.message);
+                                        } else if (data.error) {
+                                            alert(data.error);
+                                        }
+                                    })
+                                    .catch(error => {
+                                        console.error('Error:', error);
+                                        alert('An error occurred while submitting your vote.');
+                                    });
+                                }
+
+                                // Helper function to get CSRF token
+                                function getCookie(name) {
+                                    let cookieValue = null;
+                                    if (document.cookie && document.cookie !== '') {
+                                        const cookies = document.cookie.split(';');
+                                        for (let i = 0; i < cookies.length; i++) {
+                                            const cookie = cookies[i].trim();
+                                            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    return cookieValue;
+                                }
+                                </script>
+
 
                             <!-- Add the CSS below -->
                             <style>
@@ -907,6 +1010,48 @@
                         </div>
                         
                     </div>
+                                            <!-- Add the updated JavaScript -->
+                        {% comment %} <script>
+                            
+                            // Function to submit a vote
+                            function submitVote(memberId) {
+                                alert("You have voted for member with ID: " + memberId);
+                                closeModal();
+                                // Add AJAX or form submission logic here to handle the vote
+                            }
+                        </script> {% endcomment %}
+                        
+                        
+
+                        <!-- Add CSS for the modal -->
+                        <style>
+                            /* Modal background styling */
+                            .modal {
+                                position: fixed;
+                                top: 0;
+                                left: 0;
+                                width: 100%;
+                                height: 100%;
+                                background-color: rgba(0, 0, 0, 0.5);
+                                z-index: 1000;
+                            }
+
+                            /* Modal content styling */
+                            .modal-content {
+                                animation: fadeIn 0.3s ease-in-out;
+                            }
+
+                            @keyframes fadeIn {
+                                from {
+                                    opacity: 0;
+                                    transform: scale(0.95);
+                                }
+                                to {
+                                    opacity: 1;
+                                    transform: scale(1);
+                                }
+                            }
+                        </style>
                     <!-- Add the People's Choice Card below the hr line -->
                     <script>
                         function toggleDetails(memberId) {

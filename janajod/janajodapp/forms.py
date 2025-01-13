@@ -137,19 +137,38 @@ class PostForm(forms.ModelForm):
 
 from django import forms
 from .models import Complaint
+from django import forms
+from .models import Complaint
 
+# Form for users (no status field included)
 class ComplaintForm(forms.ModelForm):
     class Meta:
         model = Complaint
-        fields = ['fullname', 'contact', 'email', 'location', 'complaint', 'image']
+        fields = ['fullname', 'contact', 'email', 'location', 'complaint', 'image']  # Excluding status
         widgets = {
-            'fullname': forms.TextInput(attrs={'class': 'form-control','placeholder': 'Enter your full name'}),
+            'fullname': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your full name'}),
             'contact': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your contact number'}),
-            'email': forms.EmailInput(attrs={'class': 'form-control','placeholder': 'Enter your email address'}),
-            'location': forms.TextInput(attrs={'class': 'form-control','placeholder': 'Enter your location including tole,ward..'}),
-            'complaint': forms.Textarea(attrs={'class': 'form-control','placeholder': 'Describe your complaint'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Enter your email address'}),
+            'location': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your location including tole, ward..'}),
+            'complaint': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Describe your complaint'}),
             'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
         }
+
+# Form for admin (includes status field)
+class AdminComplaintForm(forms.ModelForm):
+    class Meta:
+        model = Complaint
+        fields = ['fullname', 'contact', 'email', 'location', 'complaint', 'image', 'status']  # Including status
+        widgets = {
+            'fullname': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter full name'}),
+            'contact': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter contact number'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Enter email address'}),
+            'location': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter location'}),
+            'complaint': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter complaint details'}),
+            'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'status': forms.RadioSelect(attrs={'class': 'form-control'}),  # Add for admin to select status
+        }
+
 
 
 from django import forms

@@ -78,6 +78,11 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Complaint(models.Model):
+    STATUS_CHOICES = [
+        ('received', 'Received'),
+        ('on_progress', 'On Progress'),
+        ('done', 'Done'),
+    ]
     user = models.ForeignKey(User, on_delete=models.CASCADE)  # Link complaint to user
     fullname = models.CharField(max_length=100)
     contact = models.CharField(max_length=15)
@@ -86,7 +91,11 @@ class Complaint(models.Model):
     complaint = models.TextField()
     image = models.ImageField(upload_to='complaint_images/', blank=True, null=True)  # Optional field
     created_at = models.DateTimeField(auto_now_add=True)  # Timestamp when complaint is created
-
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='received',  # Default status is "Received"
+    )
     def __str__(self):
         return f"Complaint by {self.fullname} - {self.location}"
 
@@ -96,16 +105,16 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class ServiceRequest(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)  # Link service request to user
+    user = models.ForeignKey(User, on_delete=models.CASCADE) 
     fullname = models.CharField(max_length=100)
     contact = models.CharField(max_length=15)
     
-    email = models.EmailField(blank=True, null=True)  # Optional field
-    service_type = models.CharField(max_length=255)  # New field for service type
-    description = models.TextField()  # Details about the service request
+    email = models.EmailField(blank=True, null=True) 
+    service_type = models.CharField(max_length=255)  
+    description = models.TextField()  
     location = models.CharField(max_length=255)
-    image = models.ImageField(upload_to='service_images/', blank=True, null=True)  # Optional field for images
-    created_at = models.DateTimeField(auto_now_add=True)  # Timestamp when service request is created
+    image = models.ImageField(upload_to='service_images/', blank=True, null=True)  
+    created_at = models.DateTimeField(auto_now_add=True)  
 
     def __str__(self):
         return f"Service Request by {self.fullname} - {self.service_type}"
@@ -121,8 +130,6 @@ class Job(models.Model):
 
     def __str__(self):
         return f"{self.job_title} at {self.organization}"
-
-
 
 
 class UserReqJob(models.Model):
@@ -221,6 +228,16 @@ class CommitteeMember(models.Model):
 
     def __str__(self):
         return self.name
+    
 
 
+class Vote(models.Model):
+    member = models.ForeignKey(CommitteeMember, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    voted_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        unique_together = ('member', 'user')  # Ensure a user can only vote once per representative
+
+    def __str__(self):
+        return f"Vote for {self.member.name} by {self.user.username}"

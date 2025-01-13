@@ -1,4 +1,6 @@
 {% load static %}
+{% load humanize %}
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -24,7 +26,7 @@
     
 
     <!--Favicon-->
-    <link rel="shortcut icon" type="image/png" href="{% static 'images/fav.png' %}" />
+    <link rel="shortcut icon" type="image/png" href="{% static 'images/janajodlogo.jpg' %}" />
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <!-- CSS for styling -->
@@ -32,6 +34,8 @@
 </head>
 <body>
 
+    <!-- Header
+    ================================================= -->
     <header id="header">
         <nav style="display: flex; align-items: center; justify-content: space-between; background-color: rgba(20, 0, 113, 1); padding: 10px 20px; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); position: fixed; top: 0; left: 0; right: 0; z-index: 2000;">
             <!-- Logo -->
@@ -273,17 +277,16 @@
             
                 <!-- Logout Icon -->
                 <i class="fas fa-sign-out-alt" style="margin-right: 20px; font-size: 22px; color: white;" onclick="confirmLogout()"></i> <!-- Logout -->
+                  <!-- Hamburger Menu for Smaller Screens (hidden on larger screens) -->
+                    <div class="d-md-none fixed-top" style="right: 10px; top: 10px;">
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#sidebarModal">
+                            &#8942; <!-- Three dots icon -->
+                        </button>
+                    </div>
 
-                <!-- Hamburger Menu for Smaller Screens (hidden on larger screens) -->
-                <div class="d-md-none fixed-top" style="right: 10px; top: 10px;">
-                    <button class="btn btn-primary" data-toggle="modal" data-target="#sidebarModal">
-                        &#8942; <!-- Three dots icon -->
-                    </button>
-                </div>
-                
                 <!-- Overlay to block page interaction (hidden by default) -->
                 <div id="overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.5); z-index: 999;"></div>
-                
+            
                 <!-- Confirmation Dialog (hidden by default) -->
                 <div id="logoutConfirmation" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); width: 300px; padding:20px; z-index:1000; background-color: rgba(20, 0, 113, 0.69); color: white; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);">
                     <p style="color: white; text-align: center;">Are you sure you want to logout?</p>
@@ -292,41 +295,39 @@
                         <button onclick="cancelLogout()" style="padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; background-color: green; color: white;">No</button>
                     </div>
                 </div>
-                
+            
                 <script>
                     function confirmLogout() {
                         // Show the overlay and confirmation dialog
                         document.getElementById('overlay').style.display = 'block';
                         document.getElementById('logoutConfirmation').style.display = 'block';
                     }
-                
+            
                     function logout() {
                         // Hide the overlay and confirmation dialog, then logout
                         document.getElementById('overlay').style.display = 'none';
                         document.getElementById('logoutConfirmation').style.display = 'none';
-                        window.location.href = '{% url 'logout' %}';  // Replace with Django's URL tag for logout
+                        window.location.href = 'logout/';  // Replace '/logout' with your actual logout URL
                     }
-                
+            
                     function cancelLogout() {
                         // Hide the overlay and confirmation dialog
                         document.getElementById('overlay').style.display = 'none';
                         document.getElementById('logoutConfirmation').style.display = 'none';
                     }
                 </script>
-                
             </div>
             
         </nav>
     </header>
     <!--Header End-->
-
     <div id="page-contents">
         <div class="container" style="max-width: 100%; overflow-x: hidden;">
             <div class="row">
                  
                 <!-- Newsfeed Common Side Bar Left ================================================= -->
-                  <!-- Newsfeed Common Side Bar Left ================================================= -->
-                  <div class="col-md-3 static sidebar1 d-none d-md-block" style="position: fixed; left: 30px; top: 80px; bottom: 15px; width: 25%; overflow: hidden;  ">
+                   <!-- Newsfeed Common Side Bar Left ================================================= -->
+                <div class="col-md-3 static sidebar1 d-none d-md-block" style="position: fixed; left: 30px; top: 80px; bottom: 15px; width: 25%; overflow: hidden;  ">
 
                     <div class="profile-card">
                         <!-- Display the user's profile image if available, otherwise use the default image -->
@@ -464,112 +465,154 @@
                 </div>
 
 
-
                     
 
                 
                 
                 <div class="col-md-8" style="left: 250px;">
-                    <!-- Announcement Create Box -->
-                    <div class="create-announcement" style="border: 1px solid #e1e1e1; padding: 10px; border-radius: 10px; background-color: #f9f9f9; margin-bottom: 20px; height:95px;">
-                        <div class="row d-flex align-items-center justify-content-between">
-                            <!-- Image and Instructional Quote -->
-                            <div class="col-md-6 d-flex align-items-center">
-                                <div style="display: flex; align-items: center; margin-top: 15px;">
-                                    <!-- Profile Image -->
-                                    {% if user.profile.profile_image %}
-                                        <img src="{{ user.profile.profile_image.url }}" alt="Profile Picture" class="profile-photo-md" style="border-radius: 50%; width: 40px; height: 40px; margin-right: 10px;" />
+                                            <!-- Post Create Box -->
+                                            <div class="create-post" style="border: 1px solid #e1e1e1; border-radius: 10px; background-color: #f9f9f9;">
+                                                <form method="POST" enctype="multipart/form-data">
+                                                    {% csrf_token %}
+                                                    <div class="row">
+                                                        <!-- Profile Image, Input Box, and Post Button -->
+                                                        <div class="col-md-12">
+                                                            <div class="form-group" style="display: flex; align-items: center; margin-top: 4px;">
+                                                                <div style="display: flex; align-items: center; flex-grow: 1; margin-right: 10px;">
+                                                                    {% if user.profile.profile_image %}
+                                                                        <img src="{{ user.profile.profile_image.url }}" alt="Profile Picture" class="profile-photo-md" style="border-radius: 50%; width: 40px; height: 40px; margin-right: 10px;" />
+                                                                    {% else %}
+                                                                        <img src="{% static 'images/users/default.jpg' %}" alt="Default Profile" class="profile-photo-md" style="border-radius: 50%; width: 40px; height: 40px; margin-right: 10px;" />
+                                                                    {% endif %}
+                                                                    
+                                                                    <input type="text" name="content" class="form-control" style="border: none; background-color: #f1f1f1; flex-grow: 1; font-size: 16px; padding: 10px; border-radius: 20px; margin-top: 5px;" placeholder="What's on your mind?" />
+                                                                </div>
+                                                                
+                                                                <!-- Media Icon (Trigger Modal) -->
+                                                                <div style="margin-right: 10px;">
+                                                                    <a href="#" style="text-decoration: none; color:rgba(20, 0, 113, 0.69); display: flex; align-items: center;" data-toggle="modal" data-target="#photoVideoModal">
+                                                                        <span style="font-size: 24px; margin-right: 5px;">🖼️</span>
+                                                                    </a>
+                                                                </div>
+                                                                
+                                                                <!-- Post Button -->
+                                                                <div>
+                                                                    <button type="submit" class="btn btn-primary" style="background-color: rgba(20, 0, 113, 0.69); border: none; border-radius: 20px; padding: 8px 20px;">
+                                                                        Post
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                    
+                                                            <!-- Hidden File Input for Selected Media -->
+                                                            <input type="file" name="media" id="hiddenMediaInput" style="display: none;">
+                                                            <div id="mediaPreview" style="margin-top: 10px;"></div> <!-- Preview area for selected media -->
+                                                        </div>
+                                                    </div>
+                                                </form>
+                    
+                                                <!-- Photo/Video Modal -->
+                                                <div class="modal fade" id="photoVideoModal" tabindex="-1" role="dialog" aria-labelledby="photoVideoModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="photoVideoModalLabel" style="color:rgba(20, 0, 113, 0.69); text-align:center; font-weight: bold;">Upload Photo/Video</h5>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <form id="uploadForm" enctype="multipart/form-data">
+                                                                    <div class="form-group" style="color:rgba(20, 0, 113, 0.69);">
+                                                                        <label for="photoInput">Select Photo/Video: </label>
+                                                                        <input type="file" class="form-control-file" id="photoInput" accept="image/*, video/*" required>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-success" data-dismiss="modal" style="border-radius: 30px;">Close</button>
+                                                                <button type="button" class="btn btn-primary" id="submitUpload">Save</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Post Create Box End -->
+                    
+                                            <script>
+                                                document.getElementById('submitUpload').addEventListener('click', function() {
+                                                    const photoInput = document.getElementById('photoInput');
+                                                    const hiddenMediaInput = document.getElementById('hiddenMediaInput');
+                                                    const mediaPreview = document.getElementById('mediaPreview');
+                    
+                                                    // Clear previous previews
+                                                    mediaPreview.innerHTML = '';
+                    
+                                                    // Check if a file has been selected
+                                                    if (photoInput.files.length > 0) {
+                                                        const file = photoInput.files[0];
+                                                        const fileURL = URL.createObjectURL(file); // Create a local URL for the selected file
+                    
+                                                        // Create an HTML element to display the selected media
+                                                        let mediaElement;
+                                                        if (file.type.startsWith('image/')) {
+                                                            mediaElement = document.createElement('img');
+                                                            mediaElement.src = fileURL;
+                                                            mediaElement.alt = 'Selected Image';
+                                                            mediaElement.style.width = '100px'; // Set width for the image
+                                                            mediaElement.style.height = 'auto'; // Keep the aspect ratio
+                                                            mediaElement.style.borderRadius = '10px'; // Optional styling
+                                                            mediaElement.style.marginLeft = '10px'; // Space between input and media
+                                                        } else if (file.type.startsWith('video/')) {
+                                                            mediaElement = document.createElement('video');
+                                                            mediaElement.src = fileURL;
+                                                            mediaElement.controls = true; // Show controls for the video
+                                                            mediaElement.style.width = '100px'; // Set width for the video
+                                                            mediaElement.style.height = 'auto'; // Keep the aspect ratio
+                                                            mediaElement.style.borderRadius = '10px'; // Optional styling
+                                                            mediaElement.style.marginLeft = '10px'; // Space between input and media
+                                                        }
+                    
+                                                        // Append the media element to the preview area
+                                                        if (mediaElement) {
+                                                            mediaPreview.appendChild(mediaElement);
+                                                        }
+                    
+                                                        // Transfer the selected file to the hidden input for form submission
+                                                        hiddenMediaInput.files = photoInput.files;
+                    
+                                                        // Close the modal after selecting the file
+                                                        $('#photoVideoModal').modal('hide');
+                                                    }
+                                                });
+                                            </script>
+                    
+                    
+                    <h4 style="font-weight: bold; text-align: center;">Edit Post</h4><hr>
+                    <form action="" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="content">Edit Caption:</label>
+                            <textarea id="content" name="content" class="form-control">{{ form.content.value }}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="media">Edit Image/Video:</label>
+                            <input type="file" id="media" name="media" class="form-control-file">
+                            {% if post.media %}
+                                <p>Current Media:</p>
+                                {% with post.media.url|lower as media_url %}
+                                    {% if ".mp4" in media_url or ".webm" in media_url or ".ogg" in media_url %}
+                                        <video src="{{ post.media.url }}" controls style="max-width: 100%; border-radius: 10px;"></video>
                                     {% else %}
-                                        <img src="{% static 'images/users/default.jpg' %}" alt="Default Profile" class="profile-photo-md" style="border-radius: 50%; width: 40px; height: 40px; margin-right: 10px;" />
+                                        <img src="{{ post.media.url }}" alt="post-media" class="img-responsive" style="max-width: 100%; border-radius: 10px;" />
                                     {% endif %}
-                                    
-                                    <!-- Announcement Text -->
-                                    <p style="font-size: 14px; font-weight: bold; white-space: nowrap; color: rgba(20, 0, 113, 0.69); margin: 0;">
-                                        Hosting an event? Submit your event details now!
-                                    </p>
-                            
-                                </div>
-                            </div>
-
-                            <!-- Announce Button -->
-                            <div class="col-md-6 d-flex align-items-center justify-content-end">
-                                <button id="announceButton" class="btn btn-primary" style="padding: 10px; font-size: 16px; margin-left: 150px; margin-top: 16px;">Submit Details</button>
-                            </div>
+                                {% endwith %}
+                            {% endif %}
                         </div>
-                    </div>
-
-                    <!-- Modal Structure -->
-                    <div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="eventModalLabel" style="text-align: center; font-weight: bold;">Submit Event Details</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <form method="POST" enctype="multipart/form-data" action="{% url 'submit_event' %}">
-                                    {% csrf_token %}
-                                    <div class="modal-body" style="color:rgba(20, 0, 113, 0.69)">
-                                        <div class="form-group" >
-                                            <label for="eventTitle">Event Title</label>
-                                            <input type="text" class="form-control" id="eventTitle" name="event_title" placeholder="Enter event title" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="eventDescription">Event Description</label>
-                                            <textarea class="form-control" id="eventDescription" name="event_description" rows="3" placeholder="Enter event description" required></textarea>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="eventImage">Event Image</label>
-                                            <input type="file" class="form-control-file" id="eventImage" name="event_image">
-                                        </div>
-                                    </div>
-                                    <p style="font-style: italic; font-size: small; color: red; text-align: center;">
-                                       * Your event will be published once approved *
-                                    </p>
-                                    
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-success" data-dismiss="modal" style="border-radius: 30px;">Cancel</button>
-                                        <button type="submit" class="btn btn-primary">Submit</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- JavaScript to trigger the modal -->
-                    <script>
-                        document.getElementById('announceButton').addEventListener('click', function() {
-                            $('#eventModal').modal('show');
-                        });
-                    </script>
-
-                    <!-- Add Bootstrap and jQuery (if not already included) -->
-                    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-                    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
-
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                        <a href="{% url 'home' %}" class="btn btn-danger">Cancel</a>
                 
-                    <div class="notice-board" style="box-shadow: 0 4px 8px rgba(0, 255, 0, 0.5);">
-                        {% for event in events %}
-                            <div class="card" style="border: 1px solid #e1e1e1; border-radius: 10px; background-color: #f9f9f9; margin-bottom: 12px;">
-                                <div class="card-body">
-                                    {% if event.image %}
-                                        <img src="{{ event.image.url }}" alt="Event Image" style="width: 100%; max-height: 200px; object-fit: cover; border-radius: 5px; margin-bottom: 10px;">
-                                    {% endif %}
-                                    <h5 class="card-title" style="font-size: 18px; margin-bottom: 10px; font-weight: bold; text-align: center;">{{ event.title }}</h5>
-                                    <p class="card-text" style="font-size: 13px; margin-bottom: 10px; padding: 6px;">
-                                        {{ event.description }}
-                                    </p>
-                                    <p class="card-text text-muted" style="font-size: 14px; color: green; padding: 6px;">
-                                        Posted on: {{ event.created_at|date:"d M Y, H:i" }}
-                                    </p>
-                                </div>
-                            </div>
-                        {% empty %}
-                            <p>No approved events available.</p>
-                        {% endfor %}
-                    </div>
-                    
+                    </form>
+                   
                     
                     
                     <!-- Notice Board End -->
@@ -628,232 +671,234 @@
                         <hr>
                         <!-- People's Choice Card -->
                                                     <!-- People's Choice Card -->
-                                                    <div class="peoples-choice-card">
-                                                        <div class="profile-image-container">
-                                                            <img src="{% static 'images/post-images/vote.jpg' %}" alt="People's Choice Representative" class="profile-image">
-                                                        </div>
-                                                        <h5 class="peoples-choice-title"><p style="font-weight: bold;">See People's choice</p></h5>
-                                                        <div class="button-container">
-                                                            <button class="custom-button" onclick="openVoteModal()">Your Vote</button>
-                                                            <button class="custom-button" onclick="openVoteDetailsModal()">👁️</button> <!-- Eye icon for vote details -->
-                                                        </div>
-                                                    </div>
+                          <!-- People's Choice Card -->
+                          <div class="peoples-choice-card">
+                            <div class="profile-image-container">
+                                <img src="{% static 'images/post-images/vote.jpg' %}" alt="People's Choice Representative" class="profile-image">
+                            </div>
+                            <h5 class="peoples-choice-title"><p style="font-weight: bold;">See People's choice</p></h5>
+                            <div class="button-container">
+                                <button class="custom-button" onclick="openVoteModal()">Your Vote</button>
+                                <button class="custom-button" onclick="openVoteDetailsModal()">👁️</button> <!-- Eye icon for vote details -->
+                            </div>
+                        </div>
+
+                        <!-- Modal for Voting -->
+                        <div id="voteModal" class="modal custom-vote-modal" style="display: none;">
+                            <div class="modal-content" style="background-color: white; border-radius: 10px; max-width: 500px; margin: 50px auto; padding: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);">
+                                <span class="close" onclick="closeVoteModal()" style="float: right; cursor: pointer; font-size: 20px;">&times;</span>
+                                <h3 style="text-align: center; font-weight: bold; margin-bottom: 20px;">Vote for Your Representative</h3>
+                                <ul style="list-style: none; padding: 0; max-height: 300px; overflow-y: auto;">
+                                    {% for member in committee_members %}
+                                    <li id="member-{{ member.id }}" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 10px;">
+                                        <div style="display: flex; align-items: center;">
+                                            {% if member.profile_picture %}
+                                                <img src="{{ member.profile_picture.url }}" alt="{{ member.name }}" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
+                                            {% else %}
+                                                <img src="{% static 'images/default-profile.png' %}" alt="Default profile picture" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
+                                            {% endif %}
+                                            <span style="font-weight: bold;">{{ member.name }}</span>
+                                        </div>
+                                        <button id="vote-button-{{ member.id }}" onclick="handleVote('{{ member.id }}', '{{ member.name }}')" class="vote-button" style="background-color: green; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">
+                                            Vote
+                                        </button>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Modal for Vote Counts (Details) -->
+                        <div id="voteDetailsModal" class="modal custom-vote-details-modal" style="display: none;">
+                            <div class="modal-content" style="background-color: white; border-radius: 10px; max-width: 500px; margin: 50px auto; padding: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);">
+                                <span class="close" onclick="closeVoteDetailsModal()" style="float: right; cursor: pointer; font-size: 20px;">&times;</span>
+                                <h3 style="text-align: center; font-weight: bold; margin-bottom: 20px;">Vote Counts for Representatives</h3>
+                                <ul id="voteList" style="list-style: none; padding: 0; max-height: 300px; overflow-y: auto;">
+                                    <!-- Representative list will be injected here by JavaScript -->
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- JavaScript Code -->
+                        <script>
+                        let votedMemberId = null; // Tracks the currently voted member
+
+                        // Open the modal to vote
+                        function openVoteModal() {
+                            document.getElementById("voteModal").style.display = "block";
+                        }
+
+                        // Close the vote modal
+                        function closeVoteModal() {
+                            document.getElementById("voteModal").style.display = "none";
+                        }
+
+                        // Open the modal to display vote counts
+                        function openVoteDetailsModal() {
+                            document.getElementById("voteDetailsModal").style.display = "block";
+
+                            // Fetch the vote counts for each representative
+                            fetch('/get_votes_for_representatives/')
+                                .then(response => response.json())
+                                .then(data => {
+                                    const representatives = data.representatives;
+                                    let html = '';
+
+                                    // Create a list of committee members with their vote count
+                                    representatives.forEach(rep => {
+                                        html += `
+                                            <li style="display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 10px;">
+                                                <div style="display: flex; align-items: center;">
+                                                    <img src="${rep.profile_picture ? rep.profile_picture : '{% static 'images/default-profile.png' %}'}" alt="${rep.name}" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
+                                                    <span style="font-weight: bold;">${rep.name}</span>
+                                                </div>
+                                                <span style="font-weight: bold;">Votes: ${rep.vote_count}</span>
+                                            </li>
+                                        `;
+                                    });
+
+                                    // Insert the list of representatives into the modal
+                                    document.getElementById("voteList").innerHTML = html;
+                                })
+                                .catch(error => {
+                                    console.error('Error:', error);
+                                    alert('An error occurred while fetching the vote data.');
+                                });
+                        }
+
+                        // Close the votes modal
+                        function closeVoteDetailsModal() {
+                            document.getElementById("voteDetailsModal").style.display = "none";
+                        }
+
+                        // Handle the voting logic
+                        function handleVote(memberId, memberName) {
+                            const voteButton = document.getElementById(`vote-button-${memberId}`);
+
+                            // Make the vote request
+                            fetch(`/vote_for_representative/${memberId}/`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': getCookie('csrftoken'),
+                                },
+                                body: JSON.stringify({ memberId: memberId })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.message) {
+                                    voteButton.textContent = 'Voted';
+                                    voteButton.disabled = true;
+                                    alert(data.message);
+                                } else if (data.error) {
+                                    alert(data.error);
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                alert('An error occurred while submitting your vote.');
+                            });
+                        }
+
+                        // Helper function to get CSRF token
+                        function getCookie(name) {
+                            let cookieValue = null;
+                            if (document.cookie && document.cookie !== '') {
+                                const cookies = document.cookie.split(';');
+                                for (let i = 0; i < cookies.length; i++) {
+                                    const cookie = cookies[i].trim();
+                                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                        break;
+                                    }
+                                }
+                            }
+                            return cookieValue;
+                        }
+                        </script>
+
+
+                    <!-- Add the CSS below -->
+                    <style>
+                    /* Card styling */
+                    .peoples-choice-card {
+                        background-color: rgba(60, 40, 153, 0.5);
+                        color: white;
+                        padding: 20px;
+                        text-align: center;
+                        margin-top: 60px;
+                        border-radius: 10px;
+                        position: relative;
+                        box-shadow: 0 0 0 3px rgba(135, 211, 124, 1); /* Green border with specified color */
+                        transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth animation on hover */
+                    }
+
+                    /* Animation on card hover */
+                    .peoples-choice-card:hover {
+                        transform: translateY(-5px); /* Lift card slightly */
+                        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4); /* Deepen shadow on hover */
+                    }
+
+                    /* Profile image container with outer shadow */
+                    .profile-image-container {
+                        position: absolute;
+                        top: -40px;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        width: 110px;
+                        height: 110px;
+                        background-color: white;
+                        border-radius: 50%;
+                        padding: 5px;
+                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Shadow around circular frame */
+                    }
+
+                    /* Profile image */
+                    .profile-image {
+                        width: 100%;
+                        height: 100%;
+                        border-radius: 50%;
+                    }
+
+                    /* Title styling */
+                    .peoples-choice-title {
+                        font-weight: bold;
+                        margin-top: 59px;
+                        font-size: 17px;
+                        
+                    }
+
+                    /* Button container */
+                    .button-container {
+                        display: flex;
+                        justify-content: center;
+                        gap: 50px;
+                        margin-top: 15px;
+                    }
+
+                    /* Button styling with hover effect */
+                    .custom-button {
+                        background-color:rgba(135, 211, 124, 1);
+                        box-shadow: 0 0 0 1px rgba(20, 0, 113, 0.69);
+                        color: green;
+                        border: none;
+                        padding: 10px 15px;
+                        border-radius: 20px;
+                        font-weight: bold;
+                        cursor: pointer;
+                        transition: background-color 0.3s, color 0.3s, transform 0.2s; /* Smooth transition for color and scale */
+                    }
+
+                    /* Button hover animation */
+                    .custom-button:hover {
+                        background-color: green;
+                        color: white;
+                        transform: scale(1.05); /* Slight enlargement on hover */
+                    }
+                    </style>
+
                     
-                                                    <!-- Modal for Voting -->
-                                                    <div id="voteModal" class="modal custom-vote-modal" style="display: none;">
-                                                        <div class="modal-content" style="background-color: white; border-radius: 10px; max-width: 500px; margin: 50px auto; padding: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);">
-                                                            <span class="close" onclick="closeVoteModal()" style="float: right; cursor: pointer; font-size: 20px;">&times;</span>
-                                                            <h3 style="text-align: center; font-weight: bold; margin-bottom: 20px;">Vote for Your Representative</h3>
-                                                            <ul style="list-style: none; padding: 0; max-height: 300px; overflow-y: auto;">
-                                                                {% for member in committee_members %}
-                                                                <li id="member-{{ member.id }}" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 10px;">
-                                                                    <div style="display: flex; align-items: center;">
-                                                                        {% if member.profile_picture %}
-                                                                            <img src="{{ member.profile_picture.url }}" alt="{{ member.name }}" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
-                                                                        {% else %}
-                                                                            <img src="{% static 'images/default-profile.png' %}" alt="Default profile picture" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
-                                                                        {% endif %}
-                                                                        <span style="font-weight: bold;">{{ member.name }}</span>
-                                                                    </div>
-                                                                    <button id="vote-button-{{ member.id }}" onclick="handleVote('{{ member.id }}', '{{ member.name }}')" class="vote-button" style="background-color: green; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">
-                                                                        Vote
-                                                                    </button>
-                                                                </li>
-                                                                {% endfor %}
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                    
-                                                    <!-- Modal for Vote Counts (Details) -->
-                                                    <div id="voteDetailsModal" class="modal custom-vote-details-modal" style="display: none;">
-                                                        <div class="modal-content" style="background-color: white; border-radius: 10px; max-width: 500px; margin: 50px auto; padding: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);">
-                                                            <span class="close" onclick="closeVoteDetailsModal()" style="float: right; cursor: pointer; font-size: 20px;">&times;</span>
-                                                            <h3 style="text-align: center; font-weight: bold; margin-bottom: 20px;">Vote Counts for Representatives</h3>
-                                                            <ul id="voteList" style="list-style: none; padding: 0; max-height: 300px; overflow-y: auto;">
-                                                                <!-- Representative list will be injected here by JavaScript -->
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                    
-                                                    <!-- JavaScript Code -->
-                                                    <script>
-                                                    let votedMemberId = null; // Tracks the currently voted member
-                    
-                                                    // Open the modal to vote
-                                                    function openVoteModal() {
-                                                        document.getElementById("voteModal").style.display = "block";
-                                                    }
-                    
-                                                    // Close the vote modal
-                                                    function closeVoteModal() {
-                                                        document.getElementById("voteModal").style.display = "none";
-                                                    }
-                    
-                                                    // Open the modal to display vote counts
-                                                    function openVoteDetailsModal() {
-                                                        document.getElementById("voteDetailsModal").style.display = "block";
-                    
-                                                        // Fetch the vote counts for each representative
-                                                        fetch('/get_votes_for_representatives/')
-                                                            .then(response => response.json())
-                                                            .then(data => {
-                                                                const representatives = data.representatives;
-                                                                let html = '';
-                    
-                                                                // Create a list of committee members with their vote count
-                                                                representatives.forEach(rep => {
-                                                                    html += `
-                                                                        <li style="display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 10px;">
-                                                                            <div style="display: flex; align-items: center;">
-                                                                                <img src="${rep.profile_picture ? rep.profile_picture : '{% static 'images/default-profile.png' %}'}" alt="${rep.name}" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
-                                                                                <span style="font-weight: bold;">${rep.name}</span>
-                                                                            </div>
-                                                                            <span style="font-weight: bold;">Votes: ${rep.vote_count}</span>
-                                                                        </li>
-                                                                    `;
-                                                                });
-                    
-                                                                // Insert the list of representatives into the modal
-                                                                document.getElementById("voteList").innerHTML = html;
-                                                            })
-                                                            .catch(error => {
-                                                                console.error('Error:', error);
-                                                                alert('An error occurred while fetching the vote data.');
-                                                            });
-                                                    }
-                    
-                                                    // Close the votes modal
-                                                    function closeVoteDetailsModal() {
-                                                        document.getElementById("voteDetailsModal").style.display = "none";
-                                                    }
-                    
-                                                    // Handle the voting logic
-                                                    function handleVote(memberId, memberName) {
-                                                        const voteButton = document.getElementById(`vote-button-${memberId}`);
-                    
-                                                        // Make the vote request
-                                                        fetch(`/vote_for_representative/${memberId}/`, {
-                                                            method: 'POST',
-                                                            headers: {
-                                                                'Content-Type': 'application/json',
-                                                                'X-CSRFToken': getCookie('csrftoken'),
-                                                            },
-                                                            body: JSON.stringify({ memberId: memberId })
-                                                        })
-                                                        .then(response => response.json())
-                                                        .then(data => {
-                                                            if (data.message) {
-                                                                voteButton.textContent = 'Voted';
-                                                                voteButton.disabled = true;
-                                                                alert(data.message);
-                                                            } else if (data.error) {
-                                                                alert(data.error);
-                                                            }
-                                                        })
-                                                        .catch(error => {
-                                                            console.error('Error:', error);
-                                                            alert('An error occurred while submitting your vote.');
-                                                        });
-                                                    }
-                    
-                                                    // Helper function to get CSRF token
-                                                    function getCookie(name) {
-                                                        let cookieValue = null;
-                                                        if (document.cookie && document.cookie !== '') {
-                                                            const cookies = document.cookie.split(';');
-                                                            for (let i = 0; i < cookies.length; i++) {
-                                                                const cookie = cookies[i].trim();
-                                                                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                                                                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                                                                    break;
-                                                                }
-                                                            }
-                                                        }
-                                                        return cookieValue;
-                                                    }
-                                                    </script>
-                    
-                    
-                                                <!-- Add the CSS below -->
-                                                <style>
-                                                /* Card styling */
-                                                .peoples-choice-card {
-                                                    background-color: rgba(60, 40, 153, 0.5);
-                                                    color: white;
-                                                    padding: 20px;
-                                                    text-align: center;
-                                                    margin-top: 60px;
-                                                    border-radius: 10px;
-                                                    position: relative;
-                                                    box-shadow: 0 0 0 3px rgba(135, 211, 124, 1); /* Green border with specified color */
-                                                    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth animation on hover */
-                                                }
-                    
-                                                /* Animation on card hover */
-                                                .peoples-choice-card:hover {
-                                                    transform: translateY(-5px); /* Lift card slightly */
-                                                    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4); /* Deepen shadow on hover */
-                                                }
-                    
-                                                /* Profile image container with outer shadow */
-                                                .profile-image-container {
-                                                    position: absolute;
-                                                    top: -40px;
-                                                    left: 50%;
-                                                    transform: translateX(-50%);
-                                                    width: 110px;
-                                                    height: 110px;
-                                                    background-color: white;
-                                                    border-radius: 50%;
-                                                    padding: 5px;
-                                                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Shadow around circular frame */
-                                                }
-                    
-                                                /* Profile image */
-                                                .profile-image {
-                                                    width: 100%;
-                                                    height: 100%;
-                                                    border-radius: 50%;
-                                                }
-                    
-                                                /* Title styling */
-                                                .peoples-choice-title {
-                                                    font-weight: bold;
-                                                    margin-top: 59px;
-                                                    font-size: 17px;
-                                                    
-                                                }
-                    
-                                                /* Button container */
-                                                .button-container {
-                                                    display: flex;
-                                                    justify-content: center;
-                                                    gap: 50px;
-                                                    margin-top: 15px;
-                                                }
-                    
-                                                /* Button styling with hover effect */
-                                                .custom-button {
-                                                    background-color:rgba(135, 211, 124, 1);
-                                                    box-shadow: 0 0 0 1px rgba(20, 0, 113, 0.69);
-                                                    color: green;
-                                                    border: none;
-                                                    padding: 10px 15px;
-                                                    border-radius: 20px;
-                                                    font-weight: bold;
-                                                    cursor: pointer;
-                                                    transition: background-color 0.3s, color 0.3s, transform 0.2s; /* Smooth transition for color and scale */
-                                                }
-                    
-                                                /* Button hover animation */
-                                                .custom-button:hover {
-                                                    background-color: green;
-                                                    color: white;
-                                                    transform: scale(1.05); /* Slight enlargement on hover */
-                                                }
-                                                </style>
-                    
-                                                
+
                         
                         
 
@@ -988,75 +1033,23 @@
 </div>
 </div>
 
-<!-- Footer
-================================================= -->
-{% comment %} <footer id="footer">
-<div class="container">
-<div class="row">
-<div class="footer-wrapper">
-    <div class="col-md-3 col-sm-3">
-        <a href=""><img src="images/logo-black.png" alt="" class="footer-logo" /></a>
-        <ul class="list-inline social-icons">
-            <li><a href="#"><i class="icon ion-social-facebook"></i></a></li>
-            <li><a href="#"><i class="icon ion-social-twitter"></i></a></li>
-            <li><a href="#"><i class="icon ion-social-googleplus"></i></a></li>
-            <li><a href="#"><i class="icon ion-social-pinterest"></i></a></li>
-            <li><a href="#"><i class="icon ion-social-linkedin"></i></a></li>
-        </ul>
-    </div>
-    <div class="col-md-2 col-sm-2">
-        <h5>For individuals</h5>
-        <ul class="footer-links">
-            <li><a href="">Signup</a></li>
-            <li><a href="">login</a></li>
-            <li><a href="">Explore</a></li>
-            <li><a href="">Finder app</a></li>
-            <li><a href="">Features</a></li>
-            <li><a href="">Language settings</a></li>
-        </ul>
-    </div>
-    <div class="col-md-2 col-sm-2">
-        <h5>For businesses</h5>
-        <ul class="footer-links">
-            <li><a href="">Business signup</a></li>
-            <li><a href="">Business login</a></li>
-            <li><a href="">Benefits</a></li>
-            <li><a href="">Resources</a></li>
-            <li><a href="">Advertise</a></li>
-            <li><a href="">Setup</a></li>
-        </ul>
-    </div>
-    <div class="col-md-2 col-sm-2">
-        <h5>About</h5>
-        <ul class="footer-links">
-            <li><a href="">About us</a></li>
-            <li><a href="">Contact us</a></li>
-            <li><a href="">Privacy Policy</a></li>
-            <li><a href="">Terms</a></li>
-            <li><a href="">Help</a></li>
-        </ul>
-    </div>
-    <div class="col-md-3 col-sm-3">
-        <h5>Contact Us</h5>
-        <ul class="contact">
-            <li><i class="icon ion-ios-telephone-outline"></i>+1 (234) 222 0754</li>
-            <li><i class="icon ion-ios-email-outline"></i>info@thunder-team.com</li>
-            <li><i class="icon ion-ios-location-outline"></i>228 Park Ave S NY, USA</li>
-        </ul>
-    </div>
-</div>
-</div>
-</div>
-<div class="copyright">
-<p>Thunder Team © 2016. All rights reserved</p>
-</div>
-</footer> {% endcomment %}
 
 
 
 
-<!-- Scripts
-================================================= -->
+
+
+
+
+
+
+
+
+
+<div class="container mt-5">
+   
+</div>
+
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCTMXfmDn0VlqWIyoOxK8997L-amWbUPiQ&callback=initMap"></script>
 <script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
@@ -1069,3 +1062,4 @@
 
 
 </html>
+

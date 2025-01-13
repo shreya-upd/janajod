@@ -326,6 +326,7 @@
             <div class="row">
                  
                 <!-- Newsfeed Common Side Bar Left ================================================= -->
+                <!-- Newsfeed Common Side Bar Left ================================================= -->
                 <div class="col-md-3 static sidebar1 d-none d-md-block" style="position: fixed; left: 30px; top: 80px; bottom: 15px; width: 25%; overflow: hidden;">
 
                     <div class="profile-card">
@@ -343,7 +344,7 @@
                     
                     
                     <!-- Navigation Links -->
-                    <ul class="nav-news-feed nav-list" style="list-style-type: none; padding: 5px; margin: 0; background-color: rgba(255, 255, 255, 0.8); border-radius: 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
+                    <ul class="nav-news-feed nav-list" style="list-style-type: none;font-size: 100px;font-weight: bold; padding: 5px; margin: 0;  border-radius: 8px; box-shadow: 0 3px 3px  rgba(140, 20, 252,1);">
                         <li style="margin: 5px 0;">
                             <div>
                                 <a href="{% url 'home' %}" class="nav-link"
@@ -388,7 +389,7 @@
                                 </a>
                             </div>
                         </li>
-                        <li style="margin: 5px 0;">
+                        {% comment %} <li style="margin: 5px 0;">
                             <div>
                                 <a href="{% url 'servicerequest' %}" class="nav-link"
                                 style="text-decoration: none; color: #333; padding: 10px 14px; border-radius: 20px; display: inline-block; 
@@ -398,7 +399,7 @@
                                     🔧 Service Request
                                 </a>
                             </div>
-                        </li>
+                        </li> {% endcomment %}
                         <li style="margin: 5px 0;">
                             <div>
                                 <a href="{% url 'surveyform' %}" class="nav-link"
@@ -462,7 +463,6 @@
                         </div>
                     </div>
                 </div>
-              
 
 
 
@@ -471,7 +471,7 @@
                 <div class="col-md-8" style="left: 250px;">
 
                       <!-- Announcement Create Box -->
-                    <div class="create-announcement" style="border: 1px solid #e1e1e1; padding: 10px; border-radius: 10px; background-color: #f9f9f9; margin-bottom: 20px; height:95px;">
+                      <div class="create-announcement" style="border: 1px solid #e1e1e1; padding: 10px; border-radius: 10px; background-color: #f9f9f9; margin-bottom: 20px; height:95px; margin-right: 9px;">
                         <div class="row d-flex align-items-center justify-content-between">
                             <!-- Image and Instructional Quote -->
                             <div class="col-md-6 d-flex align-items-center">
@@ -493,7 +493,7 @@
                             <div class="col-md-6 d-flex align-items-center justify-content-end">
                                 <!-- Announce Now Button -->
                                 <button id="announceButton" class="btn btn-primary" style="padding: 12px; font-size: 16px; margin-left: 50px;margin-top: 2px;" data-toggle="modal" data-target="#announcementModal">
-                                    Announce Now
+                                    Announce
                                 </button>
                                 
                                 <!-- Eye Icon Button for Applications -->
@@ -563,7 +563,7 @@
                     </script>
                     
                     <!-- Job Applications Table -->
-                    <div class="job-applications-table" style="border: 1px solid #e1e1e1; border-radius: 10px; background-color: #f9f9f9; margin-bottom: 12px;">
+                    <div class="job-applications-table" style="border: 1px solid #e1e1e1; border-radius: 10px; background-color: #f9f9f9; margin-bottom: 12px;margin-right: 9px;box-shadow: 0 4px 8px rgba(0, 255, 0, 0.5);">
                         <hr>
                         <table class="table table-striped">
                             <thead>
@@ -618,7 +618,7 @@
                 <hr>
                 <div class="members-list" style="max-height: 250px; overflow-y: auto; overflow-x: hidden; padding-right: 10px;">
                     {% for member in committee_members %}
-                    <div class="committee-member-card" style="border: 1px solid #ddd; padding: 10px; margin-bottom: 15px; text-align: center;">
+                    <div class="committee-member-card" style="border: 1px solid #ddd; padding: 10px;background-color: rgb(243,236,253); margin-bottom: 15px; text-align: center;">
                         <div class="profile-summary" style="display: flex; align-items: center; justify-content: center; margin-bottom: 5px;">
                             {% if member.profile_picture %}
                                 <img src="{{ member.profile_picture.url }}" alt="{{ member.name }}" style="width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;">
@@ -653,107 +653,359 @@
                 </div>
                 <hr>
                 <!-- People's Choice Card -->
-                                            <!-- People's Choice Card -->
-                <div class="peoples-choice-card">
-                    <!-- Image of the person in a circular frame that overlaps the card -->
-                    <div class="profile-image-container">
-                        <img src="{% static 'images/post-images/Balen.jpg' %}" alt="People's Choice Representative" class="profile-image">
-                    </div>
-
-                    <!-- People's Choice Title -->
-                  <h5 class="peoples-choice-title" >🌟Popular Choice🌟</h5>
-
-
-                    <!-- Buttons: Your Vote and Eye Icon for Details -->
-                    <div class="button-container">
-                        <!-- Your Vote Button -->
-                        <button class="custom-button">Your Vote</button>
-                        
-                        <!-- Eye Icon for Details -->
-                        <button class="custom-button">&#128065;</button>
-                    </div>
+              <!-- People's Choice Card -->
+              <div class="peoples-choice-card">
+                <div class="profile-image-container">
+                    <img src="{% static 'images/post-images/vote.jpg' %}" alt="People's Choice Representative" class="profile-image">
                 </div>
+                <h5 class="peoples-choice-title"><p style="font-weight: bold;">See People's choice</p></h5>
+                <div class="button-container">
+                    <button class="custom-button" onclick="openVoteModal()">Your Vote</button>
+                    <button class="custom-button" onclick="openVoteDetailsModal()">👁️</button> <!-- Eye icon for vote details -->
+                </div>
+            </div>
 
-                <!-- Add the CSS below -->
-                <style>
-                /* Card styling */
-                .peoples-choice-card {
-                    background-color: rgba(60, 40, 153, 0.5);
-                    color: white;
-                    padding: 20px;
-                    text-align: center;
-                    margin-top: 60px;
-                    border-radius: 10px;
-                    position: relative;
-                    box-shadow: 0 0 0 3px rgba(135, 211, 124, 1); /* Green border with specified color */
-                    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth animation on hover */
+            <!-- Modal for Voting -->
+            <div id="voteModal" class="modal custom-vote-modal" style="display: none;">
+                <div class="modal-content" style="background-color: white; border-radius: 10px; max-width: 500px; margin: 50px auto; padding: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);">
+                    <span class="close" onclick="closeVoteModal()" style="float: right; cursor: pointer; font-size: 20px;">&times;</span>
+                    <h3 style="text-align: center; font-weight: bold; margin-bottom: 20px;">Vote for Your Representative</h3>
+                    <ul style="list-style: none; padding: 0; max-height: 300px; overflow-y: auto;">
+                        {% for member in committee_members %}
+                        <li id="member-{{ member.id }}" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 10px;">
+                            <div style="display: flex; align-items: center;">
+                                {% if member.profile_picture %}
+                                    <img src="{{ member.profile_picture.url }}" alt="{{ member.name }}" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
+                                {% else %}
+                                    <img src="{% static 'images/default-profile.png' %}" alt="Default profile picture" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
+                                {% endif %}
+                                <span style="font-weight: bold;">{{ member.name }}</span>
+                            </div>
+                            <button id="vote-button-{{ member.id }}" onclick="handleVote('{{ member.id }}', '{{ member.name }}')" class="vote-button" style="background-color: green; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">
+                                Vote
+                            </button>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Modal for Vote Counts (Details) -->
+            <div id="voteDetailsModal" class="modal custom-vote-details-modal" style="display: none;">
+                <div class="modal-content" style="background-color: white; border-radius: 10px; max-width: 500px; margin: 50px auto; padding: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);">
+                    <span class="close" onclick="closeVoteDetailsModal()" style="float: right; cursor: pointer; font-size: 20px;">&times;</span>
+                    <h3 style="text-align: center; font-weight: bold; margin-bottom: 20px;">Vote Counts for Representatives</h3>
+                    <ul id="voteList" style="list-style: none; padding: 0; max-height: 300px; overflow-y: auto;">
+                        <!-- Representative list will be injected here by JavaScript -->
+                    </ul>
+                </div>
+            </div>
+
+            <!-- JavaScript Code -->
+            <script>
+            let votedMemberId = null; // Tracks the currently voted member
+
+            // Open the modal to vote
+            function openVoteModal() {
+                document.getElementById("voteModal").style.display = "block";
+            }
+
+            // Close the vote modal
+            function closeVoteModal() {
+                document.getElementById("voteModal").style.display = "none";
+            }
+
+            // Open the modal to display vote counts
+            function openVoteDetailsModal() {
+                document.getElementById("voteDetailsModal").style.display = "block";
+
+                // Fetch the vote counts for each representative
+                fetch('/get_votes_for_representatives/')
+                    .then(response => response.json())
+                    .then(data => {
+                        const representatives = data.representatives;
+                        let html = '';
+
+                        // Create a list of committee members with their vote count
+                        representatives.forEach(rep => {
+                            html += `
+                                <li style="display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 10px;">
+                                    <div style="display: flex; align-items: center;">
+                                        <img src="${rep.profile_picture ? rep.profile_picture : '{% static 'images/default-profile.png' %}'}" alt="${rep.name}" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
+                                        <span style="font-weight: bold;">${rep.name}</span>
+                                    </div>
+                                    <span style="font-weight: bold;">Votes: ${rep.vote_count}</span>
+                                </li>
+                            `;
+                        });
+
+                        // Insert the list of representatives into the modal
+                        document.getElementById("voteList").innerHTML = html;
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred while fetching the vote data.');
+                    });
+            }
+
+            // Close the votes modal
+            function closeVoteDetailsModal() {
+                document.getElementById("voteDetailsModal").style.display = "none";
+            }
+
+            // Handle the voting logic
+            function handleVote(memberId, memberName) {
+                const voteButton = document.getElementById(`vote-button-${memberId}`);
+
+                // Make the vote request
+                fetch(`/vote_for_representative/${memberId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken'),
+                    },
+                    body: JSON.stringify({ memberId: memberId })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        voteButton.textContent = 'Voted';
+                        voteButton.disabled = true;
+                        alert(data.message);
+                    } else if (data.error) {
+                        alert(data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while submitting your vote.');
+                });
+            }
+
+            // Helper function to get CSRF token
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
                 }
+                return cookieValue;
+            }
+            </script>
 
-                /* Animation on card hover */
-                .peoples-choice-card:hover {
-                    transform: translateY(-5px); /* Lift card slightly */
-                    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4); /* Deepen shadow on hover */
-                }
 
-                /* Profile image container with outer shadow */
-                .profile-image-container {
-                    position: absolute;
-                    top: -40px;
-                    left: 50%;
-                    transform: translateX(-50%);
-                    width: 110px;
-                    height: 110px;
-                    background-color: white;
-                    border-radius: 50%;
-                    padding: 5px;
-                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Shadow around circular frame */
-                }
+       
+        <style>
+        .peoples-choice-card {
+            background-color: rgba(60, 40, 153, 0.5);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            margin-top: 60px;
+            border-radius: 10px;
+            position: relative;
+            box-shadow: 0 0 0 3px rgba(135, 211, 124, 1); 
+            transition: transform 0.3s ease, box-shadow 0.3s ease; 
+        }
+        /* Animation on card hover */
+        .peoples-choice-card:hover {
+            transform: translateY(-5px); 
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4); 
+        }
+         /* Profile image */
+         .profile-image {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+        }
 
-                /* Profile image */
-                .profile-image {
-                    width: 100%;
-                    height: 100%;
-                    border-radius: 50%;
-                }
+        /* Title styling */
+        .peoples-choice-title {
+            font-weight: bold;
+            margin-top: 59px;
+            font-size: 17px;
+          }
+         /* Profile image container with outer shadow */
+        .profile-image-container {
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 110px;
+            height: 110px;
+            background-color: white;
+            border-radius: 50%;
+            padding: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); 
+        }
 
-                /* Title styling */
-                .peoples-choice-title {
-                    font-weight: bold;
-                    margin-top: 59px;
-                    font-size: 17px;
+       
+
+        /* Button container */
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin-top: 15px;
+        }
+
+        /* Button styling with hover effect */
+        .custom-button {
+            background-color:rgba(135, 211, 124, 1);
+            box-shadow: 0 0 0 1px rgba(20, 0, 113, 0.69);
+            color: green;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s, transform 0.2s; /* Smooth transition for color and scale */
+        }
+
+        /* Button hover animation */
+        .custom-button:hover {
+            background-color: green;
+            color: white;
+            transform: scale(1.05); /* Slight enlargement on hover */
+        }
+        </style>
+
+        
+            
+
+        </div>
+        
+    </div>
+    <!-- Add the People's Choice Card below the hr line -->
+    <script>
+        function toggleDetails(memberId) {
+            var detailsDiv = document.getElementById("details-" + memberId);
+            detailsDiv.style.display = (detailsDiv.style.display === "none") ? "block" : "none";
+        }
+    </script>
                     
+    <style>
+            /* Default styles for larger screens */
+        /* Default styles for larger screens */
+            .sidebar {
+                position: fixed;
+                right: 40px;
+                top: 0;
+                bottom: 0;
+                width: 16.66667%;
+                height: 100%;
+                padding-top: 80px;
+                overflow-y: auto;
+                z-index: 1000;
+            }
+
+            .committee-member-card {
+                text-align: center;
+                padding: 10px;
+            }
+
+            .profile-summary {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 5px;
+            }
+
+            .profile-summary img {
+                margin-right: 10px;
+            }
+
+            .members-list {
+                max-height: 300px;
+                overflow-y: auto;
+                overflow-x: hidden;
+                padding-right: 10px;
+            }
+                                        /* Style for the scrollbar track */
+            .members-list::-webkit-scrollbar {
+                width: 8px; /* Adjust the width of the scrollbar */
+            }
+
+            .members-list::-webkit-scrollbar-track {
+                background: #f1f1f1; /* Light background for the track */
+            }             /* Style for the scrollbar thumb (the draggable part) */
+            .members-list::-webkit-scrollbar-thumb {
+                background: rgba(20, 0, 113, 0.69); /* Custom color for the scrollbar thumb */
+                border-radius: 10px; /* Optional: round the edges of the scrollbar */
+            }
+
+            /* Hover effect for the scrollbar thumb */
+            .members-list::-webkit-scrollbar-thumb:hover {
+                background: rgba(20, 0, 113, 1); /* Darker color when hovering */
+            }
+
+            /* Responsive adjustments for the details section */
+            @media (max-width: 768px) {
+                .sidebar {
+                    position: relative;
+                    padding: 10px;
+                    width: 100%;
+                    height: auto;
                 }
 
-                /* Button container */
-                .button-container {
-                    display: flex;
-                    justify-content: center;
-                    gap: 50px;
-                    margin-top: 15px;
+                .committee-member-card {
+                    text-align: left;
+                    padding: 5px;
                 }
 
-                /* Button styling with hover effect */
-                .custom-button {
-                    background-color:rgba(135, 211, 124, 1);
-                    box-shadow: 0 0 0 1px rgba(20, 0, 113, 0.69);
-                    color: green;
-                    border: none;
-                    padding: 10px 15px;
-                    border-radius: 20px;
-                    font-weight: bold;
-                    cursor: pointer;
-                    transition: background-color 0.3s, color 0.3s, transform 0.2s; /* Smooth transition for color and scale */
+                .profile-summary {
+                    flex-direction: column;
+                    align-items: flex-start;
                 }
 
-                /* Button hover animation */
-                .custom-button:hover {
-                    background-color: green;
-                    color: white;
-                    transform: scale(1.05); /* Slight enlargement on hover */
+                .profile-summary img {
+                    margin-right: 0;
+                    margin-bottom: 5px;
                 }
-                </style>
 
-                
+                .profile-summary h5 {
+                    font-size: 1rem;
+                }
+
+                /* Adjust details section */
+                .committee-member-card #details-{{ member.id }} {
+                    text-align: left;
+                    font-size: 0.9rem;
+                    padding: 25px 35px; /* Increased left padding for better spacing */
+                    margin-left: 10px; /* Additional left margin */
+                }
+
+                /* Adjust button within details section */
+                .committee-member-card #details-{{ member.id }} button {
+                    margin-left: 0;
+                    display: block;
+                    margin: 40px auto 0;
+                }
+            }
+
+            @media (max-width: 576px) {
+                .profile-summary {
+                    align-items: center;
+                    text-align: center;
+                }
+
+                .committee-member-card #details-{{ member.id }} p {
+                    font-size: 0.85rem;
+                    margin-left: 40px; /* Additional left margin for paragraphs */
+                }
+
+                .members-list {
+                    max-height: 180px;
+                }
+            }
+
+    </style>   
                 
 
             </div>

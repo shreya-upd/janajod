@@ -170,3 +170,4 @@ EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'shryupd@gmail.com'
 
 
+

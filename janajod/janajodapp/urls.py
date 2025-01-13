@@ -32,7 +32,7 @@ urlpatterns = [
     path('profilemanage/edit/<int:pk>/', views.edit_profile, name='edit_profile'),
     path('profilemanage/confirm-delete/<int:pk>/', views.confirm_delete_profile, name='confirm_delete_profile'),
     path('profilemanage/delete/<int:pk>/', views.delete_profile, name='delete_profile'),
-     
+     path('get_votes_for_representatives/', views.get_votes_for_representatives, name='get_votes_for_representatives'),
      path('viewservicerequests/', views.view_service_requests, name='view_service_requests'),
    
     # path('viewservicerequest/add/', views.add_service_request, name='add_service_request'),
@@ -53,7 +53,7 @@ urlpatterns = [
      path('add_survey/', views.add_survey, name='add_survey'),
       path('delete-question/<int:question_id>/', views.delete_question, name='delete_question'),
       path('survey-responses/', views.survey_responses, name='survey_responses'),
-     
+     path('vote_for_representative/<int:member_id>/', views.vote_for_representative, name='vote_for_representative'),
     path('surveyresponse/<int:pk>/confirm-delete/', views.surveyresponse_confirm_delete, name='surveyresponse_confirm_delete'),
     # path('customsurvey/<int:survey_id>/responses/add/', views.add_survey_response, name='add_survey_response'),
     # path('customsurvey/<int:survey_id>/responses/<int:response_id>/edit/', views.change_survey_response, name='change_survey_response'),
@@ -108,6 +108,8 @@ urlpatterns = [
     path('submit-feedback/', views.submit_feedback, name='submit_feedback'),
     path('user-job-applications/', views.user_job_applications_view, name='user_job_applications'),
     # path('submit-complaint/', views.submit_complaint, name='submit_complaint'),
+    
+    
     path('add_comment/<int:post_id>/', views.add_comment, name='add_comment'),
     path('submit_event/', views.submit_event, name='submit_event'),
     path('surveyform/', views.surveyform, name='surveyform'),
@@ -119,6 +121,8 @@ urlpatterns = [
     path('like/<int:post_id>/', views.like_post, name='like_post'),
     path('dislike/<int:post_id>/', views.dislike_post, name='dislike_post'),
     path('post/<int:post_id>/edit/', views.edit_post, name='edit_post'), 
+      path('post/<int:post_id>/edit/', views.edit_post_page, name='edit_post_page'),
+    
      path('delete-post/<int:id>/', views.delete_post, name='delete_post'),
     # path('profile/',views.profile,name='profile'),
     path('profile/<str:username>/', views.profile, name='profile'),
